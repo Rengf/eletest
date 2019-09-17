@@ -1,6 +1,6 @@
 <template>
   <div class="navBar">
-    <audio :src="currentSong" @ended="nextsong()"></audio>
+    <audio ref="audio" src="../../assets/music/许嵩 - 玫瑰花的葬礼.mp3" autoplay @ended="nextsong()"></audio>
     <el-row>
       <el-col :span="24">
         <div class="bg-purple-dark">
@@ -22,7 +22,7 @@
               </div>
             </el-col>
             <el-col :span="3">
-              <div class="grid-content musicList">
+              <div class="grid-content musicList" @click="showMusicList">
                 <i class="iconfont">&#xe605;</i>
               </div>
             </el-col>
@@ -39,18 +39,20 @@ export default {
       circleUrl:
         "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
       playIcon: "&#xe658;",
-      currentSong: ""
+      currentSong: "../../assets/music/许嵩 - 玫瑰花的葬礼.mp3"
     };
   },
   methods: {
     musicPlay() {
-      var audio = new Audio();
-      console.log(audio);
+      this.$refs.audio.play();
       if (this.playIcon === "&#xe658;") {
         this.playIcon = "&#xe775;";
       } else {
         this.playIcon = "&#xe658;";
       }
+    },
+    showMusicList() {
+      this.$emit("showMusicList", true);
     }
   }
 };

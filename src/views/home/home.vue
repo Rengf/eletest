@@ -1,6 +1,9 @@
 <template>
-  <div class="home-wrap">
-    <NavBar></NavBar>
+  <div class="homeWrap">
+    <transition name="slide-fade">
+      <MusicList v-if="isShowList" @showMusicList="showMusicList"></MusicList>
+    </transition>
+    <NavBar @showMusicList="showMusicList"></NavBar>
   </div>
 </template>
 

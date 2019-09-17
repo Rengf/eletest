@@ -5,16 +5,16 @@ const basePath = path.resolve(__dirname, '../src')
 const dirName = process.argv[2]
 const capPirName = dirName.substring(0, 1).toUpperCase() + dirName.substring(1)
 if (!dirName) {
-  console.log('文件夹名称不能为空！')
-  console.log('示例：npm run tep ${capPirName}')
-  process.exit(0)
+    console.log('文件夹名称不能为空！')
+    console.log('示例：npm run tep ${capPirName}')
+    process.exit(0)
 }
 
 /**
  * @msg: vue页面模版
  */
 const VueTep = `<template>
-  <div class="${dirName}-wrap">
+  <div class="${dirName}Wrap">
     {{componentName}}
   </div>
 </template>
@@ -48,7 +48,7 @@ const VueTep = `<template>
 </script>
 
 <style lang="scss">
-  .${dirName}-wrap {
+  .${dirName}Wrap {
     width: 100%;
   }
 </style>

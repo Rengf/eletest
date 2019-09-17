@@ -1,11 +1,14 @@
 import NavBar from "@/components/common/navBar" // 组件
+import MusicList from "@/components/musicList/musicList"
 export default {
+    name: "home",
     components: {
-        NavBar
+        NavBar,
+        MusicList
     },
     data() {
         return {
-
+            isShowList: false,
         }
     },
 
@@ -16,6 +19,10 @@ export default {
     mounted() {
         //
     },
-
+    methods: {
+        showMusicList(showMusicList) {
+            this.isShowList = showMusicList;
+        }
+    },
 
 }
