@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '../views/home/home.vue'
+import HomeIndex from '../views/home/index'
+import Find from '@/views/home/find/find'
 
 Vue.use(Router)
 
@@ -10,10 +11,15 @@ export default new Router({
     routes: [{
             path: '/',
             name: 'home',
-            component: Home,
-            meta: {
-                title: '首页'
-            }
+            component: HomeIndex,
+            children: [{
+                path: '/',
+                name: 'find',
+                component: Find,
+                meta: {
+                    title: '首页'
+                }
+            }]
         },
         {
             path: '/about',
@@ -22,7 +28,7 @@ export default new Router({
             // this generates a separate chunk (about.[hash].js) for this route
             // which is lazy-loaded when the route is visited.
             component: () =>
-                import ( /* webpackChunkName: "about" */ '../views/home/home.vue'),
+                import ( /* webpackChunkName: "about" */ '../views/home/index.vue'),
             meta: {
                 title: '关于'
             }

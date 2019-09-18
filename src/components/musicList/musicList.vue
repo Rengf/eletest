@@ -106,26 +106,16 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.slide-fade-enter-active {
-  transition: all 0.3s ease;
-}
-.slide-fade-leave-active {
-  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
-}
-.slide-fade-enter, .slide-fade-leave-to
-/* .slide-fade-leave-active for below version 2.1.8 */ {
-  transform: translateY(30px);
-  opacity: 0;
-}
+<style lang="scss" scoped>
 .iconfont {
   font-family: "iconfont" !important;
-  font-size: 32px;
+  font-size: 20px;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 .musicListWrap {
+  position: relative;
   background: rgba($color: #888, $alpha: 0.3);
   width: 100%;
   height: 100%;
@@ -136,7 +126,7 @@ export default {
     line-height: 36px;
     border-top-right-radius: 15px;
     border-top-left-radius: 15px;
-    margin-top: 70%;
+    margin-top: 54%;
     z-index: 9999;
     background: #fff;
     .musicListHeader {
