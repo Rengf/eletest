@@ -1,6 +1,6 @@
 {
-  "id": "",
-  "name": "",
+  "id": "1415564",
+  "name": "eletest",
   "font_family": "iconfont",
   "css_prefix_text": "icon-",
   "description": "",
@@ -30,8 +30,15 @@
       "icon_id": "1257811",
       "name": "循环播放",
       "font_class": "xunhuanbofang",
-      "unicode": "e501",
-      "unicode_decimal": 58625
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "2202185",
+      "name": "排行榜",
+      "font_class": "paihangbang-",
+      "unicode": "e6c2",
+      "unicode_decimal": 59074
     },
     {
       "icon_id": "2465497",
@@ -48,18 +55,39 @@
       "unicode_decimal": 58917
     },
     {
+      "icon_id": "3305348",
+      "name": "播放",
+      "font_class": "bofang02",
+      "unicode": "e602",
+      "unicode_decimal": 58882
+    },
+    {
+      "icon_id": "6299886",
+      "name": "音乐9",
+      "font_class": "yinle",
+      "unicode": "e696",
+      "unicode_decimal": 59030
+    },
+    {
+      "icon_id": "6982643",
+      "name": "每日推荐_画板 1",
+      "font_class": "meirituijian_huaban",
+      "unicode": "e627",
+      "unicode_decimal": 58919
+    },
+    {
       "icon_id": "7214652",
       "name": "菜单",
       "font_class": "caidan",
-      "unicode": "e604",
-      "unicode_decimal": 58884
+      "unicode": "e606",
+      "unicode_decimal": 58886
     },
     {
       "icon_id": "7774949",
       "name": "删 除",
       "font_class": "shanchu",
-      "unicode": "e513",
-      "unicode_decimal": 58643
+      "unicode": "e601",
+      "unicode_decimal": 58881
     },
     {
       "icon_id": "8071869",
@@ -67,6 +95,13 @@
       "font_class": "laba",
       "unicode": "ec0a",
       "unicode_decimal": 60426
+    },
+    {
+      "icon_id": "8228494",
+      "name": "歌单",
+      "font_class": "gedan",
+      "unicode": "e60a",
+      "unicode_decimal": 58890
     },
     {
       "icon_id": "8863963",
@@ -88,6 +123,13 @@
       "font_class": "juxing",
       "unicode": "e605",
       "unicode_decimal": 58885
+    },
+    {
+      "icon_id": "10915891",
+      "name": "customer-service-line",
+      "font_class": "customer-service-line",
+      "unicode": "e690",
+      "unicode_decimal": 59024
     }
   ]
 }

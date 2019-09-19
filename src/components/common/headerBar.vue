@@ -3,7 +3,7 @@
     <el-row>
       <el-col :span="4">
         <div class="grid-content menu" @click="jump('menu')">
-          <i class="iconfont">&#xe604;</i>
+          <i class="iconfont">&#xe606;</i>
         </div>
       </el-col>
       <el-col :span="4">

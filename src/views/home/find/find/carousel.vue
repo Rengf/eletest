@@ -4,7 +4,7 @@
       <div class="imageBox">
         <transition-group tag="ul" name="image">
           <li v-show="lunboIndex === index" v-for="(image,index) in imageList" :key="index">
-            <img :src="image.url" :alt="index+'.png'" />0
+            <img :src="image.url" :alt="index+'.png'" />
           </li>
         </transition-group>
       </div>

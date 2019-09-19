@@ -1,6 +1,8 @@
 <template>
   <div class="navBar">
-    <audio ref="audio" src="../../assets/music/许嵩 - 玫瑰花的葬礼.mp3" autoplay @ended="nextsong()"></audio>
+    <audio ref="audio" @ended="nextsong()">
+      <source src="../../assets/music/许嵩 - 玫瑰花的葬礼.mp3" type="audio/mpeg" />
+    </audio>
     <el-row>
       <el-col :span="24">
         <div class="bg-purple-dark">
@@ -44,7 +46,9 @@ export default {
   },
   methods: {
     musicPlay() {
-      this.$refs.audio.play();
+      var audio = this.$refs.audio;
+      console.log(audio);
+      audio.play();
       if (this.playIcon === "&#xe658;") {
         this.playIcon = "&#xe775;";
       } else {
