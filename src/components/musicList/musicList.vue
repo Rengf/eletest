@@ -6,7 +6,7 @@
           <el-col :span="15">
             <div class="grid-content loopPlay" @click="switchLoop">
               <i class="iconfont" v-html="switchLoopData[loopIndex].loopIcon"></i>
-              <span>{{switchLoopData[loopIndex].loopString}}（{{musicList.length}}）</span>
+              <span>{{switchLoopData[loopIndex].loopString}}||（{{musicList.length}}）</span>
             </div>
           </el-col>
           <el-col :span="7">
@@ -17,7 +17,7 @@
           </el-col>
           <el-col :span="2">
             <div class="grid-content deleteAll" @click="deleteMusic()">
-              <i class="iconfont">&#xe513;</i>
+              <i class="iconfont">&#xe601;</i>
             </div>
           </el-col>
         </el-row>
@@ -115,8 +115,9 @@ export default {
   -moz-osx-font-smoothing: grayscale;
 }
 .musicListWrap {
-  position: relative;
+  position: absolute;
   background: rgba($color: #888, $alpha: 0.3);
+  top: 0px;
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -126,7 +127,7 @@ export default {
     line-height: 36px;
     border-top-right-radius: 15px;
     border-top-left-radius: 15px;
-    margin-top: 54%;
+    margin-top: 70%;
     z-index: 9999;
     background: #fff;
     .musicListHeader {

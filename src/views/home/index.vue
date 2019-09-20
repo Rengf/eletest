@@ -1,6 +1,6 @@
 <template>
   <div class="indexWrap">
-    <transition name="slide-fade">
+    <transition name="slider-slide-fade">
       <SliderBar v-if="isShowSlider" @showSliderBar="showSliderBar"></SliderBar>
     </transition>
     <HeaderBar @showSliderBar="showSliderBar"></HeaderBar>
@@ -70,7 +70,21 @@ export default {
 /* .slide-fade-leave-active for below version 2.1.8 */
 
  {
-  transform: translateY(50px);
+  transform: translateY(100%);
+  opacity: 1;
+}
+
+.slier-slide-fade-enter-active {
+  transition: all 0.5s linear;
+}
+
+.slier-slide-fade-leave-active {
+  transition: all 0.5s linear;
+}
+
+.slier-slide-fade-enter,
+.slier-slide-fade-leave-to {
+  transform: translateY(100%);
   opacity: 1;
 }
 </style>
