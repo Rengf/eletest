@@ -22,15 +22,15 @@ export default new Router({
             }]
         },
         {
-            path: '/about',
-            name: 'about',
+            path: '/play',
+            name: 'play',
             // route level code-splitting
             // this generates a separate chunk (about.[hash].js) for this route
             // which is lazy-loaded when the route is visited.
             component: () =>
-                import ( /* webpackChunkName: "about" */ '../views/home/index.vue'),
+                import ('../views/play/index.vue'),
             meta: {
-                title: '关于'
+                title: '播放页面'
             }
         },
         //{

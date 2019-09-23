@@ -69,6 +69,13 @@
       "unicode_decimal": 59030
     },
     {
+      "icon_id": "6538690",
+      "name": "播放",
+      "font_class": "bofang2",
+      "unicode": "e75e",
+      "unicode_decimal": 59230
+    },
+    {
       "icon_id": "6982643",
       "name": "每日推荐_画板 1",
       "font_class": "meirituijian_huaban",
@@ -83,11 +90,25 @@
       "unicode_decimal": 58886
     },
     {
+      "icon_id": "7250525",
+      "name": "下一首/上一首",
+      "font_class": "xiayishou",
+      "unicode": "e7a9",
+      "unicode_decimal": 59305
+    },
+    {
       "icon_id": "7774949",
       "name": "删 除",
       "font_class": "shanchu",
       "unicode": "e601",
       "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "7900631",
+      "name": "下一首/上一首",
+      "font_class": "xiayishou1",
+      "unicode": "e604",
+      "unicode_decimal": 58884
     },
     {
       "icon_id": "8071869",
