@@ -44,21 +44,22 @@
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {
       $timeBar: "",
-      startX: 0,
+      startX: 0, //点击时间时时间的开始位置
       timeBarLength: 0, //  滑竿多长距离
-      positionX: 0,
-      timer: "",
-      autox: 0,
+      positionX: 0, //时间点距离
+      timer: "", //定时器
+      autox: 0, //每秒移动距离
       playIcon: "&#xe75e;",
       loopIndex: 0,
       switchLoopData: ["&#xe603;", "&#xe600;", "&#xe628;"],
       currentSong: require("../../assets/music/许嵩 - 玫瑰花的葬礼.mp3"),
-      duration: 0,
-      currentTime: 0,
+      duration: 0, //总时长，按秒为单位
+      currentTime: 0, //已播放时长，秒
       playBackRate: 1 //播放速度
     };
   },
@@ -67,6 +68,7 @@ export default {
       this.initDefault();
     });
   },
+  mounted() {},
   filters: {
     filterTime(value) {
       var timeString = "";
@@ -88,7 +90,6 @@ export default {
   methods: {
     musicPlay() {
       var audio = this.$refs.audio;
-
       this.playBackRate = audio.playbackRate = 1;
       this.duration = audio.duration;
       if (audio.paused || audio.ended) {
@@ -129,11 +130,9 @@ export default {
       var _this = this;
       this.$timeBar = this.$refs.timeBar;
       this.timeBarLength = this.$timeBar.clientWidth;
-      console.log(this.timeBarLength);
     },
     controlStart(e) {
       this.startX = e.touches[0].pageX;
-      console.log(this.startX);
     },
     dragTime(e) {
       var slidedis = e.touches[0].pageX;
@@ -160,7 +159,6 @@ export default {
       clearInterval(this.timer);
       this.autox = (this.timeBarLength / this.duration) * this.playBackRate;
       this.timer = setInterval(() => {
-        console.log(audio.played);
         this.currentTime = audio.currentTime;
         this.positionX += this.autox;
         if (this.timeBarLength < this.positionX + this.autox) {

@@ -54,7 +54,7 @@ export default {};
     display: flex;
     width: 95%;
     height: 60px;
-    margin-top: 5px;
+    margin: 5px auto;
     .menuList {
       flex: 1;
       text-align: center;

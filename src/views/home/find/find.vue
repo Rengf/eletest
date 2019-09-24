@@ -2,7 +2,7 @@
   <div class="homeWrap">
     <Carousel></Carousel>
     <Menu></Menu>
-    <Sheet :sheetList="sheetList"></Sheet>
+    <Sheet></Sheet>
   </div>
 </template>
 <script>
@@ -11,9 +11,7 @@ import Menu from "views/home/find/find/menu";
 import Sheet from "views/home/find/find/sheet";
 export default {
   data() {
-    return {
-      sheetList: {}
-    };
+    return {};
   },
   components: {
     Carousel,

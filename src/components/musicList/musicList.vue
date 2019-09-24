@@ -24,9 +24,9 @@
       </div>
       <div class="musicListMain">
         <ul>
-          <li v-for="(music,index) in musicList" :key="index">
+          <li v-for="(music,index) of sheetMusicLists" :key="index">
             <span class="musicName">{{music.name}}</span>
-            <span class="musicSinger">-{{music.singer}}</span>
+            <span class="musicSinger">-{{music.ar[0].name}}</span>
             <span class="delete" @click="deleteMusic(index)">
               <i class="iconfont">&#xe607;</i>
             </span>
@@ -38,6 +38,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   name: "musicList",
   components: {},
@@ -51,27 +52,6 @@ export default {
         { loopIcon: "&#xe603;", loopString: "单曲循环" },
         { loopIcon: "&#xe501;", loopString: "列表循环" },
         { loopIcon: "&#xe628;", loopString: "随机播放" }
-      ],
-      musicList: [
-        { name: "好多个科室1", singer: "肥牛饭" },
-        { name: "好多个科室2", singer: "肥牛饭" },
-        { name: "好多个科室3", singer: "肥牛饭" },
-        { name: "好多个科室4", singer: "肥牛饭" },
-        { name: "好多个科室5", singer: "肥牛饭" },
-        { name: "好多个科室6", singer: "肥牛饭" },
-        { name: "好多个科室7", singer: "肥牛饭" },
-        { name: "好多个科室8", singer: "肥牛饭" },
-        { name: "好多个科室9", singer: "肥牛饭" },
-        { name: "好多个科室10", singer: "肥牛饭" },
-        { name: "好多个科室11", singer: "肥牛饭" },
-        { name: "好多个科室12", singer: "肥牛饭" },
-        { name: "好多个科室13", singer: "肥牛饭" },
-        { name: "好多个科室14", singer: "肥牛饭" },
-        { name: "好多个科室15", singer: "肥牛饭" },
-        { name: "好多个科室16", singer: "肥牛饭" },
-        { name: "好多个科室17", singer: "肥牛饭" },
-        { name: "好多个科室18", singer: "肥牛饭" },
-        { name: "好多个科室19", singer: "肥牛饭" }
       ]
     };
   },
@@ -81,7 +61,10 @@ export default {
   },
 
   mounted() {
-    //
+    this.$store.dispatch("getSheetMusicList");
+  },
+  computed: {
+    ...mapGetters(["sheetMusicLists"])
   },
   methods: {
     switchLoop() {
@@ -167,7 +150,7 @@ export default {
           height: 36px;
           .musicName {
             margin-left: 10px;
-            font-size: 18px;
+            font-size: 14px;
             color: #333;
           }
           .musicSinger {

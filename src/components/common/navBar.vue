@@ -5,7 +5,7 @@
     </audio>
     <el-row>
       <el-col :span="24">
-        <div class="bg-purple-dark">
+        <div class="bg-purple-dark" @click="toPlay">
           <el-row>
             <el-col :span="3">
               <div class="grid-content musicImg">
@@ -95,6 +95,9 @@ export default {
           this.fg2 = (this.currentTime / this.duration) * 360 - 180;
         }
       }, 1000);
+    },
+    toPlay() {
+      this.$router.push({ path: "/play" });
     }
   }
 };

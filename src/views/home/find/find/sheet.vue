@@ -9,23 +9,20 @@
         <router-link to="/login">{{sheetMore}}</router-link>
       </div>
       <div class="sheetMain">
-        <div class="sheet">
+        <div class="sheet" v-for="(sheet,index) of sheetLists" :key="index">
           <span class="clickTotal">
-            <i class="iconfont">&#xe602;</i>13412万
+            <i class="iconfont">&#xe602;</i>
+            {{sheet.playCount|playCountFilter}}
           </span>
-          <img src="../../../../assets/images/avatar.png" alt="1.png" />
-          <span class="sheetTip">搜房卡送积分卡设计费发送到发送到喀什</span>
+          <img :src="sheet.coverImgUrl" :alt="index+'.png'" />
+          <span class="sheetTip">{{sheet.name}}</span>
         </div>
-        <div class="sheet"></div>
-        <div class="sheet"></div>
-        <div class="sheet"></div>
-        <div class="sheet"></div>
-        <div class="sheet"></div>
       </div>
     </div>
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
 export default {
   props: {
     sheetTitle: {
@@ -39,11 +36,26 @@ export default {
     sheetMore: {
       type: String,
       default: "歌单广场"
-    },
-    sheetList: {
-      type: Object,
-      default: {}
     }
+    // sheetList: {
+    //   type: Object,
+    //   default: {}
+    // }
+  },
+  filters: {
+    playCountFilter(value) {
+      if (value > 100000) {
+        return parseInt(value / 100000) + "万";
+      } else {
+        return value;
+      }
+    }
+  },
+  mounted() {
+    this.$store.dispatch("getSheetList");
+  },
+  computed: {
+    ...mapGetters(["sheetLists"])
   }
 };
 </script>
