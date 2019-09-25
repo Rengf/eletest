@@ -9,7 +9,12 @@
         <router-link to="/login">{{sheetMore}}</router-link>
       </div>
       <div class="sheetMain">
-        <div class="sheet" v-for="(sheet,index) of sheetLists" :key="index">
+        <div
+          class="sheet"
+          v-for="(sheet,index) of sheetLists"
+          :key="index"
+          @click="getSheetMusicList(sheet.id)"
+        >
           <span class="clickTotal">
             <i class="iconfont">&#xe602;</i>
             {{sheet.playCount|playCountFilter}}
@@ -56,6 +61,11 @@ export default {
   },
   computed: {
     ...mapGetters(["sheetLists"])
+  },
+  methods: {
+    getSheetMusicList(id) {
+      this.$store.dispatch("getSheetMusicList", id);
+    }
   }
 };
 </script>

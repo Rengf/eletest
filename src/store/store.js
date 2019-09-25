@@ -5,6 +5,7 @@ import mutations from './mutations'
 import actions from './actions'
 import getters from './getters'
 import Music from './modules/music'
+import play from './modules/play'
 
 Vue.use(Vuex)
 
@@ -14,6 +15,7 @@ export default new Vuex.Store({
     actions,
     getters,
     modules: {
-        Music
+        Music,
+        play
     }
 })

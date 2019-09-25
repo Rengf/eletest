@@ -6,11 +6,17 @@ const USER_API = "/api";
 //歌单列表
 export const reqSheetList = () =>
     ajax(BASE_URL + "/top/playlist", {
-        limit: 10
+        limit: 30
     }, "GET");
 
 //歌曲列表
-export const reqSheetMusicList = () =>
+export const reqSheetMusicList = (id) =>
     ajax(BASE_URL + "/playlist/detail", {
-        id: 2778782119
+        id: id
+    }, "GET");
+
+//播放歌曲
+export const reqPlayMusic = (id) =>
+    ajax(BASE_URL + "/song/url", {
+        id: id
     }, "GET");

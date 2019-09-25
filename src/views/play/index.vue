@@ -1,8 +1,34 @@
 <template>
   <div class="playWrap">
     <div class="playBox">
-      <div class="palyHeader"></div>
-      <div class="playMain"></div>
+      <div class="palyHeader">
+        <ul>
+          <li class="return">
+            <i class="iconfont">&#xe62d;</i>
+          </li>
+          <li class="musicMsg">
+            <span class="musicName">2002年的第一场雪</span>
+            <span class="singer">
+              刀郎
+              <i class="iconfont">&#xe60c;</i>
+            </span>
+          </li>
+          <li class="live">
+            <i class="iconfont">&#xe6b7;</i>
+          </li>
+          <li class="share">
+            <i class="iconfont">&#xe63c;</i>
+          </li>
+        </ul>
+      </div>
+      <div class="playMain">
+        <div class="musicImg" v-if="showImg"></div>
+        <div class="musicLyrc" v-else>
+          <div class="volume"></div>
+          <div class="lyrc"></div>
+          <div clsss="subMenu"></div>
+        </div>
+      </div>
       <div class="playBar">
         <div class="timeAxisBox">
           <span class="currentTime">{{currentTime|filterTime}}</span>
@@ -26,19 +52,19 @@
               <i class="iconfont">&#xe604;</i>
             </li>
             <li>
-              <i class="iconfont" v-html="playIcon" @click="musicPlay"></i>
+              <i class="iconfont" v-html="playIcon" @click="playPause()"></i>
             </li>
             <li>
-              <i class="iconfont">&#xe7a9;</i>
+              <i class="iconfont" @click="next()">&#xe7a9;</i>
             </li>
             <li>
-              <i class="iconfont">&#xe605;</i>
+              <i class="iconfont" @click="showMusicList()">&#xe605;</i>
             </li>
           </ul>
         </div>
       </div>
     </div>
-    <audio ref="audio" @ended="ended()">
+    <audio ref="audio" @ended="ended()" :src="currentSong">
       <source :src="currentSong" type="audio/mpeg" />
     </audio>
   </div>
@@ -57,10 +83,11 @@ export default {
       playIcon: "&#xe75e;",
       loopIndex: 0,
       switchLoopData: ["&#xe603;", "&#xe600;", "&#xe628;"],
-      currentSong: require("../../assets/music/许嵩 - 玫瑰花的葬礼.mp3"),
+      currentSong: "",
       duration: 0, //总时长，按秒为单位
       currentTime: 0, //已播放时长，秒
-      playBackRate: 1 //播放速度
+      playBackRate: 1, //播放速度
+      showImg: false
     };
   },
   created() {
@@ -87,23 +114,43 @@ export default {
       return timeString;
     }
   },
+  computed: {
+    ...mapGetters(["playMusic", "sheetMusicLists", "playIndex"])
+  },
+  watch: {
+    playMusic() {
+      this.musicPlay();
+      this.positionX = 0;
+      this.$refs.timePoint.style.left = this.positionX + "px";
+    }
+  },
   methods: {
-    musicPlay() {
+    playPause() {
       var audio = this.$refs.audio;
-      this.playBackRate = audio.playbackRate = 1;
-      this.duration = audio.duration;
       if (audio.paused || audio.ended) {
+        console.log(audio.paused);
         audio.play();
         this.autoPlay();
+        this.playIcon = "&#xe775;";
       } else {
         clearInterval(this.timer);
         audio.pause();
-      }
-      if (this.playIcon === "&#xe75e;") {
-        this.playIcon = "&#xe775;";
-      } else {
         this.playIcon = "&#xe75e;";
       }
+    },
+    musicPlay() {
+      this.currentSong = this.playMusic.url;
+      if (this.currentSong == undefined) {
+        return;
+      }
+      var audio = this.$refs.audio;
+      this.duration = audio.duration;
+      this.$nextTick(() => {
+        this.playBackRate = audio.playbackRate = 1;
+        audio.play();
+        this.autoPlay();
+        this.playIcon = "&#xe775;";
+      });
     },
     ended() {
       var audio = this.$refs.audio;
@@ -111,12 +158,16 @@ export default {
       this.$refs.timePoint.style.left = this.positionX + "px";
       if (this.loopIndex == 0) {
         this.musicPlay();
+      } else if (this.loopIndex == 1) {
+        this.next();
       }
-      if (this.playIcon === "&#xe75e;") {
-        this.playIcon = "&#xe775;";
-      } else {
-        this.playIcon = "&#xe75e;";
-      }
+    },
+    next() {
+      this.$store.dispatch("playMusicIndex", this.playIndex + 1);
+      this.$store.dispatch(
+        "getPlayMusic",
+        this.sheetMusicLists[this.playIndex + 1].id
+      );
     },
     switchLoop() {
       var audio = this.$refs.audio;
@@ -130,6 +181,7 @@ export default {
       var _this = this;
       this.$timeBar = this.$refs.timeBar;
       this.timeBarLength = this.$timeBar.clientWidth;
+      this.currentSong = this.playMusic.url;
     },
     controlStart(e) {
       this.startX = e.touches[0].pageX;
@@ -168,6 +220,9 @@ export default {
           this.$refs.timePoint.style.left = this.positionX + "px";
         }
       }, 1000);
+    },
+    showMusicList() {
+      this.$emit("showMusicList", true);
     }
   }
 };
@@ -181,6 +236,58 @@ export default {
   width: 100%;
   .playBox {
     width: 100%;
+    .palyHeader {
+      width: 95%;
+      margin: auto;
+      height: 40px;
+      background: #ccc;
+      ul {
+        display: flex;
+        li {
+          height: 40px;
+          border: 1px solid #ccc;
+        }
+        .return {
+          flex: 1;
+          line-height: 40px;
+        }
+        .musicMsg {
+          flex: 5;
+          .musicName {
+            margin: 5px 0;
+            font-size: 16px;
+            display: block;
+            color: #fff;
+          }
+          .singer {
+            font-size: 14px;
+            color: #eee;
+            i {
+              font-size: 16px;
+              color: #eee;
+              line-height: 16px;
+              margin-left: -6px;
+            }
+          }
+        }
+        .live {
+          flex: 1;
+          text-align: center;
+          line-height: 40px;
+        }
+        .share {
+          flex: 1;
+          text-align: center;
+          line-height: 40px;
+        }
+      }
+    }
+    .playMain {
+      width: 95%;
+      margin: auto;
+      height: 550px;
+      background: #bcbcbc;
+    }
     .playBar {
       width: 100%;
       .timeAxisBox {

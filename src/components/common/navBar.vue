@@ -1,8 +1,5 @@
 <template>
   <div class="navBar">
-    <audio ref="audio" @ended="nextsong()">
-      <source :src="currentSong" type="audio/mpeg" />
-    </audio>
     <el-row>
       <el-col :span="24">
         <div class="bg-purple-dark" @click="toPlay">
@@ -46,10 +43,8 @@
 export default {
   data() {
     return {
-      circleUrl:
-        "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
+      circleUrl: "",
       playIcon: "&#xe658;",
-      currentSong: require("../../assets/music/许嵩 - 玫瑰花的葬礼.mp3"),
       fg1: 0,
       fg2: 0,
       currentTime: 0, //当前播放时长
@@ -60,10 +55,23 @@ export default {
   },
   mounted() {},
   methods: {
-    musicPlay() {
+    cancelBubble(e) {
+      var evt = e ? e : window.event;
+      if (evt.stopPropagation) {
+        //W3C
+        evt.stopPropagation();
+      } else {
+        //IE
+        evt.cancelBubble = true;
+      }
+    },
+    musicPlay(e) {
+      this.cancelBubble(e);
       clearInterval(this.timer);
+      this.currentSong = this.$store.getters.playMusic.url;
       var audio = this.$refs.audio;
       audio.playbackRate = 2;
+      console.log(this.currentSong);
       if (audio.paused || audio.ended) {
         audio.play();
         this.getCurrentTime();
@@ -76,7 +84,8 @@ export default {
         this.playIcon = "&#xe658;";
       }
     },
-    showMusicList() {
+    showMusicList(e) {
+      this.cancelBubble(e);
       this.$emit("showMusicList", true);
     },
     nextsong() {

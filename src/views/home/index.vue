@@ -9,6 +9,7 @@
       <MusicList v-if="isShowList" @showMusicList="showMusicList"></MusicList>
     </transition>
     <NavBar @showMusicList="showMusicList"></NavBar>
+    <!-- <MusicPlay @showMusicList="showMusicList"></MusicPlay> -->
   </div>
 </template>
 
@@ -17,13 +18,15 @@ import HeaderBar from "@/components/common/headerBar";
 import NavBar from "@/components/common/navBar"; // 组件
 import MusicList from "@/components/musicList/musicList";
 import SliderBar from "@/components/sliderBar/sliderBar";
+import MusicPlay from "views/play/index";
 export default {
   name: "home",
   components: {
     NavBar,
     MusicList,
     HeaderBar,
-    SliderBar
+    SliderBar,
+    MusicPlay
   },
   data() {
     return {

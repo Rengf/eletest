@@ -6,7 +6,7 @@
           <el-col :span="15">
             <div class="grid-content loopPlay" @click="switchLoop">
               <i class="iconfont" v-html="switchLoopData[loopIndex].loopIcon"></i>
-              <span>{{switchLoopData[loopIndex].loopString}}||（{{musicList.length}}）</span>
+              <span>{{switchLoopData[loopIndex].loopString}}||（{{sheetMusicLists.length}}）</span>
             </div>
           </el-col>
           <el-col :span="7">
@@ -25,8 +25,10 @@
       <div class="musicListMain">
         <ul>
           <li v-for="(music,index) of sheetMusicLists" :key="index">
-            <span class="musicName">{{music.name}}</span>
-            <span class="musicSinger">-{{music.ar[0].name}}</span>
+            <p>
+              <span class="musicName" @click="playMusic(index)">{{music.name}}</span>
+              <span class="musicSinger">-{{music.ar[0].name}}</span>
+            </p>
             <span class="delete" @click="deleteMusic(index)">
               <i class="iconfont">&#xe607;</i>
             </span>
@@ -61,7 +63,7 @@ export default {
   },
 
   mounted() {
-    this.$store.dispatch("getSheetMusicList");
+    // this.$store.dispatch("getSheetMusicList");
   },
   computed: {
     ...mapGetters(["sheetMusicLists"])
@@ -84,6 +86,10 @@ export default {
     collectAll() {},
     showMusicList() {
       this.$emit("showMusicList", false);
+    },
+    playMusic(index) {
+      this.$store.dispatch("playMusicIndex", index);
+      this.$store.dispatch("getPlayMusic", this.sheetMusicLists[index].id);
     }
   }
 };
@@ -98,12 +104,13 @@ export default {
   -moz-osx-font-smoothing: grayscale;
 }
 .musicListWrap {
-  position: absolute;
+  position: fixed;
   background: rgba($color: #888, $alpha: 0.3);
   top: 0px;
   width: 100%;
   height: 100%;
   overflow: hidden;
+  z-index: 99999;
   .musicListBox {
     position: relative;
     width: 100%;
@@ -148,14 +155,21 @@ export default {
           position: relative;
           width: 100%;
           height: 36px;
-          .musicName {
-            margin-left: 10px;
-            font-size: 14px;
-            color: #333;
-          }
-          .musicSinger {
-            font-size: 12px;
-            color: #888;
+          p {
+            display: inline-block;
+            max-width: 90%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            .musicName {
+              margin-left: 10px;
+              font-size: 14px;
+              color: #333;
+            }
+            .musicSinger {
+              font-size: 12px;
+              color: #888;
+            }
           }
           .delete {
             position: absolute;
