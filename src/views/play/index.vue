@@ -23,9 +23,32 @@
       </div>
       <div class="playMain">
         <div class="musicImg" v-if="showImg"></div>
-        <div class="musicLyrc" v-else>
-          <div class="volume"></div>
-          <div class="lyrc"></div>
+        <div class="musicLyric" v-else>
+          <div class="volume">
+            <span class="volumeImg iconfont">&#xec0a;</span>
+            <div class="volumeBar" ref="volumeBar" @click.stop="jumpVolume"></div>
+            <div class="volumedBar" ref="volumedBar">
+              <span
+                ref="volumePoint"
+                class="volumePoint"
+                @touchstart="startVolume"
+                @touchmove="dragVolume"
+              ></span>
+            </div>
+          </div>
+          <div class="lyric">
+            <scroll class="lyricList" ref="lyricList" :data="lyric && lyric.lines">
+              <div class="lyricBox">
+                <p
+                  v-for="(line,index) in lyric.lines"
+                  ref="lyricLine"
+                  class="text"
+                  :class="{'current': currentLineNum === index}"
+                  :key="index"
+                >{{line.txt}}</p>
+              </div>
+            </scroll>
+          </div>
           <div clsss="subMenu"></div>
         </div>
       </div>
@@ -64,16 +87,24 @@
         </div>
       </div>
     </div>
-    <audio ref="audio" @ended="ended()" :src="currentSong">
+    <audio ref="audio" @ended="ended()" :src="currentSong" @canplay="getDuration">
       <source :src="currentSong" type="audio/mpeg" />
     </audio>
+    <transition name="slide-fade">
+      <MusicList v-if="isShowList" @showMusicList="showMusicList"></MusicList>
+    </transition>
   </div>
 </template>
 <script>
+import MusicList from "@/components/musicList/musicList";
+import scroll from "@/components/common/scroll";
 import { mapGetters } from "vuex";
+import axios from "axios";
+import Lyric from "lyric-parser";
 export default {
   data() {
     return {
+      isShowList: false,
       $timeBar: "",
       startX: 0, //点击时间时时间的开始位置
       timeBarLength: 0, //  滑竿多长距离
@@ -87,7 +118,14 @@ export default {
       duration: 0, //总时长，按秒为单位
       currentTime: 0, //已播放时长，秒
       playBackRate: 1, //播放速度
-      showImg: false
+      showImg: false,
+      startVolumeX: 0,
+      volumePositionX: 0,
+      volumeBarLength: 0,
+      lyric: {
+        lines: ""
+      },
+      currentLineNum: 0
     };
   },
   created() {
@@ -96,6 +134,10 @@ export default {
     });
   },
   mounted() {},
+  components: {
+    MusicList,
+    scroll
+  },
   filters: {
     filterTime(value) {
       var timeString = "";
@@ -124,7 +166,44 @@ export default {
       this.$refs.timePoint.style.left = this.positionX + "px";
     }
   },
+  destroyed() {
+    clearTimeout(this.timer);
+  },
   methods: {
+    getLyric() {
+      axios
+        .get("http://localhost:3000/lyric?id=" + this.playMusic.id)
+        .then(res => {
+          if (res.data.code == 200) {
+            this.lyric = new Lyric(res.data.lrc.lyric, this.handleLyric);
+            console.log(this.lyric);
+          }
+        });
+    },
+    handleLyric({ lineNum, txt }) {
+      if (!this.$refs.lyricLine) {
+        return;
+      }
+      this.currentLineNum = lineNum;
+      if (lineNum > 5) {
+        let lineEl = this.$refs.lyricLine[lineNum - 5];
+        this.$refs.lyricList.scrollToElement(lineEl, 1000);
+      } else {
+        this.$refs.lyricList.scrollTo(0, 0, 1000);
+      }
+      this.playingLyric = txt;
+    },
+    getDuration() {
+      var audio = this.$refs.audio;
+      this.duration = audio.duration;
+    },
+    showMusicList(showMusicList) {
+      if (showMusicList == undefined) {
+        this.isShowList = true;
+      } else {
+        this.isShowList = showMusicList;
+      }
+    },
     playPause() {
       var audio = this.$refs.audio;
       if (audio.paused || audio.ended) {
@@ -139,12 +218,12 @@ export default {
       }
     },
     musicPlay() {
+      this.getLyric();
       this.currentSong = this.playMusic.url;
       if (this.currentSong == undefined) {
         return;
       }
       var audio = this.$refs.audio;
-      this.duration = audio.duration;
       this.$nextTick(() => {
         this.playBackRate = audio.playbackRate = 1;
         audio.play();
@@ -178,9 +257,16 @@ export default {
       }
     },
     initDefault() {
+      var audio = this.$refs.audio;
       var _this = this;
       this.$timeBar = this.$refs.timeBar;
+      this.$volumeBar = this.$refs.volumeBar;
       this.timeBarLength = this.$timeBar.clientWidth;
+      this.volumeBarLength = this.$volumeBar.clientWidth;
+      this.volumePositionX = 0.5 * this.volumeBarLength;
+      audio.volume = this.volumePositionX / this.volumeBarLength;
+      this.$refs.volumePoint.style.left = this.volumePositionX + "px";
+      this.$refs.volumedBar.style.width = this.volumePositionX + "px";
       this.currentSong = this.playMusic.url;
     },
     controlStart(e) {
@@ -188,7 +274,7 @@ export default {
     },
     dragTime(e) {
       var slidedis = e.touches[0].pageX;
-      if (this.timeBarLength < this.positionX + this.autox + 5) {
+      if (slidedis - 43 > this.timeBarLength || slidedis - 43 < 0) {
         return;
       }
       this.positionX = slidedis - 43;
@@ -221,8 +307,21 @@ export default {
         }
       }, 1000);
     },
-    showMusicList() {
-      this.$emit("showMusicList", true);
+    jumpVolume(e) {},
+    startVolume(e) {
+      this.startVolumeX = e.touches[0].pageX;
+    },
+    dragVolume(e) {
+      var audio = this.$refs.audio;
+      var slidedis = parseInt(e.touches[0].pageX);
+      if (slidedis - 44 > this.volumeBarLength || slidedis - 44 < 0) {
+        return;
+      } else {
+        this.volumePositionX = slidedis - 44;
+        audio.volume = this.volumePositionX / this.volumeBarLength;
+        this.$refs.volumePoint.style.left = this.volumePositionX + "px";
+        this.$refs.volumedBar.style.width = this.volumePositionX + "px";
+      }
     }
   }
 };
@@ -230,6 +329,39 @@ export default {
 <style lang="scss" scoped>
 .iconfont {
   font-size: 20px;
+  color: #fff;
+}
+.slide-fade-enter-active {
+  transition: all 0.3s linear;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.3s linear;
+}
+
+.slide-fade-enter,
+.slide-fade-leave-to
+/* .slide-fade-leave-active for below version 2.1.8 */
+
+ {
+  transform: translateY(100%);
+  opacity: 1;
+}
+
+.slier-slide-fade-enter-active {
+  transition: all 0.5s linear;
+}
+
+.slier-slide-fade-leave-active {
+  transition: all 0.5s linear;
+}
+
+.slier-slide-fade-enter,
+.slier-slide-fade-leave-to {
+  transform: translateY(100%);
+  opacity: 1;
+}
+.current {
   color: #fff;
 }
 .playWrap {
@@ -284,9 +416,60 @@ export default {
     }
     .playMain {
       width: 95%;
-      margin: auto;
-      height: 550px;
+      margin: 10px auto;
+      height: 530px;
       background: #bcbcbc;
+      .musicLyric {
+        width: 100%;
+        .volume {
+          position: relative;
+          width: 100%;
+          height: 20px;
+          display: flex;
+          .volumeImg {
+            flex: 1;
+          }
+          .volumeBar {
+            flex: 15;
+            margin: 0 30px 0 10px;
+            height: 2px;
+            background: #888;
+            border-radius: 1px;
+            float: right;
+            margin-top: 9px;
+          }
+          .volumedBar {
+            position: absolute;
+            width: 0px;
+            height: 2px;
+            background: #fff;
+            margin: 9px 0px 9px 30px;
+            .volumePoint {
+              position: absolute;
+              width: 10px;
+              height: 10px;
+              border-radius: 50%;
+              background: #fff;
+              top: -4px;
+            }
+          }
+        }
+        .lyric {
+          position: relative;
+          height: 500px;
+          overflow: hidden;
+          .lyricList {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            .lyricBox {
+              position: absolute;
+              width: 100%;
+              text-align: center;
+            }
+          }
+        }
+      }
     }
     .playBar {
       width: 100%;
