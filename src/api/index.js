@@ -21,3 +21,6 @@ export const reqPlayMusic = (id) =>
     ajax(BASE_URL + "/song/url", {
         id: id
     }, "GET");
+
+//获取歌单类别
+export const reqSheetCategoryList = () => ajax(BASE_URL + "/playlist/hot", {}, "GET")

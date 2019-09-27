@@ -37,15 +37,17 @@
             </div>
           </div>
           <div class="lyric">
-            <scroll class="lyricList" ref="lyricList" :data="lyric && lyric.lines">
+            <scroll class="lyricList" ref="lyricList" :data="lyricData">
               <div class="lyricBox">
-                <p
-                  v-for="(line,index) in lyric.lines"
-                  ref="lyricLine"
-                  class="text"
-                  :class="{'current': currentLineNum === index}"
-                  :key="index"
-                >{{line.txt}}</p>
+                <div v-if="lyricData">
+                  <p
+                    v-for="(line,index) in lyricData"
+                    ref="lyricLine"
+                    class="text"
+                    :class="{'current': currentLineNum === index}"
+                    :key="index"
+                  >{{line.txt}}</p>
+                </div>
               </div>
             </scroll>
           </div>
@@ -122,9 +124,7 @@ export default {
       startVolumeX: 0,
       volumePositionX: 0,
       volumeBarLength: 0,
-      lyric: {
-        lines: ""
-      },
+      lyric: null,
       currentLineNum: 0
     };
   },
@@ -157,13 +157,26 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["playMusic", "sheetMusicLists", "playIndex"])
+    ...mapGetters(["playMusic", "sheetMusicLists", "playIndex"]),
+    lyricData() {
+      return this.lyric ? this.lyric.lines : [];
+    }
   },
   watch: {
     playMusic() {
-      this.musicPlay();
+      if (this.lyric) {
+        this.lyric.stop();
+        this.currentLineNum = 0;
+        this.currentTime = 0;
+        this.lyric = null;
+      }
+
       this.positionX = 0;
       this.$refs.timePoint.style.left = this.positionX + "px";
+      this.currentLineNum = 0;
+      this.currentTime = 0;
+      this.lyric = null;
+      this.musicPlay();
     }
   },
   destroyed() {
@@ -175,12 +188,14 @@ export default {
         .get("http://localhost:3000/lyric?id=" + this.playMusic.id)
         .then(res => {
           if (res.data.code == 200) {
-            this.lyric = new Lyric(res.data.lrc.lyric, this.handleLyric);
-            console.log(this.lyric);
+            this.lyric = new Lyric(res.data.lrc.lyric, this.handl);
+            this.lyric.seek(this.currentTime * 1000);
           }
         });
     },
-    handleLyric({ lineNum, txt }) {
+    handl({ lineNum, txt }) {
+      console.log(lineNum, txt);
+      this.lyricBoxDrift();
       if (!this.$refs.lyricLine) {
         return;
       }
@@ -191,7 +206,6 @@ export default {
       } else {
         this.$refs.lyricList.scrollTo(0, 0, 1000);
       }
-      this.playingLyric = txt;
     },
     getDuration() {
       var audio = this.$refs.audio;
@@ -207,7 +221,6 @@ export default {
     playPause() {
       var audio = this.$refs.audio;
       if (audio.paused || audio.ended) {
-        console.log(audio.paused);
         audio.play();
         this.autoPlay();
         this.playIcon = "&#xe775;";
@@ -322,6 +335,10 @@ export default {
         this.$refs.volumePoint.style.left = this.volumePositionX + "px";
         this.$refs.volumedBar.style.width = this.volumePositionX + "px";
       }
+    },
+    lyricBoxDrift() {
+      var fa = this.$refs.lyricList.$el.style;
+      console.log(fa);
     }
   }
 };
@@ -361,9 +378,7 @@ export default {
   transform: translateY(100%);
   opacity: 1;
 }
-.current {
-  color: #fff;
-}
+
 .playWrap {
   width: 100%;
   .playBox {
@@ -466,6 +481,14 @@ export default {
               position: absolute;
               width: 100%;
               text-align: center;
+              .text {
+                line-height: 32px;
+                color: rgba(255, 255, 255, 0.5);
+                font-size: 16px;
+              }
+              .current {
+                color: #ff6c32;
+              }
             }
           }
         }

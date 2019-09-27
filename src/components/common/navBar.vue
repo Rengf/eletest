@@ -6,7 +6,7 @@
           <el-row>
             <el-col :span="3">
               <div class="grid-content musicImg">
-                <el-avatar :src="circleUrl"></el-avatar>
+                <el-avatar src="../../assets/images/avatar.png"></el-avatar>
               </div>
             </el-col>
             <el-col :span="15">
@@ -43,7 +43,7 @@
 export default {
   data() {
     return {
-      circleUrl: "",
+      circleUrl: require("../../assets/images/avatar.png"),
       playIcon: "&#xe658;",
       fg1: 0,
       fg2: 0,

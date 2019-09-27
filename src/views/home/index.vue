@@ -4,6 +4,7 @@
       <SliderBar v-if="isShowSlider" @showSliderBar="showSliderBar"></SliderBar>
     </transition>
     <HeaderBar @showSliderBar="showSliderBar"></HeaderBar>
+    <button @click="getcategory()">获取歌单类别</button>
     <router-view></router-view>
     <transition name="slide-fade">
       <MusicList v-if="isShowList" @showMusicList="showMusicList"></MusicList>
@@ -19,6 +20,7 @@ import NavBar from "@/components/common/navBar"; // 组件
 import MusicList from "@/components/musicList/musicList";
 import SliderBar from "@/components/sliderBar/sliderBar";
 import MusicPlay from "views/play/index";
+import { mapGetters } from "";
 export default {
   name: "home",
   components: {
@@ -40,7 +42,10 @@ export default {
   },
 
   mounted() {
-    //
+    this.$store.dispatch("reqSheetCategoryList");
+  },
+  computed: {
+    ...mapGetters(["sheetCategoryList"])
   },
   methods: {
     showMusicList(showMusicList) {
@@ -49,6 +54,9 @@ export default {
     showSliderBar(showSliderBar) {
       console.log();
       this.isShowSlider = showSliderBar;
+    },
+    getcategory() {
+      console.log(this.sheetCategoryList);
     }
   }
 };

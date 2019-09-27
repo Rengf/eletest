@@ -2,9 +2,9 @@ import {
     RECEIVE_PLAY_INDEX
 } from '../mutations-types'
 
-import {
+// import {
 
-} from './../../api/index'
+// } from './../../api/index'
 
 const state = {
     playIndex: 0,

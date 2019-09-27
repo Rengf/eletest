@@ -1,19 +1,22 @@
 import {
     RECEIVE_SHEET_LIST,
     RECEIVE_SHEETMUSIC_LIST,
-    RECEIVE_PLAY_MUSIC
+    RECEIVE_PLAY_MUSIC,
+    RECEIVE_SHEETCATEGORY_LIST
 } from '../mutations-types'
 
 import {
     reqSheetList,
     reqSheetMusicList,
-    reqPlayMusic
+    reqPlayMusic,
+    reqSheetCategoryList
 } from './../../api/index'
 
 const state = {
     sheetLists: [],
     sheetMusicLists: [],
-    playMusic: {}
+    playMusic: {},
+    sheetCategoryLists: []
 }
 
 const getters = {
@@ -25,7 +28,10 @@ const getters = {
     },
     playMusic(state) {
         return state.playMusic
-    }
+    },
+    sheetCategoryLists(state) {
+        return state.sheetCategoryLists
+    },
 }
 
 
@@ -57,6 +63,15 @@ const actions = {
             const playMusic = result.data[0];
             commit(RECEIVE_PLAY_MUSIC, playMusic)
         }
+    },
+    async getSheetCategoryList({
+        commit
+    }) {
+        const result = await reqSheetCategoryList();
+        if (result.code == 200) {
+            const sheetCategoryLists = result;
+            commit(RECEIVE_SHEETCATEGORY_LIST, sheetCategoryLists)
+        }
     }
 }
 
@@ -69,7 +84,10 @@ const mutations = {
         state.sheetMusicLists = sheetMusicLists;
     },
     [RECEIVE_PLAY_MUSIC](state, playMusic) {
-        state.playMusic = playMusic
+        state.playMusic = playMusic;
+    },
+    [RECEIVE_SHEETCATEGORY_LIST](state, sheetCategoryLists) {
+        state.sheetCategoryLists = sheetCategoryLists;
     }
 }
 export default {

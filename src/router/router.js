@@ -21,18 +21,18 @@ export default new Router({
                 }
             }]
         },
-        {
-            path: '/play',
-            name: 'play',
-            // route level code-splitting
-            // this generates a separate chunk (about.[hash].js) for this route
-            // which is lazy-loaded when the route is visited.
-            component: () =>
-                import ('../views/play/index.vue'),
-            meta: {
-                title: '播放页面'
-            }
-        },
+        // {
+        //     path: '/play',
+        //     name: 'play',
+        //     // route level code-splitting
+        //     // this generates a separate chunk (about.[hash].js) for this route
+        //     // which is lazy-loaded when the route is visited.
+        //     component: () =>
+        //         import ('../views/play/index.vue'),
+        //     meta: {
+        //         title: '播放页面'
+        //     }
+        // },
         //{
         //     path: '/regist',
         //     name: 'regist',
