@@ -20,7 +20,7 @@ import NavBar from "@/components/common/navBar"; // 组件
 import MusicList from "@/components/musicList/musicList";
 import SliderBar from "@/components/sliderBar/sliderBar";
 import MusicPlay from "views/play/index";
-import { mapGetters } from "";
+import { mapGetters } from "vuex";
 export default {
   name: "home",
   components: {
@@ -41,11 +41,9 @@ export default {
     //
   },
 
-  mounted() {
-    this.$store.dispatch("reqSheetCategoryList");
-  },
+  mounted() {},
   computed: {
-    ...mapGetters(["sheetCategoryList"])
+    ...mapGetters(["sheetCategoryLists"])
   },
   methods: {
     showMusicList(showMusicList) {
@@ -56,7 +54,8 @@ export default {
       this.isShowSlider = showSliderBar;
     },
     getcategory() {
-      console.log(this.sheetCategoryList);
+      this.$store.dispatch("getSheetCategoryList");
+      console.log(this.sheetCategoryLists);
     }
   }
 };

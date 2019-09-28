@@ -188,13 +188,16 @@ export default {
         .get("http://localhost:3000/lyric?id=" + this.playMusic.id)
         .then(res => {
           if (res.data.code == 200) {
-            this.lyric = new Lyric(res.data.lrc.lyric, this.handl);
-            this.lyric.seek(this.currentTime * 1000);
+            if (res.data.lrc !== undefined) {
+              this.lyric = new Lyric(res.data.lrc.lyric, this.handl);
+              this.lyric.seek(this.currentTime * 1000);
+            } else {
+              this.lyric = null;
+            }
           }
         });
     },
     handl({ lineNum, txt }) {
-      console.log(lineNum, txt);
       this.lyricBoxDrift();
       if (!this.$refs.lyricLine) {
         return;
@@ -336,10 +339,7 @@ export default {
         this.$refs.volumedBar.style.width = this.volumePositionX + "px";
       }
     },
-    lyricBoxDrift() {
-      var fa = this.$refs.lyricList.$el.style;
-      console.log(fa);
-    }
+    lyricBoxDrift() {}
   }
 };
 </script>

@@ -69,7 +69,8 @@ const actions = {
     }) {
         const result = await reqSheetCategoryList();
         if (result.code == 200) {
-            const sheetCategoryLists = result;
+            const sheetCategoryLists = result.tags;
+            console.log(result.sub)
             commit(RECEIVE_SHEETCATEGORY_LIST, sheetCategoryLists)
         }
     }
