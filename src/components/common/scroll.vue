@@ -107,6 +107,7 @@ export default {
   watch: {
     // 这个可以设置data来刷新scroll组件
     data() {
+      console.log(scrollX);
       setTimeout(() => {
         this.refresh();
       }, this.refreshDelay);

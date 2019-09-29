@@ -88,8 +88,13 @@ export default {
       this.$emit("showMusicList", false);
     },
     playMusic(index) {
+      var playMusic = [
+        this.sheetMusicLists[index].id,
+        this.sheetMusicLists[index].name,
+        this.sheetMusicLists[index].ar[0].name
+      ];
       this.$store.dispatch("playMusicIndex", index);
-      this.$store.dispatch("getPlayMusic", this.sheetMusicLists[index].id);
+      this.$store.dispatch("getPlayMusic", playMusic);
     }
   }
 };

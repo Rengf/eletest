@@ -42,7 +42,6 @@ const actions = {
         const result = await reqSheetList(data)
         if (result.code == 200) {
             const sheetLists = result.playlists;
-            console.log(sheetLists)
             commit(RECEIVE_SHEET_LIST, sheetLists)
         }
     },
@@ -57,10 +56,12 @@ const actions = {
     },
     async getPlayMusic({
         commit
-    }, id) {
-        const result = await reqPlayMusic(id);
+    }, plyaingMusic) {
+        const result = await reqPlayMusic(plyaingMusic[0]);
         if (result.code == 200) {
             const playMusic = result.data[0];
+            playMusic.name = plyaingMusic[1];
+            playMusic.singer = plyaingMusic[2];
             commit(RECEIVE_PLAY_MUSIC, playMusic)
         }
     },
@@ -68,9 +69,9 @@ const actions = {
         commit
     }) {
         const result = await reqSheetCategoryList();
+        console.log(result)
         if (result.code == 200) {
-            const sheetCategoryLists = result.tags;
-            console.log(result.sub)
+            const sheetCategoryLists = result.sub;
             commit(RECEIVE_SHEETCATEGORY_LIST, sheetCategoryLists)
         }
     }

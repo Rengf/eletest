@@ -7,9 +7,9 @@
             <i class="iconfont">&#xe62d;</i>
           </li>
           <li class="musicMsg">
-            <span class="musicName">2002年的第一场雪</span>
+            <span ref="musicName" :class="isStop?'stop':'musicName'">{{playMusic.name}}</span>
             <span class="singer">
-              刀郎
+              {{playMusic.singer}}
               <i class="iconfont">&#xe60c;</i>
             </span>
           </li>
@@ -125,7 +125,8 @@ export default {
       volumePositionX: 0,
       volumeBarLength: 0,
       lyric: null,
-      currentLineNum: 0
+      currentLineNum: 0,
+      isStop: false
     };
   },
   created() {
@@ -198,7 +199,6 @@ export default {
         });
     },
     handl({ lineNum, txt }) {
-      this.lyricBoxDrift();
       if (!this.$refs.lyricLine) {
         return;
       }
@@ -213,6 +213,12 @@ export default {
     getDuration() {
       var audio = this.$refs.audio;
       this.duration = audio.duration;
+      this.autox = (this.timeBarLength / this.duration) * this.playBackRate;
+      if (this.$refs.musicName.clientWidth > 208) {
+        this.isStop = false;
+      } else {
+        this.isStop = true;
+      }
     },
     showMusicList(showMusicList) {
       if (showMusicList == undefined) {
@@ -251,18 +257,24 @@ export default {
       var audio = this.$refs.audio;
       this.positionX = 0;
       this.$refs.timePoint.style.left = this.positionX + "px";
+      this.next();
+    },
+    next() {
+      var index = 0;
       if (this.loopIndex == 0) {
         this.musicPlay();
       } else if (this.loopIndex == 1) {
-        this.next();
+        index = this.playIndex + 1;
+      } else {
+        index = parseInt(Math.random() * this.sheetMusicLists.length);
       }
-    },
-    next() {
-      this.$store.dispatch("playMusicIndex", this.playIndex + 1);
-      this.$store.dispatch(
-        "getPlayMusic",
-        this.sheetMusicLists[this.playIndex + 1].id
-      );
+      var playMusic = [
+        this.sheetMusicLists[index].id,
+        this.sheetMusicLists[index].name,
+        this.sheetMusicLists[index].ar[0].name
+      ];
+      this.$store.dispatch("playMusicIndex", index);
+      this.$store.dispatch("getPlayMusic", playMusic);
     },
     switchLoop() {
       var audio = this.$refs.audio;
@@ -301,6 +313,7 @@ export default {
       this.positionX = e.offsetX;
       this.$refs.timePoint.style.left = this.positionX + "px";
       audio.currentTime = (this.positionX / this.timeBarLength) * this.duration;
+      this.lyric.seek(audio.currentTime * 1000);
       if (this.timeBarLength < this.positionX + 5) {
         clearInterval(this.timer);
         this.$refs.timePoint.style.left = this.timeBarLength - 5 + "px";
@@ -311,7 +324,6 @@ export default {
     autoPlay() {
       var audio = this.$refs.audio;
       clearInterval(this.timer);
-      this.autox = (this.timeBarLength / this.duration) * this.playBackRate;
       this.timer = setInterval(() => {
         this.currentTime = audio.currentTime;
         this.positionX += this.autox;
@@ -378,7 +390,6 @@ export default {
   transform: translateY(100%);
   opacity: 1;
 }
-
 .playWrap {
   width: 100%;
   .playBox {
@@ -386,29 +397,42 @@ export default {
     .palyHeader {
       width: 95%;
       margin: auto;
-      height: 40px;
+      height: 45px;
       background: #ccc;
       ul {
         display: flex;
         li {
-          height: 40px;
+          height: 45px;
           border: 1px solid #ccc;
         }
         .return {
           flex: 1;
-          line-height: 40px;
+          line-height: 45px;
         }
         .musicMsg {
           flex: 5;
-          .musicName {
+          overflow: hidden;
+          .stop {
+            width: auto;
             margin: 5px 0;
             font-size: 16px;
-            display: block;
+            display: inline-block;
             color: #fff;
+            white-space: nowrap;
+          }
+          .musicName {
+            width: auto;
+            margin: 5px 0;
+            font-size: 16px;
+            display: inline-block;
+            color: #fff;
+            white-space: nowrap;
+            animation: 10s wordsLoop linear infinite normal;
           }
           .singer {
             font-size: 14px;
             color: #eee;
+            display: block;
             i {
               font-size: 16px;
               color: #eee;
@@ -547,6 +571,17 @@ export default {
         }
       }
     }
+  }
+}
+
+@keyframes wordsLoop {
+  0% {
+    transform: translateX(300px);
+    -webkit-transform: translateX(300px);
+  }
+  100% {
+    transform: translateX(-100%);
+    -webkit-transform: translateX(-100%);
   }
 }
 </style>
