@@ -5,9 +5,9 @@ const USER_API = "/api";
 
 //歌单列表
 export const reqSheetList = () =>
-    ajax(BASE_URL + "/playlist/hot", {
+    ajax(BASE_URL + "/top/playlist", {
         limit: 30,
-        order: 'hot',
+        order: 'new',
         cat: '经典'
     }, "GET");
 

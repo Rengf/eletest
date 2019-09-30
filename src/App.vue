@@ -1,13 +1,17 @@
 <template>
   <div id="app">
     <router-view></router-view>
+    <AudioPlay></AudioPlay>
   </div>
 </template>
 
 <script>
+import AudioPlay from "@/components/audio/audioPlay";
 export default {
   name: "app",
-  components: {}
+  components: {
+    AudioPlay
+  }
 };
 </script>
 

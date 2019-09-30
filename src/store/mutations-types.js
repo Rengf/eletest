@@ -7,3 +7,5 @@ export const RECEIVE_PLAY_MUSIC = 'receive_play_music' //接收播放音乐
 export const RECEIVE_SHEETCATEGORY_LIST = 'receive_sheetcategory_list' //歌单类别列表
 
 export const RECEIVE_PLAY_INDEX = 'receive_play_index' //播放的第几首
+
+export const RECEIVE_PLAYING = 'receive_playing' //是否播放
