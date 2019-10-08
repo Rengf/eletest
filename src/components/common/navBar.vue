@@ -6,13 +6,13 @@
           <el-row>
             <el-col :span="3">
               <div class="grid-content musicImg">
-                <el-avatar src="../../assets/images/avatar.png"></el-avatar>
+                <img :src="playMusic.image||circleUrl" />
               </div>
             </el-col>
             <el-col :span="15">
               <div class="grid-content musicMessage">
-                <div class="musicName">江南</div>
-                <div class="musicSinger">林俊杰</div>
+                <div class="musicName">{{playMusic.name}}</div>
+                <div class="musicSinger">{{playMusic.singer}}</div>
               </div>
             </el-col>
             <el-col :span="3">
@@ -40,6 +40,7 @@
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {
@@ -53,36 +54,57 @@ export default {
       isActive: false
     };
   },
-  mounted() {},
+  mounted() {
+    this.getPlaying();
+  },
+  computed: {
+    ...mapGetters(["playing", "playMusic"])
+  },
+  watch: {
+    playing() {
+      this.getPlaying();
+    }
+  },
+
   methods: {
+    getPlaying() {
+      if (this.playing == true) {
+        this.playIcon = "&#xe775;";
+      } else {
+        this.playIcon = "&#xe658;";
+      }
+    },
     cancelBubble(e) {
       var evt = e ? e : window.event;
       if (evt.stopPropagation) {
-        //W3C
         evt.stopPropagation();
       } else {
-        //IE
         evt.cancelBubble = true;
       }
     },
     musicPlay(e) {
       this.cancelBubble(e);
-      clearInterval(this.timer);
-      this.currentSong = this.$store.getters.playMusic.url;
-      var audio = this.$refs.audio;
-      audio.playbackRate = 2;
-      console.log(this.currentSong);
-      if (audio.paused || audio.ended) {
-        audio.play();
-        this.getCurrentTime();
+      if (this.playing == true) {
+        this.$store.dispatch("isPlaying", false);
       } else {
-        audio.pause();
+        this.$store.dispatch("isPlaying", true);
       }
-      if (this.playIcon === "&#xe658;") {
-        this.playIcon = "&#xe775;";
-      } else {
-        this.playIcon = "&#xe658;";
-      }
+      // clearInterval(this.timer);
+      // this.currentSong = this.$store.getters.playMusic.url;
+      // var audio = this.$refs.audio;
+      // audio.playbackRate = 2;
+      // console.log(this.currentSong);
+      // if (audio.paused || audio.ended) {
+      //   audio.play();
+      //   this.getCurrentTime();
+      // } else {
+      //   audio.pause();
+      // }
+      // if (this.playIcon === "&#xe658;") {
+      //   this.playIcon = "&#xe775;";
+      // } else {
+      //   this.playIcon = "&#xe658;";
+      // }
     },
     showMusicList(e) {
       this.cancelBubble(e);
@@ -130,7 +152,7 @@ export default {
     background: #fff;
     min-height: 36px;
     .musicImg {
-      span {
+      img {
         width: 36px;
         height: 36px;
         display: block;

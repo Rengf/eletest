@@ -49,10 +49,9 @@ export default {
   data() {
     return {
       componentName: "musicList",
-      loopIndex: 0,
       switchLoopData: [
         { loopIcon: "&#xe603;", loopString: "单曲循环" },
-        { loopIcon: "&#xe501;", loopString: "列表循环" },
+        { loopIcon: "&#xe600;", loopString: "列表循环" },
         { loopIcon: "&#xe628;", loopString: "随机播放" }
       ]
     };
@@ -66,14 +65,14 @@ export default {
     // this.$store.dispatch("getSheetMusicList");
   },
   computed: {
-    ...mapGetters(["sheetMusicLists"])
+    ...mapGetters(["sheetMusicLists", "loopIndex"])
   },
   methods: {
     switchLoop() {
       if (this.loopIndex < 2) {
-        this.loopIndex++;
+        this.$store.dispatch("setSwitchLoop", this.loopIndex + 1);
       } else {
-        this.loopIndex = 0;
+        this.$store.dispatch("setSwitchLoop", 0);
       }
     },
     deleteMusic(id) {
@@ -91,10 +90,12 @@ export default {
       var playMusic = [
         this.sheetMusicLists[index].id,
         this.sheetMusicLists[index].name,
-        this.sheetMusicLists[index].ar[0].name
+        this.sheetMusicLists[index].ar[0].name,
+        this.sheetMusicLists[index].al.picUrl
       ];
       this.$store.dispatch("playMusicIndex", index);
       this.$store.dispatch("getPlayMusic", playMusic);
+      this.$store.dispatch("isPlaying", true);
     }
   }
 };

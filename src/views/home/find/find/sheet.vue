@@ -1,5 +1,5 @@
 <template>
-  <div class="sheetWrap">
+  <div class="sheetWrap" v-cloak>
     <div class="sheetBox">
       <div class="sheetHeader">
         <span>
@@ -12,7 +12,7 @@
         <div
           class="sheet"
           v-for="(sheet,index) of sheetLists"
-          :key="index"
+          :key="sheet.id"
           @click="getSheetMusicList(sheet.id)"
         >
           <span class="clickTotal">
@@ -56,7 +56,7 @@ export default {
       }
     }
   },
-  mounted() {
+  created() {
     this.$store.dispatch("getSheetList");
   },
   computed: {
@@ -70,6 +70,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+[v-cloak] {
+  display: none;
+}
 .iconfont {
   font-family: "iconfont" !important;
   font-size: 15px;

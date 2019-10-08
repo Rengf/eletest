@@ -4,7 +4,6 @@
       <SliderBar v-if="isShowSlider" @showSliderBar="showSliderBar"></SliderBar>
     </transition>
     <HeaderBar @showSliderBar="showSliderBar"></HeaderBar>
-    <button @click="getcategory()">获取歌单类别</button>
     <router-view></router-view>
     <transition name="slide-fade">
       <MusicList v-if="isShowList" @showMusicList="showMusicList"></MusicList>

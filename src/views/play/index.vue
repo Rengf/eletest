@@ -56,7 +56,7 @@
       </div>
       <div class="playBar">
         <div class="timeAxisBox">
-          <span class="currentTime">{{currentTime|filterTime}}</span>
+          <span class="currentTime">{{musicMsg.currentTime|filterTime}}</span>
           <div class="timeAxis">
             <div class="timeBar" ref="timeBar" @click.stop="jumpTime"></div>
             <span
@@ -66,7 +66,7 @@
               @touchmove="dragTime"
             ></span>
           </div>
-          <span class="duration">{{duration|filterTime}}</span>
+          <span class="duration">{{musicMsg.duration|filterTime}}</span>
         </div>
         <div class="playControl">
           <ul>
@@ -89,9 +89,6 @@
         </div>
       </div>
     </div>
-    <audio ref="audio" @ended="ended()" :src="currentSong" @canplay="getDuration">
-      <source :src="currentSong" type="audio/mpeg" />
-    </audio>
     <transition name="slide-fade">
       <MusicList v-if="isShowList" @showMusicList="showMusicList"></MusicList>
     </transition>
@@ -114,7 +111,6 @@ export default {
       timer: "", //定时器
       autox: 0, //每秒移动距离
       playIcon: "&#xe75e;",
-      loopIndex: 0,
       switchLoopData: ["&#xe603;", "&#xe600;", "&#xe628;"],
       currentSong: "",
       duration: 0, //总时长，按秒为单位
@@ -134,7 +130,9 @@ export default {
       this.initDefault();
     });
   },
-  mounted() {},
+  mounted() {
+    this.getPlaying();
+  },
   components: {
     MusicList,
     scroll
@@ -158,7 +156,14 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["playMusic", "sheetMusicLists", "playIndex"]),
+    ...mapGetters([
+      "playMusic",
+      "sheetMusicLists",
+      "playIndex",
+      "loopIndex",
+      "musicMsg",
+      "playing"
+    ]),
     lyricData() {
       return this.lyric ? this.lyric.lines : [];
     }
@@ -178,12 +183,22 @@ export default {
       this.currentTime = 0;
       this.lyric = null;
       this.musicPlay();
+    },
+    playing() {
+      this.getPlaying();
     }
   },
   destroyed() {
     clearTimeout(this.timer);
   },
   methods: {
+    getPlaying() {
+      if (this.playing == true) {
+        this.playIcon = "&#xe775;";
+      } else {
+        this.playIcon = "&#xe658;";
+      }
+    },
     getLyric() {
       axios
         .get("http://localhost:3000/lyric?id=" + this.playMusic.id)
@@ -210,16 +225,6 @@ export default {
         this.$refs.lyricList.scrollTo(0, 0, 1000);
       }
     },
-    getDuration() {
-      var audio = this.$refs.audio;
-      this.duration = audio.duration;
-      this.autox = (this.timeBarLength / this.duration) * this.playBackRate;
-      if (this.$refs.musicName.clientWidth > 208) {
-        this.isStop = false;
-      } else {
-        this.isStop = true;
-      }
-    },
     showMusicList(showMusicList) {
       if (showMusicList == undefined) {
         this.isShowList = true;
@@ -228,15 +233,10 @@ export default {
       }
     },
     playPause() {
-      var audio = this.$refs.audio;
-      if (audio.paused || audio.ended) {
-        audio.play();
-        this.autoPlay();
-        this.playIcon = "&#xe775;";
+      if (this.playing == true) {
+        this.$store.dispatch("isPlaying", false);
       } else {
-        clearInterval(this.timer);
-        audio.pause();
-        this.playIcon = "&#xe75e;";
+        this.$store.dispatch("isPlaying", true);
       }
     },
     musicPlay() {
@@ -245,24 +245,17 @@ export default {
       if (this.currentSong == undefined) {
         return;
       }
-      var audio = this.$refs.audio;
+
       this.$nextTick(() => {
-        this.playBackRate = audio.playbackRate = 1;
         audio.play();
         this.autoPlay();
         this.playIcon = "&#xe775;";
       });
     },
-    ended() {
-      var audio = this.$refs.audio;
-      this.positionX = 0;
-      this.$refs.timePoint.style.left = this.positionX + "px";
-      this.next();
-    },
     next() {
       var index = 0;
       if (this.loopIndex == 0) {
-        this.musicPlay();
+        index = this.playIndex;
       } else if (this.loopIndex == 1) {
         index = this.playIndex + 1;
       } else {
@@ -277,22 +270,20 @@ export default {
       this.$store.dispatch("getPlayMusic", playMusic);
     },
     switchLoop() {
-      var audio = this.$refs.audio;
       if (this.loopIndex < 2) {
-        this.loopIndex++;
+        this.$store.dispatch("setSwitchLoop", this.loopIndex + 1);
       } else {
-        this.loopIndex = 0;
+        this.$store.dispatch("setSwitchLoop", 0);
       }
     },
     initDefault() {
-      var audio = this.$refs.audio;
       var _this = this;
       this.$timeBar = this.$refs.timeBar;
       this.$volumeBar = this.$refs.volumeBar;
       this.timeBarLength = this.$timeBar.clientWidth;
       this.volumeBarLength = this.$volumeBar.clientWidth;
       this.volumePositionX = 0.5 * this.volumeBarLength;
-      audio.volume = this.volumePositionX / this.volumeBarLength;
+      this.volumePositionX = this.volumeBarLength * this.musicMsg.volume;
       this.$refs.volumePoint.style.left = this.volumePositionX + "px";
       this.$refs.volumedBar.style.width = this.volumePositionX + "px";
       this.currentSong = this.playMusic.url;
@@ -312,7 +303,8 @@ export default {
       var audio = this.$refs.audio;
       this.positionX = e.offsetX;
       this.$refs.timePoint.style.left = this.positionX + "px";
-      audio.currentTime = (this.positionX / this.timeBarLength) * this.duration;
+      audio.currentTime =
+        (this.positionX / this.timeBarLength) * this.musicMsg.duration;
       this.lyric.seek(audio.currentTime * 1000);
       if (this.timeBarLength < this.positionX + 5) {
         clearInterval(this.timer);
@@ -322,10 +314,8 @@ export default {
       }
     },
     autoPlay() {
-      var audio = this.$refs.audio;
       clearInterval(this.timer);
       this.timer = setInterval(() => {
-        this.currentTime = audio.currentTime;
         this.positionX += this.autox;
         if (this.timeBarLength < this.positionX + this.autox) {
           this.$refs.timePoint.style.left = this.timeBarLength - 5 + "px";
@@ -340,15 +330,15 @@ export default {
       this.startVolumeX = e.touches[0].pageX;
     },
     dragVolume(e) {
-      var audio = this.$refs.audio;
       var slidedis = parseInt(e.touches[0].pageX);
       if (slidedis - 44 > this.volumeBarLength || slidedis - 44 < 0) {
         return;
       } else {
         this.volumePositionX = slidedis - 44;
-        audio.volume = this.volumePositionX / this.volumeBarLength;
+        var volume = this.volumePositionX / this.volumeBarLength;
         this.$refs.volumePoint.style.left = this.volumePositionX + "px";
         this.$refs.volumedBar.style.width = this.volumePositionX + "px";
+        this.$store.dispatch("setMusic", ["volume", volume]);
       }
     },
     lyricBoxDrift() {}
