@@ -74,7 +74,7 @@
               <i class="iconfont" v-html="switchLoopData[loopIndex]" @click="switchLoop">&#xe628;</i>
             </li>
             <li>
-              <i class="iconfont">&#xe604;</i>
+              <i class="iconfont" @click="prev()">&#xe604;</i>
             </li>
             <li>
               <i class="iconfont" v-html="playIcon" @click="playPause()"></i>
@@ -131,7 +131,10 @@ export default {
     });
   },
   mounted() {
+    this.initDefault();
     this.getPlaying();
+    this.autoPlay();
+    this.getLyric();
   },
   components: {
     MusicList,
@@ -139,6 +142,9 @@ export default {
   },
   filters: {
     filterTime(value) {
+      if (!value) {
+        return "00:00";
+      }
       var timeString = "";
       var min = parseInt(value / 60);
       var seconds = parseInt(value % 60);
@@ -158,11 +164,12 @@ export default {
   computed: {
     ...mapGetters([
       "playMusic",
-      "sheetMusicLists",
+      "playLists",
       "playIndex",
       "loopIndex",
       "musicMsg",
-      "playing"
+      "playing",
+      "playedLists"
     ]),
     lyricData() {
       return this.lyric ? this.lyric.lines : [];
@@ -173,15 +180,15 @@ export default {
       if (this.lyric) {
         this.lyric.stop();
         this.currentLineNum = 0;
-        this.currentTime = 0;
         this.lyric = null;
       }
-
-      this.positionX = 0;
-      this.$refs.timePoint.style.left = this.positionX + "px";
       this.currentLineNum = 0;
-      this.currentTime = 0;
       this.lyric = null;
+      if (this.$refs.musicName.clientWidth < 205) {
+        this.isStop = true;
+      } else {
+        this.isStop = false;
+      }
       this.musicPlay();
     },
     playing() {
@@ -206,7 +213,7 @@ export default {
           if (res.data.code == 200) {
             if (res.data.lrc !== undefined) {
               this.lyric = new Lyric(res.data.lrc.lyric, this.handl);
-              this.lyric.seek(this.currentTime * 1000);
+              this.lyric.seek(this.musicMsg.currentTime * 1000);
             } else {
               this.lyric = null;
             }
@@ -247,7 +254,6 @@ export default {
       }
 
       this.$nextTick(() => {
-        audio.play();
         this.autoPlay();
         this.playIcon = "&#xe775;";
       });
@@ -259,14 +265,31 @@ export default {
       } else if (this.loopIndex == 1) {
         index = this.playIndex + 1;
       } else {
-        index = parseInt(Math.random() * this.sheetMusicLists.length);
+        index = parseInt(Math.random() * this.playLists.length);
       }
       var playMusic = [
-        this.sheetMusicLists[index].id,
-        this.sheetMusicLists[index].name,
-        this.sheetMusicLists[index].ar[0].name
+        this.playLists[index].id,
+        this.playLists[index].name,
+        this.playLists[index].ar[0].name
       ];
       this.$store.dispatch("playMusicIndex", index);
+      this.$store.dispatch("getPlayMusic", playMusic);
+    },
+    prev() {
+      this.$store.dispatch("setPrevMusic");
+      if (this.playedLists.length == 0) {
+        return;
+      }
+      console.log(this.playedLists);
+      var index = this.playedLists[this.playedLists.length - 1];
+      console.log(index);
+      var playMusic = [
+        this.playLists[index].id,
+        this.playLists[index].name,
+        this.playLists[index].ar[0].name
+      ];
+      this.$store.dispatch("playMusicIndex", index);
+      this.$store.dispatch("setPrevMusic");
       this.$store.dispatch("getPlayMusic", playMusic);
     },
     switchLoop() {
@@ -287,6 +310,12 @@ export default {
       this.$refs.volumePoint.style.left = this.volumePositionX + "px";
       this.$refs.volumedBar.style.width = this.volumePositionX + "px";
       this.currentSong = this.playMusic.url;
+      this.autox = this.timeBarLength / this.musicMsg.duration;
+      if (this.$refs.musicName.clientWidth < 205) {
+        this.isStop = true;
+      } else {
+        this.isStop = false;
+      }
     },
     controlStart(e) {
       this.startX = e.touches[0].pageX;
@@ -296,16 +325,19 @@ export default {
       if (slidedis - 43 > this.timeBarLength || slidedis - 43 < 0) {
         return;
       }
+      var newTime =
+        (this.positionX / this.timeBarLength) * this.musicMsg.duration;
+      this.$store.dispatch("setCurrentTime", newTime);
       this.positionX = slidedis - 43;
       this.$refs.timePoint.style.left = this.positionX + "px";
     },
     jumpTime(e) {
-      var audio = this.$refs.audio;
       this.positionX = e.offsetX;
       this.$refs.timePoint.style.left = this.positionX + "px";
-      audio.currentTime =
+      var newTime =
         (this.positionX / this.timeBarLength) * this.musicMsg.duration;
-      this.lyric.seek(audio.currentTime * 1000);
+      this.$store.dispatch("setCurrentTime", newTime);
+      this.lyric.seek(this.musicMsg.currentTime * 1000);
       if (this.timeBarLength < this.positionX + 5) {
         clearInterval(this.timer);
         this.$refs.timePoint.style.left = this.timeBarLength - 5 + "px";
@@ -314,14 +346,16 @@ export default {
       }
     },
     autoPlay() {
+      this.$refs.timePoint.style.left =
+        this.musicMsg.currentTime * this.autox + "px";
       clearInterval(this.timer);
       this.timer = setInterval(() => {
-        this.positionX += this.autox;
         if (this.timeBarLength < this.positionX + this.autox) {
           this.$refs.timePoint.style.left = this.timeBarLength - 5 + "px";
           clearInterval(this.timer);
         } else {
-          this.$refs.timePoint.style.left = this.positionX + "px";
+          this.$refs.timePoint.style.left =
+            this.musicMsg.currentTime * this.autox + "px";
         }
       }, 1000);
     },

@@ -163,13 +163,23 @@ export default {
     .musicMessage {
       width: 100%;
       height: 100%;
+      overflow: hidden;
       .musicName {
-        width: 100%;
-        height: 18px;
+        width: auto;
+        margin: 5px 0;
         font-size: 16px;
-        line-height: 18px;
-        font-weight: bold;
-        color: #555;
+        display: inline-block;
+        color: #535353;
+        white-space: nowrap;
+        animation: 10s wordsLoop linear infinite normal;
+      }
+      .stop {
+        width: auto;
+        margin: 5px 0;
+        font-size: 16px;
+        display: inline-block;
+        color: #fff;
+        white-space: nowrap;
       }
       .musicSinger {
         width: 100%;

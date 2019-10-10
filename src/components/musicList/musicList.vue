@@ -6,7 +6,7 @@
           <el-col :span="15">
             <div class="grid-content loopPlay" @click="switchLoop">
               <i class="iconfont" v-html="switchLoopData[loopIndex].loopIcon"></i>
-              <span>{{switchLoopData[loopIndex].loopString}}||（{{sheetMusicLists.length}}）</span>
+              <span>{{switchLoopData[loopIndex].loopString}}||（{{playLists.length}}）</span>
             </div>
           </el-col>
           <el-col :span="7">
@@ -24,7 +24,7 @@
       </div>
       <div class="musicListMain">
         <ul>
-          <li v-for="(music,index) of sheetMusicLists" :key="index">
+          <li v-for="(music,index) of playLists" :key="index">
             <p>
               <span class="musicName" @click="playMusic(index)">{{music.name}}</span>
               <span class="musicSinger">-{{music.ar[0].name}}</span>
@@ -65,7 +65,7 @@ export default {
     // this.$store.dispatch("getSheetMusicList");
   },
   computed: {
-    ...mapGetters(["sheetMusicLists", "loopIndex"])
+    ...mapGetters(["playLists", "loopIndex"])
   },
   methods: {
     switchLoop() {
@@ -88,10 +88,10 @@ export default {
     },
     playMusic(index) {
       var playMusic = [
-        this.sheetMusicLists[index].id,
-        this.sheetMusicLists[index].name,
-        this.sheetMusicLists[index].ar[0].name,
-        this.sheetMusicLists[index].al.picUrl
+        this.playLists[index].id,
+        this.playLists[index].name,
+        this.playLists[index].ar[0].name,
+        this.playLists[index].al.picUrl
       ];
       this.$store.dispatch("playMusicIndex", index);
       this.$store.dispatch("getPlayMusic", playMusic);

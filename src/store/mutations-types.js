@@ -15,3 +15,7 @@ export const RECEIVE_SWITCH_LOOP = 'receive_switch_loop' // 循环方式
 export const RECEIVE_MUSIC_MSG = 'receive_music_msg' //音乐媒体信息
 
 export const RECEIVE_MUSIC = 'receive_music' //音量
+
+export const RECEIVE_NEW_CURRENT_TIME = 'receive_new_current_time' //控制播放进度
+
+export const RECEIVE_PREV_MUSIC = 'receive_prev_music' //控制播放进度

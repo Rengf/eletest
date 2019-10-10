@@ -10,7 +10,6 @@ export default new Router({
     base: process.env.BASE_URL,
     routes: [{
             path: '/',
-            name: 'home',
             component: HomeIndex,
             children: [{
                 path: '/',
@@ -40,7 +39,7 @@ export default new Router({
             // this generates a separate chunk (about.[hash].js) for this route
             // which is lazy-loaded when the route is visited.
             component: () =>
-                import ( /* webpackChunkName: "about" */ '@/views/sheet/sheet.vue'),
+                import ('@/views/sheet/index.vue'),
             meta: {
                 title: '歌单广场'
             }

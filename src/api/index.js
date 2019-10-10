@@ -4,11 +4,11 @@ const BASE_URL = "http://localhost:3000";
 const USER_API = "/api";
 
 //歌单列表
-export const reqSheetList = () =>
+export const reqSheetList = (cat) =>
     ajax(BASE_URL + "/top/playlist", {
         limit: 30,
         order: 'new',
-        cat: '经典'
+        cat: cat
     }, "GET");
 
 //歌曲列表

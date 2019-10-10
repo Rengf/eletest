@@ -8,7 +8,7 @@
             <li
               v-for="(category,index) in sheetCategoryLists.sub"
               :key="index"
-              @click="getSheet(index)"
+              @click="getSheet(index,category.name)"
               :class="{active:activeIndex==index}"
             >{{category.name}}</li>
           </ul>
@@ -19,10 +19,13 @@
       </div>
     </div>
     <div class="hotSheet"></div>
-    <div class="sheetList"></div>
+    <div class="sheetList">
+      <AllSheet :sheetLists="sheetLists"></AllSheet>
+    </div>
   </div>
 </template>
 <script>
+import AllSheet from "@/components/sheet/sheet";
 import scroll from "@/components/common/scroll";
 import ReturnHeader from "@/components/common/returnHeader";
 import { mapGetters } from "vuex";
@@ -36,19 +39,29 @@ export default {
   mounted() {
     this.$store.dispatch("getSheetCategoryList");
   },
+  filters: {
+    playCountFilter(value) {
+      if (value > 100000) {
+        return parseInt(value / 100000) + "万";
+      } else {
+        return value;
+      }
+    }
+  },
   computed: {
-    ...mapGetters(["sheetCategoryLists"])
+    ...mapGetters(["sheetCategoryLists", "sheetLists"])
   },
   methods: {
-    getSheet(index) {
+    getSheet(index, name) {
       this.activeIndex = index;
-      console.log(this.sheetCategoryLists);
+      this.$store.dispatch("getSheetList", name);
     },
     toSheetTag() {}
   },
   components: {
     ReturnHeader,
-    scroll
+    scroll,
+    AllSheet
   }
 };
 </script>
@@ -94,6 +107,48 @@ export default {
         float: right;
         line-height: 30px;
         text-align: center;
+      }
+    }
+  }
+  .sheetList {
+    width: 100%;
+    .sheetMain {
+      width: 95%;
+      display: flex;
+      flex-wrap: wrap;
+      margin: auto;
+      .sheet {
+        position: relative;
+        width: 31%;
+        height: 135px;
+        margin: 1%;
+        justify-content: center;
+        .clickTotal {
+          position: absolute;
+          font-size: 8px;
+          transform: scale(0.8);
+          color: #fff;
+          top: -1px;
+          right: -2px;
+        }
+        img {
+          width: 100%;
+          height: 100px;
+        }
+        .sheetTip {
+          display: block;
+          width: 100%;
+          font-size: 10px;
+          line-height: 12px;
+          height: 25px;
+          display: -webkit-box;
+          overflow: hidden;
+          white-space: normal !important;
+          text-overflow: ellipsis;
+          word-wrap: break-word;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+        }
       }
     }
   }

@@ -3,7 +3,9 @@ import {
     RECEIVE_PLAYING,
     RECEIVE_SWITCH_LOOP,
     RECEIVE_MUSIC_MSG,
-    RECEIVE_MUSIC
+    RECEIVE_MUSIC,
+    RECEIVE_NEW_CURRENT_TIME,
+    RECEIVE_PREV_MUSIC,
 } from '../mutations-types'
 
 // import {
@@ -14,7 +16,9 @@ const state = {
     playIndex: 0,
     playing: false,
     loopIndex: 0,
-    musicMsg: {}
+    musicMsg: {},
+    newCurrentTime: 0,
+    playedLists: [],
 }
 
 const getters = {
@@ -29,7 +33,13 @@ const getters = {
     },
     musicMsg(state) {
         return state.musicMsg
-    }
+    },
+    newCurrentTime(state) {
+        return state.newCurrentTime
+    },
+    playedLists(state) {
+        return state.playedLists
+    },
 }
 
 
@@ -62,6 +72,18 @@ const actions = {
         commit
     }, [msg, value]) {
         commit(RECEIVE_MUSIC, [msg, value]);
+    },
+
+    setCurrentTime({
+        commit
+    }, newTime) {
+        commit(RECEIVE_NEW_CURRENT_TIME, newTime)
+    },
+
+    setPrevMusic({
+        commit
+    }) {
+        commit(RECEIVE_PREV_MUSIC)
     }
 }
 
@@ -69,6 +91,7 @@ const actions = {
 const mutations = {
     [RECEIVE_PLAY_INDEX](state, playIndex) {
         state.playIndex = playIndex;
+        state.playedLists.push(playIndex)
     },
     [RECEIVE_PLAYING](state, playing) {
         state.playing = playing;
@@ -81,6 +104,12 @@ const mutations = {
     },
     [RECEIVE_MUSIC](state, [msg, value]) {
         state.musicMsg[msg] = value
+    },
+    [RECEIVE_NEW_CURRENT_TIME](state, newTime) {
+        state.newCurrentTime = newTime
+    },
+    [RECEIVE_PREV_MUSIC](state) {
+        state.playedLists.pop();
     }
 }
 export default {

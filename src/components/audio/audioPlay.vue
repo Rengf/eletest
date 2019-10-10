@@ -10,7 +10,8 @@ import { mapGetters } from "vuex";
 export default {
   data() {
     return {
-      currentSong: ""
+      currentSong: "",
+      timer: ""
     };
   },
   computed: {
@@ -18,9 +19,10 @@ export default {
       "playMusic",
       "playing",
       "loopIndex",
-      "sheetMusicLists",
+      "playLists",
       "musicMsg",
-      "playIndex"
+      "playIndex",
+      "newCurrentTime"
     ])
   },
   watch: {
@@ -46,10 +48,16 @@ export default {
         audio.volume = this.musicMsg.volume;
       },
       deep: true
+    },
+    newCurrentTime() {
+      var audio = this.$refs.audio;
+      audio.currentTime = this.newCurrentTime;
+      this.$store.dispatch("setMusic", ["currentTime", this.newCurrentTime]);
     }
   },
   methods: {
     ended() {
+      clearInterval(this.timer);
       this.next();
     },
     next() {
@@ -59,12 +67,12 @@ export default {
       } else if (this.loopIndex == 1) {
         index = this.playIndex + 1;
       } else {
-        index = parseInt(Math.random() * this.sheetMusicLists.length);
+        index = parseInt(Math.random() * this.playLists.length);
       }
       var playMusic = [
-        this.sheetMusicLists[index].id,
-        this.sheetMusicLists[index].name,
-        this.sheetMusicLists[index].ar[0].name
+        this.playLists[index].id,
+        this.playLists[index].name,
+        this.playLists[index].ar[0].name
       ];
       this.$store.dispatch("playMusicIndex", index);
       this.$store.dispatch("getPlayMusic", playMusic);
@@ -78,7 +86,7 @@ export default {
         playbackRate: audio.playbackRate
       };
       this.$store.dispatch("setPlayMusicMsg", musicMsg);
-      var timer = setInterval(() => {
+      this.timer = setInterval(() => {
         this.$store.dispatch("setMusic", ["currentTime", audio.currentTime]);
       }, 1000);
     }

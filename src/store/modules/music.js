@@ -16,7 +16,8 @@ const state = {
     sheetLists: [],
     sheetMusicLists: [],
     playMusic: {},
-    sheetCategoryLists: []
+    sheetCategoryLists: [],
+    playLists: [],
 }
 
 const getters = {
@@ -32,6 +33,9 @@ const getters = {
     sheetCategoryLists(state) {
         return state.sheetCategoryLists
     },
+    playLists(state) {
+        return state.playLists
+    }
 }
 
 
@@ -83,6 +87,9 @@ const mutations = {
         state.sheetLists = sheetLists;
     },
     [RECEIVE_SHEETMUSIC_LIST](state, sheetMusicLists) {
+        sheetMusicLists.forEach(val => {
+            state.playLists.push(val)
+        })
         state.sheetMusicLists = sheetMusicLists;
     },
     [RECEIVE_PLAY_MUSIC](state, playMusic) {
