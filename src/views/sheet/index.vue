@@ -56,7 +56,9 @@ export default {
       this.activeIndex = index;
       this.$store.dispatch("getSheetList", name);
     },
-    toSheetTag() {}
+    toSheetTag() {
+      this.$router.push("/sheetTag");
+    }
   },
   components: {
     ReturnHeader,

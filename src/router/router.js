@@ -35,11 +35,17 @@ export default new Router({
         {
             path: '/sheet',
             name: 'sheet',
-            // route level code-splitting
-            // this generates a separate chunk (about.[hash].js) for this route
-            // which is lazy-loaded when the route is visited.
             component: () =>
                 import ('@/views/sheet/index.vue'),
+            meta: {
+                title: '歌单广场'
+            }
+        },
+        {
+            path: '/sheetTag',
+            name: 'sheetTag',
+            component: () =>
+                import ('@/views/sheetTag/index.vue'),
             meta: {
                 title: '歌单广场'
             }
