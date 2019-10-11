@@ -6,7 +6,7 @@
         <scroll class="categoryList" :scrollX="true" :scrollY="false">
           <ul>
             <li
-              v-for="(category,index) in sheetCategoryLists.sub"
+              v-for="(category,index) of mySheetTags"
               :key="index"
               @click="getSheet(index,category.name)"
               :class="{active:activeIndex==index}"
@@ -18,7 +18,9 @@
         </div>
       </div>
     </div>
-    <div class="hotSheet"></div>
+    <div class="hotSheet">
+      <button @click="getds()">获取</button>
+    </div>
     <div class="sheetList">
       <AllSheet :sheetLists="sheetLists"></AllSheet>
     </div>
@@ -33,23 +35,15 @@ export default {
   data() {
     return {
       title: "歌单广场",
-      activeIndex: 0
+      activeIndex: 0,
+      tags: []
     };
   },
   mounted() {
     this.$store.dispatch("getSheetCategoryList");
   },
-  filters: {
-    playCountFilter(value) {
-      if (value > 100000) {
-        return parseInt(value / 100000) + "万";
-      } else {
-        return value;
-      }
-    }
-  },
   computed: {
-    ...mapGetters(["sheetCategoryLists", "sheetLists"])
+    ...mapGetters(["mySheetTags", "sheetLists"])
   },
   methods: {
     getSheet(index, name) {
@@ -58,6 +52,9 @@ export default {
     },
     toSheetTag() {
       this.$router.push("/sheetTag");
+    },
+    getds() {
+      console.log(this.sheetCategoryLists);
     }
   },
   components: {
@@ -91,7 +88,7 @@ export default {
         float: left;
         overflow: hidden;
         ul {
-          width: 4500px;
+          width: 2000px;
           overflow: hidden;
           height: 30px;
           li {

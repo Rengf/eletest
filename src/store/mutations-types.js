@@ -19,3 +19,7 @@ export const RECEIVE_MUSIC = 'receive_music' //音量
 export const RECEIVE_NEW_CURRENT_TIME = 'receive_new_current_time' //控制播放进度
 
 export const RECEIVE_PREV_MUSIC = 'receive_prev_music' //控制播放进度
+
+export const RECEIVE_MY_SHEET_TAGS = 'receive_my_sheet_tags' //我的歌单标签
+
+export const DELETE_PLAYLIST_MUSIC = 'delete_playlist_music' // 删除播放列表中的音乐

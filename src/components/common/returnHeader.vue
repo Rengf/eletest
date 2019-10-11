@@ -1,7 +1,7 @@
 <template>
   <div class="returnHeader">
     <span>
-      <i class="iconfont">&#xe62d;</i>
+      <i class="iconfont" @click="returnPre()">&#xe62d;</i>
     </span>
     <span class="title">{{title}}</span>
   </div>
@@ -12,6 +12,11 @@ export default {
     title: {
       type: String,
       default: "音乐"
+    }
+  },
+  methods: {
+    returnPre() {
+      this.$router.go(-1);
     }
   }
 };

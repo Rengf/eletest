@@ -75,11 +75,11 @@ export default {
         this.$store.dispatch("setSwitchLoop", 0);
       }
     },
-    deleteMusic(id) {
-      if (id !== undefined) {
-        this.musicList.splice(id, 1);
+    deleteMusic(index) {
+      if (index == undefined) {
+        this.$store.dispatch("deletePlayListMusic", [0, this.playLists.length]);
       } else {
-        this.musicList.splice(0, this.musicList.length);
+        this.$store.dispatch("deletePlayListMusic", [index, 1]);
       }
     },
     collectAll() {},

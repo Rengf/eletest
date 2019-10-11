@@ -4,7 +4,7 @@
       <div class="palyHeader">
         <ul>
           <li class="return">
-            <i class="iconfont">&#xe62d;</i>
+            <i class="iconfont" @click="returnPre()">&#xe62d;</i>
           </li>
           <li class="musicMsg">
             <span ref="musicName" :class="isStop?'stop':'musicName'">{{playMusic.name}}</span>
@@ -375,7 +375,10 @@ export default {
         this.$store.dispatch("setMusic", ["volume", volume]);
       }
     },
-    lyricBoxDrift() {}
+    lyricBoxDrift() {},
+    returnPre() {
+      this.$router.go(-1);
+    }
   }
 };
 </script>
