@@ -193,6 +193,10 @@ export default {
     },
     playing() {
       this.getPlaying();
+    },
+    musicMsg: {
+      handler(newval, oldval) {},
+      deep: true
     }
   },
   destroyed() {
@@ -419,6 +423,7 @@ export default {
 }
 .playWrap {
   width: 100%;
+  background: #efefef;
   .playBox {
     width: 100%;
     .palyHeader {
