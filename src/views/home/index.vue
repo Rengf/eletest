@@ -49,7 +49,6 @@ export default {
       this.isShowList = showMusicList;
     },
     showSliderBar(showSliderBar) {
-      console.log();
       this.isShowSlider = showSliderBar;
     },
     getcategory() {

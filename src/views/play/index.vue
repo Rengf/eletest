@@ -211,18 +211,22 @@ export default {
       }
     },
     getLyric() {
-      axios
-        .get("http://localhost:3000/lyric?id=" + this.playMusic.id)
-        .then(res => {
-          if (res.data.code == 200) {
-            if (res.data.lrc !== undefined) {
-              this.lyric = new Lyric(res.data.lrc.lyric, this.handl);
-              this.lyric.seek(this.musicMsg.currentTime * 1000);
-            } else {
-              this.lyric = null;
+      if (this.playMusic) {
+        axios
+          .get("http://localhost:3000/lyric?id=" + this.playMusic.id)
+          .then(res => {
+            if (res.data.code == 200) {
+              if (res.data.lrc !== undefined) {
+                this.lyric = new Lyric(res.data.lrc.lyric, this.handl);
+                this.lyric.seek(this.musicMsg.currentTime * 1000);
+              } else {
+                this.lyric = null;
+              }
             }
-          }
-        });
+          });
+      } else {
+        return;
+      }
     },
     handl({ lineNum, txt }) {
       if (!this.$refs.lyricLine) {
@@ -263,6 +267,8 @@ export default {
       });
     },
     next() {
+      this.currentLineNum = 0;
+      this.lyric = null;
       var index = 0;
       if (this.loopIndex == 0) {
         index = this.playIndex;
@@ -280,6 +286,8 @@ export default {
       this.$store.dispatch("getPlayMusic", playMusic);
     },
     prev() {
+      this.currentLineNum = 0;
+      this.lyric = null;
       this.$store.dispatch("setPrevMusic");
       if (this.playedLists.length == 0) {
         return;
