@@ -15,12 +15,12 @@ import {
 } from "./../../api/index";
 
 const state = {
-    sheetLists: [],
-    sheetMusicLists: [],
-    playMusic: {},
-    sheetCategoryLists: {},
-    playLists: [],
-    mySheetTags: [{
+    sheetLists: [], //歌单列表
+    sheetMusicLists: [], //歌单音乐列表
+    playMusic: {}, //播放的音乐
+    sheetCategoryLists: {}, //歌单分类列表
+    playLists: [], //播放列表
+    mySheetTags: [{ // 我的歌单标签
             name: "推荐",
             id: 1
         },
