@@ -49,9 +49,11 @@ export default {
     ...mapGetters(["sheetCategoryLists", "mySheetTags"])
   },
   methods: {
+    //添加我的歌单分类标签
     addMySheet(tag) {
       this.$store.dispatch("setMySheetTags", ["add", tag]);
     },
+    //删除我的歌单分类标签
     subMySheet(tag, index) {
       if (index <= 2) {
         return;

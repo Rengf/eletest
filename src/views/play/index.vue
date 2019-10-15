@@ -201,8 +201,10 @@ export default {
   },
   destroyed() {
     clearTimeout(this.timer);
+    this.lyric.stop();
   },
   methods: {
+    //判断是否播放，播放图标控制
     getPlaying() {
       if (this.playing == true) {
         this.playIcon = "&#xe775;";
@@ -210,6 +212,7 @@ export default {
         this.playIcon = "&#xe658;";
       }
     },
+    //获取歌词
     getLyric() {
       if (this.playMusic) {
         axios
@@ -228,6 +231,7 @@ export default {
         return;
       }
     },
+    //处理歌词
     handl({ lineNum, txt }) {
       if (!this.$refs.lyricLine) {
         return;
@@ -240,6 +244,7 @@ export default {
         this.$refs.lyricList.scrollTo(0, 0, 1000);
       }
     },
+    //控制显示音乐列表
     showMusicList(showMusicList) {
       if (showMusicList == undefined) {
         this.isShowList = true;
@@ -247,6 +252,7 @@ export default {
         this.isShowList = showMusicList;
       }
     },
+    //控制播放暂停
     playPause() {
       if (this.playing == true) {
         this.$store.dispatch("isPlaying", false);
@@ -254,6 +260,7 @@ export default {
         this.$store.dispatch("isPlaying", true);
       }
     },
+    //播放音乐
     musicPlay() {
       this.getLyric();
       this.currentSong = this.playMusic.url;
@@ -266,6 +273,7 @@ export default {
         this.playIcon = "&#xe775;";
       });
     },
+    //下一首
     next() {
       this.currentLineNum = 0;
       this.lyric = null;
@@ -285,6 +293,7 @@ export default {
       this.$store.dispatch("playMusicIndex", index);
       this.$store.dispatch("getPlayMusic", playMusic);
     },
+    //上一首
     prev() {
       this.currentLineNum = 0;
       this.lyric = null;
@@ -292,9 +301,7 @@ export default {
       if (this.playedLists.length == 0) {
         return;
       }
-      console.log(this.playedLists);
       var index = this.playedLists[this.playedLists.length - 1];
-      console.log(index);
       var playMusic = [
         this.playLists[index].id,
         this.playLists[index].name,
@@ -304,6 +311,7 @@ export default {
       this.$store.dispatch("setPrevMusic");
       this.$store.dispatch("getPlayMusic", playMusic);
     },
+    //控制播放循环方式
     switchLoop() {
       if (this.loopIndex < 2) {
         this.$store.dispatch("setSwitchLoop", this.loopIndex + 1);
@@ -311,6 +319,7 @@ export default {
         this.$store.dispatch("setSwitchLoop", 0);
       }
     },
+    //获取默认数据
     initDefault() {
       var _this = this;
       this.$timeBar = this.$refs.timeBar;
@@ -329,9 +338,12 @@ export default {
         this.isStop = false;
       }
     },
+
+    //滑动起始点
     controlStart(e) {
       this.startX = e.touches[0].pageX;
     },
+    //滑动控制进度
     dragTime(e) {
       var slidedis = e.touches[0].pageX;
       if (slidedis - 43 > this.timeBarLength || slidedis - 43 < 0) {
@@ -343,6 +355,7 @@ export default {
       this.positionX = slidedis - 43;
       this.$refs.timePoint.style.left = this.positionX + "px";
     },
+    //点击控制进度
     jumpTime(e) {
       this.positionX = e.offsetX;
       this.$refs.timePoint.style.left = this.positionX + "px";
@@ -357,6 +370,7 @@ export default {
         this.autoPlay();
       }
     },
+    //进度条显示
     autoPlay() {
       this.$refs.timePoint.style.left =
         this.musicMsg.currentTime * this.autox + "px";
@@ -372,9 +386,11 @@ export default {
       }, 1000);
     },
     jumpVolume(e) {},
+    //音量控制起始点
     startVolume(e) {
       this.startVolumeX = e.touches[0].pageX;
     },
+    //音量控制
     dragVolume(e) {
       var slidedis = parseInt(e.touches[0].pageX);
       if (slidedis - 44 > this.volumeBarLength || slidedis - 44 < 0) {
@@ -388,6 +404,7 @@ export default {
       }
     },
     lyricBoxDrift() {},
+    //返回上一页面
     returnPre() {
       this.$router.go(-1);
     }

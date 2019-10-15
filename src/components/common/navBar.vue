@@ -67,6 +67,7 @@ export default {
   },
 
   methods: {
+    //播放图标显示控制
     getPlaying() {
       if (this.playing == true) {
         this.playIcon = "&#xe775;";
@@ -74,6 +75,7 @@ export default {
         this.playIcon = "&#xe658;";
       }
     },
+    //点击事件设置
     cancelBubble(e) {
       var evt = e ? e : window.event;
       if (evt.stopPropagation) {
@@ -82,6 +84,7 @@ export default {
         evt.cancelBubble = true;
       }
     },
+    //播放控制
     musicPlay(e) {
       this.cancelBubble(e);
       if (this.playing == true) {
@@ -89,44 +92,13 @@ export default {
       } else {
         this.$store.dispatch("isPlaying", true);
       }
-      // clearInterval(this.timer);
-      // this.currentSong = this.$store.getters.playMusic.url;
-      // var audio = this.$refs.audio;
-      // audio.playbackRate = 2;
-      // console.log(this.currentSong);
-      // if (audio.paused || audio.ended) {
-      //   audio.play();
-      //   this.getCurrentTime();
-      // } else {
-      //   audio.pause();
-      // }
-      // if (this.playIcon === "&#xe658;") {
-      //   this.playIcon = "&#xe775;";
-      // } else {
-      //   this.playIcon = "&#xe658;";
-      // }
     },
+    //显示音乐列表
     showMusicList(e) {
       this.cancelBubble(e);
       this.$emit("showMusicList", true);
     },
-    nextsong() {
-      this.currentSong = require("../../assets/music/李欣芸 - 宁静的海.mp3");
-      this.musicPlay();
-    },
-    getCurrentTime() {
-      var audio = this.$refs.audio;
-      this.timer = setInterval(() => {
-        this.currentTime = audio.currentTime;
-        this.duration = audio.duration;
-        this.fg1 = (this.currentTime / this.duration) * 360;
-        if (this.fg1 >= 180) {
-          this.isActive = true;
-          this.fg1 = 0;
-          this.fg2 = (this.currentTime / this.duration) * 360 - 180;
-        }
-      }, 1000);
-    },
+    //跳转到播放页
     toPlay() {
       this.$router.push({ path: "/play" });
     }

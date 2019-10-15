@@ -68,6 +68,7 @@ export default {
     ...mapGetters(["playLists", "loopIndex"])
   },
   methods: {
+    //设置循环方式
     switchLoop() {
       if (this.loopIndex < 2) {
         this.$store.dispatch("setSwitchLoop", this.loopIndex + 1);
@@ -75,6 +76,7 @@ export default {
         this.$store.dispatch("setSwitchLoop", 0);
       }
     },
+    //删除播放列表的音乐
     deleteMusic(index) {
       if (index == undefined) {
         this.$store.dispatch("deletePlayListMusic", [0, this.playLists.length]);
@@ -83,9 +85,11 @@ export default {
       }
     },
     collectAll() {},
+    //关闭音乐列表
     showMusicList() {
       this.$emit("showMusicList", false);
     },
+    //播放音乐
     playMusic(index) {
       var playMusic = [
         this.playLists[index].id,

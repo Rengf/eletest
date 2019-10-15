@@ -56,10 +56,12 @@ export default {
     }
   },
   methods: {
+    //播放结束
     ended() {
       clearInterval(this.timer);
       this.next();
     },
+    //下一曲
     next() {
       var index = 0;
       if (this.loopIndex == 0) {
@@ -77,6 +79,7 @@ export default {
       this.$store.dispatch("playMusicIndex", index);
       this.$store.dispatch("getPlayMusic", playMusic);
     },
+    //获取音乐信息
     getDuration() {
       var audio = this.$refs.audio;
       var musicMsg = {

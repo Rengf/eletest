@@ -18,9 +18,7 @@
         </div>
       </div>
     </div>
-    <div class="hotSheet">
-      <button @click="getds()">获取</button>
-    </div>
+    <div class="hotSheet"></div>
     <div class="sheetList">
       <AllSheet :sheetLists="sheetLists"></AllSheet>
     </div>
@@ -46,15 +44,14 @@ export default {
     ...mapGetters(["mySheetTags", "sheetLists"])
   },
   methods: {
+    //获取歌单列表
     getSheet(index, name) {
       this.activeIndex = index;
       this.$store.dispatch("getSheetList", name);
     },
+    //跳转到歌单标签页
     toSheetTag() {
       this.$router.push("/sheetTag");
-    },
-    getds() {
-      console.log(this.sheetCategoryLists);
     }
   },
   components: {

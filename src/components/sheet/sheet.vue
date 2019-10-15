@@ -33,6 +33,7 @@ export default {
     }
   },
   methods: {
+    //获取歌单音乐列表
     getSheetMusicList(id) {
       this.$store.dispatch("getSheetMusicList", id);
     }

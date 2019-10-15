@@ -45,18 +45,24 @@ export default {
         {
           url: require("../../../../assets/images/avatar.png")
         }
-      ]
+      ],
+      timer: ""
     };
+  },
+  destroyed() {
+    clearInterval(this.timer);
   },
   mounted() {
     this.jumpadd();
   },
   methods: {
+    //点击跳到第几张
     jump(index) {
       this.lunboIndex = index;
     },
+    //自动播放
     jumpadd() {
-      setInterval(() => {
+      this.timer = setInterval(() => {
         this.lunboIndex++;
         if (this.lunboIndex == 7) {
           this.lunboIndex = 0;

@@ -144,21 +144,18 @@ const mutations = {
         if (state.playLists.length == 0) {
             state.playLists = sheetMusicLists;
         } else {
-            sheetMusicLists.forEach(val => {
-                var oldplay = state.playLists.find(oldval => {
+            sheetMusicLists.forEach((val, index) => {
+                var oldplay;
+                state.playLists.forEach(oldval => {
                     if (val.name == oldval.name) {
-                        return false;
-                    } else {
-                        return val;
+                        oldplay = val
                     }
                 })
-                if (oldplay) {
-                    state.playLists.push(val);
+                if (!oldplay) {
+                    state.playLists.push(val)
                 }
-
             });
         }
-
         state.sheetMusicLists = sheetMusicLists;
     },
     [RECEIVE_PLAY_MUSIC](state, playMusic) {

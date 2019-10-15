@@ -9,7 +9,6 @@
       <MusicList v-if="isShowList" @showMusicList="showMusicList"></MusicList>
     </transition>
     <NavBar @showMusicList="showMusicList"></NavBar>
-    <!-- <MusicPlay @showMusicList="showMusicList"></MusicPlay> -->
   </div>
 </template>
 
@@ -45,15 +44,13 @@ export default {
     ...mapGetters(["sheetCategoryLists"])
   },
   methods: {
+    //显示音乐列表
     showMusicList(showMusicList) {
       this.isShowList = showMusicList;
     },
+    //显示设置页
     showSliderBar(showSliderBar) {
       this.isShowSlider = showSliderBar;
-    },
-    getcategory() {
-      this.$store.dispatch("getSheetCategoryList");
-      console.log(this.sheetCategoryLists);
     }
   }
 };
