@@ -23,3 +23,5 @@ export const RECEIVE_PREV_MUSIC = 'receive_prev_music' //控制播放进度
 export const RECEIVE_MY_SHEET_TAGS = 'receive_my_sheet_tags' //我的歌单标签
 
 export const DELETE_PLAYLIST_MUSIC = 'delete_playlist_music' // 删除播放列表中的音乐
+
+export const RECEIVE_SINGER_LIST = 'receive_singer_list' // 获取歌手列表

@@ -22,10 +22,13 @@
           </el-col>
         </el-row>
       </div>
-      <div class="musicListMain">
+      <scroll class="musicListMain">
         <ul>
-          <li v-for="(music,index) of playLists" :key="index">
+          <li v-for="(music,index) of playLists" :key="index" :class="{active:index==playIndex}">
             <p>
+              <span>
+                <i class="iconfont" v-if="index==playIndex">&#xec0a;</i>
+              </span>
               <span class="musicName" @click="playMusic(index)">{{music.name}}</span>
               <span class="musicSinger">-{{music.ar[0].name}}</span>
             </p>
@@ -34,12 +37,13 @@
             </span>
           </li>
         </ul>
-      </div>
+      </scroll>
     </div>
   </div>
 </template>
 
 <script>
+import scroll from "@/components/common/scroll";
 import { mapGetters } from "vuex";
 export default {
   name: "musicList",
@@ -48,7 +52,6 @@ export default {
   // data
   data() {
     return {
-      componentName: "musicList",
       switchLoopData: [
         { loopIcon: "&#xe603;", loopString: "单曲循环" },
         { loopIcon: "&#xe600;", loopString: "列表循环" },
@@ -60,12 +63,14 @@ export default {
   created() {
     //
   },
-
+  components: {
+    scroll
+  },
   mounted() {
     // this.$store.dispatch("getSheetMusicList");
   },
   computed: {
-    ...mapGetters(["playLists", "loopIndex"])
+    ...mapGetters(["playLists", "loopIndex", "playIndex"])
   },
   methods: {
     //设置循环方式
@@ -113,6 +118,7 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
 .musicListWrap {
   position: fixed;
   background: rgba($color: #888, $alpha: 0.3);
@@ -159,6 +165,9 @@ export default {
       width: 100%;
       height: 350px;
       overflow: scroll;
+      .active span {
+        color: rgb(248, 4, 4) !important;
+      }
       ul {
         width: 100%;
         li {

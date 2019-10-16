@@ -7,12 +7,12 @@
         </span>
         <span class="font">每日推荐</span>
       </div>
-      <div class="menuList">
+      <router-link class="menuList" to="/sheet">
         <span class="imgIcon">
           <i class="iconfont">&#xe60a;</i>
         </span>
         <span class="font">歌单</span>
-      </div>
+      </router-link>
       <div class="menuList">
         <span class="imgIcon">
           <i class="iconfont">&#xe6c2;</i>

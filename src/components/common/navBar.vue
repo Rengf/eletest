@@ -139,7 +139,7 @@ export default {
       .musicName {
         width: auto;
         margin: 5px 0;
-        font-size: 16px;
+        font-size: 14px;
         display: inline-block;
         color: #535353;
         white-space: nowrap;
@@ -155,9 +155,9 @@ export default {
       }
       .musicSinger {
         width: 100%;
-        height: 18px;
-        font-size: 13px;
-        line-height: 18px;
+        height: 14px;
+        font-size: 12px;
+        line-height: 14px;
         color: #888;
         letter-spacing: 1px;
       }

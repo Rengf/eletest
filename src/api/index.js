@@ -25,3 +25,10 @@ export const reqPlayMusic = (id) =>
 
 //获取歌单类别
 export const reqSheetCategoryList = () => ajax(BASE_URL + "/playlist/catlist", {}, "GET")
+
+//获取歌手列表
+export const reqSingerList = (data) => ajax(BASE_URL + "/artist/list", {
+    cat: 1001,
+    limit: data.limit,
+    offset: data.page
+}, "GET")

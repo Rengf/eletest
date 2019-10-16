@@ -144,7 +144,7 @@ const mutations = {
         if (state.playLists.length == 0) {
             state.playLists = sheetMusicLists;
         } else {
-            sheetMusicLists.forEach((val, index) => {
+            sheetMusicLists.forEach(val => {
                 var oldplay;
                 state.playLists.forEach(oldval => {
                     if (val.name == oldval.name) {

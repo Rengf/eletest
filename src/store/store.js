@@ -6,6 +6,7 @@ import actions from './actions'
 import getters from './getters'
 import Music from './modules/music'
 import play from './modules/play'
+import singer from './modules/singer'
 
 Vue.use(Vuex)
 
@@ -16,6 +17,7 @@ export default new Vuex.Store({
     getters,
     modules: {
         Music,
-        play
+        play,
+        singer
     }
 })

@@ -49,6 +49,15 @@ export default new Router({
             meta: {
                 title: '歌单广场'
             }
+        },
+        {
+            path: '/singer',
+            name: 'singer',
+            component: () =>
+                import ('@/views/singer/index.vue'),
+            meta: {
+                title: '歌手'
+            }
         }
     ]
 })

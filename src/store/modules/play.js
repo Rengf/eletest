@@ -15,7 +15,7 @@ import {
 const state = {
     playIndex: 0, //播放歌曲的位置
     playing: false, //是否播放
-    loopIndex: 0, //播放循环方式
+    loopIndex: 2, //播放循环方式
     musicMsg: {}, //音乐信息
     newCurrentTime: 0, //播放时间
     playedLists: [], //播放过的音乐列表

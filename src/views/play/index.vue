@@ -201,7 +201,6 @@ export default {
   },
   destroyed() {
     clearTimeout(this.timer);
-    this.lyric.stop();
   },
   methods: {
     //判断是否播放，播放图标控制

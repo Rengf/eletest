@@ -16,6 +16,7 @@
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
 export default {
   props: {
     sheetLists: {
@@ -32,10 +33,30 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapGetters(["playLists"])
+  },
   methods: {
     //获取歌单音乐列表
-    getSheetMusicList(id) {
-      this.$store.dispatch("getSheetMusicList", id);
+    async getSheetMusicList(id) {
+      if (this.playLists.length == 0) {
+        this.$store.dispatch("getSheetMusicList", id).then(() => {
+          this.playMusic(0);
+        });
+      } else {
+        this.$store.dispatch("getSheetMusicList", id);
+      }
+    },
+    playMusic(index) {
+      var playMusic = [
+        this.playLists[index].id,
+        this.playLists[index].name,
+        this.playLists[index].ar[0].name,
+        this.playLists[index].al.picUrl
+      ];
+      this.$store.dispatch("playMusicIndex", index);
+      this.$store.dispatch("getPlayMusic", playMusic);
+      this.$store.dispatch("isPlaying", true);
     }
   }
 };
