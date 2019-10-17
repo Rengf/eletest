@@ -1,12 +1,12 @@
 <template>
   <div class="menuWrap">
     <div class="menuBox">
-      <div class="menuList">
+      <router-link class="menuList" to="/singer">
         <span class="imgIcon">
           <i class="iconfont">&#xe627;</i>
         </span>
         <span class="font">每日推荐</span>
-      </div>
+      </router-link>
       <router-link class="menuList" to="/sheet">
         <span class="imgIcon">
           <i class="iconfont">&#xe60a;</i>

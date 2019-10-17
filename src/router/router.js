@@ -58,6 +58,14 @@ export default new Router({
             meta: {
                 title: '歌手'
             }
+        }, {
+            path: '/singerMsg',
+            name: 'singerMsg',
+            component: () =>
+                import ('@/views/singerMsg/index.vue'),
+            meta: {
+                title: '歌手信息'
+            }
         }
     ]
 })

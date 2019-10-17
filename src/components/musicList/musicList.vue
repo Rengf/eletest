@@ -6,7 +6,7 @@
           <el-col :span="15">
             <div class="grid-content loopPlay" @click="switchLoop">
               <i class="iconfont" v-html="switchLoopData[loopIndex].loopIcon"></i>
-              <span>{{switchLoopData[loopIndex].loopString}}||（{{playLists.length}}）</span>
+              <span>{{switchLoopData[loopIndex].loopString}}（{{playLists.length}}）</span>
             </div>
           </el-col>
           <el-col :span="7">
@@ -66,9 +66,7 @@ export default {
   components: {
     scroll
   },
-  mounted() {
-    // this.$store.dispatch("getSheetMusicList");
-  },
+  mounted() {},
   computed: {
     ...mapGetters(["playLists", "loopIndex", "playIndex"])
   },
@@ -164,7 +162,7 @@ export default {
     .musicListMain {
       width: 100%;
       height: 350px;
-      overflow: scroll;
+      overflow: hidden;
       .active span {
         color: rgb(248, 4, 4) !important;
       }
