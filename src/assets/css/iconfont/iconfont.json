@@ -34,6 +34,13 @@
       "unicode_decimal": 58928
     },
     {
+      "icon_id": "1050425",
+      "name": "更多",
+      "font_class": "gengduo",
+      "unicode": "e60d",
+      "unicode_decimal": 58893
+    },
+    {
       "icon_id": "1257811",
       "name": "循环播放",
       "font_class": "xunhuanbofang",
@@ -181,6 +188,13 @@
       "unicode_decimal": 60426
     },
     {
+      "icon_id": "8154489",
+      "name": "视频 (1)",
+      "font_class": "shipin",
+      "unicode": "e60f",
+      "unicode_decimal": 58895
+    },
+    {
       "icon_id": "8205228",
       "name": "鲸云音效(4pt) - 网易icon",
       "font_class": "jingyunyinxiaopt",
@@ -193,6 +207,13 @@
       "font_class": "gedan",
       "unicode": "e60a",
       "unicode_decimal": 58890
+    },
+    {
+      "icon_id": "8776878",
+      "name": "download",
+      "font_class": "icon-test",
+      "unicode": "e640",
+      "unicode_decimal": 58944
     },
     {
       "icon_id": "8863963",

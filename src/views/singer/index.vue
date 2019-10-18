@@ -29,8 +29,6 @@
         </li>
       </ul>
     </scroll>
-    <button @click="next()">下一页</button>
-    <span>当前第{{page}}页</span>
   </div>
 </template>
 <script>

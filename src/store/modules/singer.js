@@ -20,8 +20,18 @@ const getters = {
     singerLists(state) {
         return state.singerLists
     },
-    singerArtists(state) {
-        return state.singerArtists
+    singerArtist(state) {
+        return state.singerArtists.artist;
+    },
+    singerHotSongs(state) {
+        return state.singerArtists.hotSongs;
+    },
+    fiveHotSongs(state) {
+        var fiveSongs = [];
+        for (let index = 0; index < 5; index++) {
+            fiveSongs.push(state.singerArtists.hotSongs[index]);
+        }
+        return fiveSongs
     }
 }
 

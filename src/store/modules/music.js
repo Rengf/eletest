@@ -13,6 +13,9 @@ import {
     reqPlayMusic,
     reqSheetCategoryList
 } from "./../../api/index";
+import {
+    isArray
+} from "util";
 
 const state = {
     sheetLists: [], //歌单列表
@@ -68,11 +71,16 @@ const actions = {
     },
     async getSheetMusicList({
         commit
-    }, id) {
-        const result = await reqSheetMusicList(id);
-        if (result.code == 200) {
-            const sheetMusicLists = result.playlist.tracks;
-            commit(RECEIVE_SHEETMUSIC_LIST, sheetMusicLists);
+    }, data) {
+        if (isArray(data)) {
+            commit(RECEIVE_SHEETMUSIC_LIST, data);
+        } else {
+            const result = await reqSheetMusicList(data);
+            if (result.code == 200) {
+                const sheetMusicLists = result.playlist.tracks;
+                commit(RECEIVE_SHEETMUSIC_LIST, sheetMusicLists);
+            }
+
         }
     },
     async getPlayMusic({

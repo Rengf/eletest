@@ -2,7 +2,7 @@
   <div class="singerMsgWrap">
     <div
       class="singerMsgHeader"
-      :style="{backgroundImage:'url('+singerArtists.artist.picUrl+')',backgroundSize:'100% 100%',backgroundRepeat:'no-repeat'}"
+      :style="{backgroundImage:'url('+singerArtist.picUrl+')',backgroundSize:'100% 100%',backgroundRepeat:'no-repeat'}"
     >
       <div class="headerTop">
         <div class="returnBox">
@@ -21,16 +21,24 @@
           :key="index"
           @click="switchTag(index)"
         >
-          <span :class="{active:index==mainTagIndex}">{{mainTag.name}}</span>
+          <span :class="{active:index==mainTagIndex}">
+            {{mainTag.name}}
+            <i
+              v-if="index==2||index==3||index==4"
+            >{{index==2?singerArtist.albumSize:(index==3?singerArtist.mvSize:0)}}</i>
+          </span>
         </div>
       </div>
-      <scroll>
-        <div class="singer"></div>
-      </scroll>
+      <div class="singerMsg">
+        <HomePage v-if="mainTagIndex==0"></HomePage>
+        <SongLists v-if="mainTagIndex==1"></SongLists>
+      </div>
     </div>
   </div>
 </template>
 <script>
+import HomePage from "./singerMsg/homePage";
+import SongLists from "./singerMsg/songLists";
 import scroll from "@/components/common/scroll";
 import { mapGetters } from "vuex";
 import axios from "axios";
@@ -50,15 +58,9 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["singerArtists"])
+    ...mapGetters(["singerArtist", "fiveHotSongs"])
   },
   methods: {
-    getmsg() {
-      console.log(this.singerArtists);
-      axios.get("http://localhost:3000/artist/desc?id=6452").then(res => {
-        console.log(res);
-      });
-    },
     returnPre() {
       this.$router.go(-1);
     },
@@ -67,7 +69,9 @@ export default {
     }
   },
   components: {
-    scroll
+    scroll,
+    HomePage,
+    SongLists
   }
 };
 </script>
@@ -106,19 +110,28 @@ export default {
       display: flex;
       width: 100%;
       height: 30px;
-      background: #ccc;
+      background: #fff;
       border-top-right-radius: 10px;
       border-top-left-radius: 10px;
       .mainTopTag {
         flex: 1;
         height: 30px;
+        border-bottom: 1px solid #efefef;
+        text-align: center;
+        line-height: 30px;
         span {
-          display: block;
           font-size: 14px;
-          text-align: center;
-          line-height: 30px;
+          padding: 4px 0;
+          i {
+            font-size: 12px;
+          }
         }
       }
+    }
+
+    .singerMsg {
+      height: 348px;
+      overflow: hidden;
     }
   }
 }
