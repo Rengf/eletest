@@ -29,16 +29,20 @@
           </span>
         </div>
       </div>
+      <MyVideo></MyVideo>
       <div class="singerMsg">
         <HomePage v-if="mainTagIndex==0"></HomePage>
         <SongLists v-if="mainTagIndex==1"></SongLists>
+        <MusicVideo v-if="mainTagIndex==3"></MusicVideo>
       </div>
     </div>
   </div>
 </template>
 <script>
+import MyVideo from "@/components/video/videoPlay";
 import HomePage from "./singerMsg/homePage";
 import SongLists from "./singerMsg/songLists";
+import MusicVideo from "./singerMsg/musicVideo";
 import scroll from "@/components/common/scroll";
 import { mapGetters } from "vuex";
 import axios from "axios";
@@ -71,7 +75,9 @@ export default {
   components: {
     scroll,
     HomePage,
-    SongLists
+    SongLists,
+    MusicVideo,
+    MyVideo
   }
 };
 </script>

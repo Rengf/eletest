@@ -83,8 +83,8 @@ export default {
       .tags {
         display: inline-block;
         width: 23%;
-        height: 40px;
-        line-height: 40px;
+        height: 30px;
+        line-height: 30px;
         text-align: center;
         background: #ececec;
         border-radius: 15px;

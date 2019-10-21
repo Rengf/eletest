@@ -64,7 +64,8 @@ export default {
       this.scroll = new BScroll(this.$refs.wrapper, {
         probeType: this.probeType,
         click: this.click,
-        scrollX: this.scrollX
+        scrollX: this.scrollX,
+        pullUpLoad: true
       });
 
       if (this.listenScroll) {

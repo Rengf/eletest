@@ -7,6 +7,7 @@ import getters from './getters'
 import Music from './modules/music'
 import play from './modules/play'
 import singer from './modules/singer'
+import Video from './modules/video'
 
 Vue.use(Vuex)
 
@@ -18,6 +19,7 @@ export default new Vuex.Store({
     modules: {
         Music,
         play,
-        singer
+        singer,
+        Video
     }
 })

@@ -8,7 +8,7 @@
           </li>
           <li class="musicMsg">
             <span ref="musicName" :class="isStop?'stop':'musicName'">{{playMusic.name}}</span>
-            <span class="singer">
+            <span class="singer" @click="toSingerMsg(playMusic.singerId)">
               {{playMusic.singer}}
               <i class="iconfont">&#xe60c;</i>
             </span>
@@ -203,6 +203,11 @@ export default {
     clearTimeout(this.timer);
   },
   methods: {
+    toSingerMsg(id) {
+      this.$store.dispatch("getSingerArtists", id).then(() => {
+        this.$router.push("/singerMsg");
+      });
+    },
     //判断是否播放，播放图标控制
     getPlaying() {
       if (this.playing == true) {
@@ -255,8 +260,10 @@ export default {
     playPause() {
       if (this.playing == true) {
         this.$store.dispatch("isPlaying", false);
+        this.lyric.togglePlay();
       } else {
         this.$store.dispatch("isPlaying", true);
+        this.lyric.togglePlay();
       }
     },
     //播放音乐
@@ -287,7 +294,9 @@ export default {
       var playMusic = [
         this.playLists[index].id,
         this.playLists[index].name,
-        this.playLists[index].ar[0].name
+        this.playLists[index].ar[0].name,
+        this.playLists[index].al.picUrl,
+        this.playLists[index].ar[0].id
       ];
       this.$store.dispatch("playMusicIndex", index);
       this.$store.dispatch("getPlayMusic", playMusic);
@@ -304,7 +313,9 @@ export default {
       var playMusic = [
         this.playLists[index].id,
         this.playLists[index].name,
-        this.playLists[index].ar[0].name
+        this.playLists[index].ar[0].name,
+        this.playLists[index].al.picUrl,
+        this.playLists[index].ar[0].id
       ];
       this.$store.dispatch("playMusicIndex", index);
       this.$store.dispatch("setPrevMusic");

@@ -1,5 +1,5 @@
 <template>
-  <div class="musicListWrap" @click.self="showMusicList">
+  <div class="musicListWrap" @click.self="showMusicList" :class="{showback:isback}">
     <div class="musicListBox">
       <div class="musicListHeader">
         <el-row>
@@ -22,7 +22,14 @@
           </el-col>
         </el-row>
       </div>
-      <scroll class="musicListMain">
+      <scroll
+        class="musicListMain"
+        ref="musicListMain"
+        @scrollToEnd="scrolls"
+        @scroll="scrolls"
+        :pullup="pullup"
+        :listenScroll="listenScroll"
+      >
         <ul>
           <li v-for="(music,index) of playLists" :key="index" :class="{active:index==playIndex}">
             <p>
@@ -56,7 +63,10 @@ export default {
         { loopIcon: "&#xe603;", loopString: "单曲循环" },
         { loopIcon: "&#xe600;", loopString: "列表循环" },
         { loopIcon: "&#xe628;", loopString: "随机播放" }
-      ]
+      ],
+      pullup: true,
+      listenScroll: true,
+      isback: false
     };
   },
 
@@ -66,7 +76,12 @@ export default {
   components: {
     scroll
   },
-  mounted() {},
+  mounted() {
+    setTimeout(() => {
+      this.$refs.musicListMain.scrollTo(0, -(this.playIndex - 4) * 36, 0);
+      this.isback = true;
+    }, 300);
+  },
   computed: {
     ...mapGetters(["playLists", "loopIndex", "playIndex"])
   },
@@ -98,12 +113,14 @@ export default {
         this.playLists[index].id,
         this.playLists[index].name,
         this.playLists[index].ar[0].name,
-        this.playLists[index].al.picUrl
+        this.playLists[index].al.picUrl,
+        this.playLists[index].ar[0].id
       ];
       this.$store.dispatch("playMusicIndex", index);
       this.$store.dispatch("getPlayMusic", playMusic);
       this.$store.dispatch("isPlaying", true);
-    }
+    },
+    scrolls(pos) {}
   }
 };
 </script>
@@ -117,9 +134,11 @@ export default {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.showback {
+  background: rgba($color: #888, $alpha: 0.3);
+}
 .musicListWrap {
   position: fixed;
-  background: rgba($color: #888, $alpha: 0.3);
   top: 0px;
   width: 100%;
   height: 100%;
@@ -168,6 +187,7 @@ export default {
       }
       ul {
         width: 100%;
+        position: relative;
         li {
           position: relative;
           width: 100%;

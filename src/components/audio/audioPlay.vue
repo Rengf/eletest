@@ -74,7 +74,9 @@ export default {
       var playMusic = [
         this.playLists[index].id,
         this.playLists[index].name,
-        this.playLists[index].ar[0].name
+        this.playLists[index].ar[0].name,
+        this.playLists[index].al.picUrl,
+        this.playLists[index].ar[0].id
       ];
       this.$store.dispatch("playMusicIndex", index);
       this.$store.dispatch("getPlayMusic", playMusic);

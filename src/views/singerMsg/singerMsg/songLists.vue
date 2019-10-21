@@ -1,5 +1,11 @@
 <template>
-  <scroll class="songList">
+  <scroll
+    class="songList"
+    @scrollToEnd="scrolls"
+    @scroll="scrolls"
+    :pullup="pullup"
+    :listenScroll="listenScroll"
+  >
     <div>
       <div class="collectAll" @click="collectAll()">
         <i class="iconfont">&#xe625;</i>
@@ -31,6 +37,12 @@
 import scroll from "@/components/common/scroll";
 import { mapGetters } from "vuex";
 export default {
+  data() {
+    return {
+      pullup: true,
+      listenScroll: true
+    };
+  },
   computed: {
     ...mapGetters(["singerHotSongs"])
   },
@@ -46,7 +58,8 @@ export default {
       this.$store.dispatch("getPlayMusic", playMusic);
       this.$store.dispatch("isPlaying", true);
     },
-    collectAll() {}
+    collectAll() {},
+    scrolls(pos) {}
   },
   components: {
     scroll

@@ -92,6 +92,7 @@ const actions = {
             playMusic.name = playingMusic[1];
             playMusic.singer = playingMusic[2];
             playMusic.image = playingMusic[3];
+            playMusic.singerId = playingMusic[4]
             commit(RECEIVE_PLAY_MUSIC, playMusic);
         }
     },

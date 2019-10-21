@@ -21,7 +21,7 @@
         </ul>
       </div>
     </div>
-    <scroll class="singerLists">
+    <scroll class="singerLists" :pullup="pullup" @scrollToEnd="getMoreSinger()">
       <ul>
         <li v-for="(singer,index) of singerLists" :key="index" @click="getSingerArtists(singer.id)">
           <img :src="singer.img1v1Url" alt />
@@ -44,6 +44,7 @@ export default {
       sexIndex: 0,
       areaCode: "100",
       sexCode: "1",
+      newCode: "1001",
       singerCategory: {
         area: [
           { id: "000", name: "全部" },
@@ -60,7 +61,8 @@ export default {
           { id: "2", name: "女" },
           { id: "3", name: "组合" }
         ]
-      }
+      },
+      pullup: true
     };
   },
   mounted() {
@@ -69,21 +71,12 @@ export default {
       limit: 30,
       page: (this.page - 1) * 30
     };
-    this.$store.dispatch("getSingerList", data);
+    this.$store.dispatch("getSingerList", [data, "1001"]);
   },
   computed: {
     ...mapGetters(["singerLists", "singerArtists"])
   },
   methods: {
-    next() {
-      this.page = this.page + 1;
-      var data = {
-        cat: 1001,
-        limit: 30,
-        page: (this.page - 1) * 30
-      };
-      this.$store.dispatch("getSingerList", data);
-    },
     setArea(index, id) {
       this.scIndex = index;
       this.areaCode = id;
@@ -95,27 +88,50 @@ export default {
       this.getSingerList(id);
     },
     getSingerList(id) {
-      var newcode = "";
       if (id === "0") {
         this.sexCode = "1";
-        newcode = this.areaCode + this.sexCode;
+        if (this.areaCode + this.sexCode == this.newCode) {
+          return;
+        } else {
+          this.page = 1;
+          this.newcode = this.areaCode + this.sexCode;
+        }
       } else if (id === "000") {
         this.areaCode = "001";
-        newcode = this.areaCode + this.sexCode;
+        if (this.areaCode + this.sexCode == this.newCode) {
+          return;
+        } else {
+          this.page = 1;
+          this.newcode = this.areaCode + this.sexCode;
+        }
       } else {
-        newcode = this.areaCode + this.sexCode;
+        if (this.areaCode + this.sexCode == this.newCode) {
+          return;
+        } else {
+          this.page = 1;
+          this.newcode = this.areaCode + this.sexCode;
+        }
       }
       var data = {
-        cat: newcode,
+        cat: this.newcode,
         limit: 30,
         page: (this.page - 1) * 30
       };
-      this.$store.dispatch("getSingerList", data);
+      this.$store.dispatch("getSingerList", [data, this.newcode]);
     },
     getSingerArtists(id) {
       this.$store.dispatch("getSingerArtists", id).then(() => {
         this.$router.push("/singerMsg");
       });
+    },
+    getMoreSinger() {
+      this.page = this.page + 1;
+      var data = {
+        cat: this.newCode,
+        limit: 30,
+        page: (this.page - 1) * 30
+      };
+      this.$store.dispatch("getSingerList", [data, this.newCode]);
     }
   },
   components: {

@@ -37,3 +37,13 @@ export const reqSingerList = (data) => ajax(BASE_URL + "/artist/list", {
 export const reqSingerArtists = (id) => ajax(BASE_URL + "/artists", {
     id: id
 }, "GET")
+
+//获取歌手mv
+export const reqSingerMv = (id) => ajax(BASE_URL + "/artist/mv", {
+    id: id
+}, "GET")
+
+//播放mv
+export const reqPlayVideo = (id) => ajax(BASE_URL + "/mv/url", {
+    id: id
+}, "GET")
