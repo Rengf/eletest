@@ -66,6 +66,14 @@ export default new Router({
             meta: {
                 title: '歌手信息'
             }
+        }, {
+            path: '/musicVideo',
+            name: 'musicVideo',
+            component: () =>
+                import ('@/views/musicVideo/index.vue'),
+            meta: {
+                title: 'mv'
+            }
         }
     ]
 })

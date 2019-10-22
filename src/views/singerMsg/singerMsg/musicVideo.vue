@@ -1,13 +1,19 @@
 <template>
-  <scroll class="musicVideo">
+  <scroll class="musicVideo" :pullup="pullup" @scrollToEnd="getMoreMv()">
     <div class="videoList">
-      <button @click="getmv()">dfhasj</button>
       <ul>
-        <li v-for="(mv,index) of singerMv" :key="index" @click="playMv(mv.id)">
+        <li v-for="(mv,index) of singerMvList" :key="index" @click="playMv(mv.id,mv.name)">
           <div class="mvLeft mv">
             <img :src="mv.imgurl" :alt="mv.name" />
+            <span class="clickTotal">
+              <i class="iconfont">&#xe602;</i>
+              {{mv.playCount|playCountFilter}}
+            </span>
           </div>
-          <div class="mvRight mv">发神经的复活卡国家会计师的环境卡仕达</div>
+          <div class="mvRight mv">
+            <div class="videoName">{{mv.name}}</div>
+            <div class="publishTime">{{mv.publishTime}}</div>
+          </div>
         </li>
       </ul>
     </div>
@@ -19,20 +25,50 @@ import VideoPlay from "@/components/video/videoPlay";
 import { mapGetters } from "vuex";
 export default {
   data() {
-    return {};
+    return {
+      pullup: true,
+      page: 1,
+      limit: 10
+    };
   },
   mounted() {
-    this.$store.dispatch("getSingerMv", this.singerArtist.id);
+    var data = {
+      id: this.singerArtist.id,
+      limit: this.limit,
+      offset: 0
+    };
+    this.$store.dispatch("getSingerMvList", [data, this.singerArtist.id]);
+  },
+  filters: {
+    playCountFilter(value) {
+      if (value > 100000) {
+        return parseInt(value / 10000) + "万";
+      } else {
+        return value;
+      }
+    }
   },
   computed: {
-    ...mapGetters(["singerMv", "singerArtist"])
+    ...mapGetters(["singerMvList", "singerArtist"])
   },
   methods: {
-    getmv() {
-      console.log(this.singerArtist, this.singerMv);
+    playMv(id, name) {
+      this.$store.dispatch("playVideo", [id, name]).then(() => {
+        this.$router.push("/musicVideo");
+      });
     },
-    playMv(id) {
-      this.$store.dispatch("playVideo", id);
+    getMoreMv() {
+      if (this.page * this.limit > this.singerArtist.mvSize) {
+        return;
+      } else {
+        this.page = this.page + 1;
+        var data = {
+          id: this.singerArtist.id,
+          limit: this.limit,
+          offset: (this.page - 1) * 10
+        };
+        this.$store.dispatch("getSingerMvList", [data, this.singerArtist.id]);
+      }
     }
   },
   components: {
@@ -57,15 +93,38 @@ export default {
         margin: 10px 0;
         display: flex;
         .mvLeft {
+          position: relative;
           flex: 3;
           img {
             width: 100%;
             height: 80px;
             border-radius: 5px;
           }
+          .clickTotal {
+            position: absolute;
+            font-size: 8px;
+            transform: scale(0.8);
+            color: #fff;
+            top: -1px;
+            right: -2px;
+          }
         }
         .mvRight {
           flex: 5;
+          .videoName {
+            width: 90%;
+            margin: auto;
+            font-size: 14px;
+            color: #222;
+            line-height: 20px;
+          }
+          .publishTime {
+            width: 90%;
+            margin: auto;
+            font-size: 12px;
+            line-height: 20px;
+            color: #888;
+          }
         }
       }
     }

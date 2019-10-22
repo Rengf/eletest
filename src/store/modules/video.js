@@ -12,18 +12,18 @@ const state = {
 
 const getters = {
     playVideo(state) {
-        return state.playVideo.url
+        return state.playVideo
     }
 }
 
 const actions = {
     async playVideo({
         commit
-    }, id) {
+    }, [id, name]) {
         const result = await reqPlayVideo(id);
-        console.log(result)
-        if (result.code == 20) {
+        if (result.code == 200) {
             const playVideo = result.data;
+            playVideo.name = name;
             commit(RECEIVE_PLAY_VIDEO, playVideo);
         }
     }

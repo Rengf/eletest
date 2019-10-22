@@ -29,7 +29,6 @@
           </span>
         </div>
       </div>
-      <MyVideo></MyVideo>
       <div class="singerMsg">
         <HomePage v-if="mainTagIndex==0"></HomePage>
         <SongLists v-if="mainTagIndex==1"></SongLists>
@@ -39,7 +38,6 @@
   </div>
 </template>
 <script>
-import MyVideo from "@/components/video/videoPlay";
 import HomePage from "./singerMsg/homePage";
 import SongLists from "./singerMsg/songLists";
 import MusicVideo from "./singerMsg/musicVideo";
@@ -76,8 +74,7 @@ export default {
     scroll,
     HomePage,
     SongLists,
-    MusicVideo,
-    MyVideo
+    MusicVideo
   }
 };
 </script>

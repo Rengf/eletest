@@ -1,13 +1,13 @@
 import {
     RECEIVE_SINGER_LIST,
     RECEIVE_SINGER_ARTISTS,
-    RECEIVE_SINGER_MV,
+    RECEIVE_SINGER_MV_LIST,
 } from '../mutations-types'
 
 import {
     reqSingerList,
     reqSingerArtists,
-    reqSingerMv
+    reqsingerMvList
 } from './../../api/index'
 
 const state = {
@@ -17,7 +17,8 @@ const state = {
         artist: {},
         hotSongs: []
     },
-    singerMv: []
+    singerMvList: [],
+    singerId: 0,
 }
 
 const getters = {
@@ -37,8 +38,8 @@ const getters = {
         }
         return fiveSongs
     },
-    singerMv(state) {
-        return state.singerMv
+    singerMvList(state) {
+        return state.singerMvList
     }
 }
 
@@ -62,14 +63,13 @@ const actions = {
             commit(RECEIVE_SINGER_ARTISTS, [artist, hotSongs])
         }
     },
-    async getSingerMv({
+    async getSingerMvList({
         commit
-    }, id) {
-        const result = await reqSingerMv(id);
-        console.log(result)
+    }, [data, singerId]) {
+        const result = await reqsingerMvList(data);
         if (result.code == 200) {
-            const singerMv = result.mvs;
-            commit(RECEIVE_SINGER_MV, singerMv)
+            const singerMvList = result.mvs;
+            commit(RECEIVE_SINGER_MV_LIST, [singerMvList, singerId])
         }
     }
 }
@@ -88,8 +88,14 @@ const mutations = {
         state.singerArtists.artist = artist;
         state.singerArtists.hotSongs = hotSongs;
     },
-    [RECEIVE_SINGER_MV](state, singerMv) {
-        state.singerMv = singerMv
+    [RECEIVE_SINGER_MV_LIST](state, [singerMvList, singerId]) {
+        if (state.singerId == singerId) {
+            state.singerMvList = state.singerMvList.concat(singerMvList)
+        } else {
+            state.singerMvList = singerMvList
+            state.singerId = singerId
+        }
+
     }
 }
 
