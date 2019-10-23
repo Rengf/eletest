@@ -121,7 +121,7 @@ export default {
     },
     getSingerArtists(id) {
       this.$store.dispatch("getSingerArtists", id).then(() => {
-        this.$router.push("/singerMsg");
+        this.$router.push("/singerMsg?id=" + id);
       });
     },
     getMoreSinger() {

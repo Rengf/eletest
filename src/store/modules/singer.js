@@ -2,12 +2,14 @@ import {
     RECEIVE_SINGER_LIST,
     RECEIVE_SINGER_ARTISTS,
     RECEIVE_SINGER_MV_LIST,
+    RECEIVE_SINGER_ALBUM_LIST
 } from '../mutations-types'
 
 import {
     reqSingerList,
     reqSingerArtists,
-    reqsingerMvList
+    reqSingerMvList,
+    reqSingerAlbumList
 } from './../../api/index'
 
 const state = {
@@ -19,6 +21,7 @@ const state = {
     },
     singerMvList: [],
     singerId: 0,
+    singerAlbumList: [],
 }
 
 const getters = {
@@ -31,15 +34,11 @@ const getters = {
     singerHotSongs(state) {
         return state.singerArtists.hotSongs;
     },
-    fiveHotSongs(state) {
-        var fiveSongs = [];
-        for (let index = 0; index < 5; index++) {
-            fiveSongs.push(state.singerArtists.hotSongs[index]);
-        }
-        return fiveSongs
-    },
     singerMvList(state) {
         return state.singerMvList
+    },
+    singerAlbumList(state) {
+        return state.singerAlbumList
     }
 }
 
@@ -66,10 +65,19 @@ const actions = {
     async getSingerMvList({
         commit
     }, [data, singerId]) {
-        const result = await reqsingerMvList(data);
+        const result = await reqSingerMvList(data);
         if (result.code == 200) {
             const singerMvList = result.mvs;
             commit(RECEIVE_SINGER_MV_LIST, [singerMvList, singerId])
+        }
+    },
+    async getSingerAlbumList({
+        commit
+    }, [data, singerId]) {
+        const result = await reqSingerAlbumList(data);
+        if (result.code == 200) {
+            const singerAlbumList = result.hotAlbums
+            commit(RECEIVE_SINGER_ALBUM_LIST, [singerAlbumList, singerId])
         }
     }
 }
@@ -93,6 +101,14 @@ const mutations = {
             state.singerMvList = state.singerMvList.concat(singerMvList)
         } else {
             state.singerMvList = singerMvList
+            state.singerId = singerId
+        }
+    },
+    [RECEIVE_SINGER_ALBUM_LIST](state, [singerAlbumList, singerId]) {
+        if (state.singerId == singerId) {
+            state.singerAlbumList = state.singerAlbumList.concat(singerAlbumList)
+        } else {
+            state.singerAlbumList = singerAlbumList
             state.singerId = singerId
         }
 

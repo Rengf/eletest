@@ -8,7 +8,11 @@
       <div class="songList">
         <div class="list">
           <ul>
-            <li v-for="(song,index) of fiveHotSongs" :key="index" @click="playMusic(index)">
+            <li
+              v-for="(song,index) of singerHotSongs.slice(0,5)"
+              :key="index"
+              @click="playMusic(index)"
+            >
               <div class="listIndex">
                 <span>{{index+1}}</span>
               </div>
@@ -35,7 +39,7 @@ import scroll from "@/components/common/scroll";
 import { mapGetters } from "vuex";
 export default {
   computed: {
-    ...mapGetters(["fiveHotSongs", "singerHotSongs"])
+    ...mapGetters(["singerHotSongs"])
   },
   methods: {
     playHotSongs() {
@@ -44,10 +48,10 @@ export default {
     },
     playMusic(index) {
       var playMusic = [
-        this.fiveHotSongs[index].id,
-        this.fiveHotSongs[index].name,
-        this.fiveHotSongs[index].ar[0].name,
-        this.fiveHotSongs[index].al.picUrl
+        this.singerHotSongs[index].id,
+        this.singerHotSongs[index].name,
+        this.singerHotSongs[index].ar[0].name,
+        this.singerHotSongs[index].al.picUrl
       ];
       this.$store.dispatch("playMusicIndex", 0);
       this.$store.dispatch("getPlayMusic", playMusic);

@@ -1,18 +1,18 @@
 <template>
-  <scroll class="musicVideo" :pullup="pullup" @scrollToEnd="getMoreMv()">
-    <div class="videoList">
+  <scroll class="album" :pullup="pullup" @scrollToEnd="getMoreAlbum()">
+    <div class="albumList">
       <ul>
-        <li v-for="(mv,index) of singerMvList" :key="index" @click="playMv(mv.id,mv.name)">
-          <div class="mvLeft mv">
-            <img :src="mv.imgurl" :alt="mv.name" />
-            <span class="clickTotal">
-              <i class="iconfont">&#xe602;</i>
-              {{mv.playCount|playCountFilter}}
-            </span>
+        <li
+          v-for="(album,index) of singerAlbumList"
+          :key="index"
+          @click="toAlbum(album.id,album.name)"
+        >
+          <div class="albumLeft album">
+            <img :src="album.picUrl" :alt="album.name" />
           </div>
-          <div class="mvRight mv">
-            <div class="videoName">{{mv.name}}</div>
-            <div class="publishTime">{{mv.publishTime}}</div>
+          <div class="albumRight album">
+            <div class="albumName">{{album.name}}</div>
+            <div class="publishTime">{{album.publishTime|dateformat("YYYY-MM-DD")}} 歌曲{{album.size}}</div>
           </div>
         </li>
       </ul>
@@ -36,7 +36,7 @@ export default {
       limit: this.limit,
       offset: 0
     };
-    this.$store.dispatch("getSingerMvList", [data, this.singerArtist.id]);
+    this.$store.dispatch("getSingerAlbumList", [data, this.$route.query.id]);
   },
   filters: {
     playCountFilter(value) {
@@ -48,16 +48,16 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["singerMvList", "singerArtist"])
+    ...mapGetters(["singerAlbumList", "singerArtist"])
   },
   methods: {
-    playMv(id, name) {
+    toAlbum(id, name) {
       this.$store.dispatch("playVideo", [id, name]).then(() => {
         this.$router.push("/musicVideo?id=" + id);
       });
     },
-    getMoreMv() {
-      if (this.page * this.limit > this.singerArtist.mvSize) {
+    getMoreAlbum() {
+      if (this.page * this.limit > this.singerArtist.albumSize) {
         return;
       } else {
         this.page = this.page + 1;
@@ -66,7 +66,10 @@ export default {
           limit: this.limit,
           offset: (this.page - 1) * 10
         };
-        this.$store.dispatch("getSingerMvList", [data, this.singerArtist.id]);
+        this.$store.dispatch("getSingerAlbumList", [
+          data,
+          this.$route.query.id
+        ]);
       }
     }
   },
@@ -76,26 +79,26 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.musicVideo {
+.album {
   width: 100%;
   height: 348px;
   overflow: hidden;
-  .videoList {
+  .albumList {
     width: 100%;
     ul {
       width: 95%;
       margin: auto;
       li {
         width: 100%;
-        height: 80px;
+        height: 57px;
         margin: 10px 0;
         display: flex;
-        .mvLeft {
+        .albumLeft {
           position: relative;
-          flex: 3;
+          flex: 2;
           img {
             width: 100%;
-            height: 80px;
+            height: 57px;
             border-radius: 5px;
           }
           .clickTotal {
@@ -107,9 +110,9 @@ export default {
             right: -2px;
           }
         }
-        .mvRight {
-          flex: 5;
-          .videoName {
+        .albumRight {
+          flex: 10;
+          .albumName {
             width: 90%;
             margin: auto;
             font-size: 14px;

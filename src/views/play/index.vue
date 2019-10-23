@@ -205,7 +205,7 @@ export default {
   methods: {
     toSingerMsg(id) {
       this.$store.dispatch("getSingerArtists", id).then(() => {
-        this.$router.push("/singerMsg");
+        this.$router.push("/singerMsg?id=" + id);
       });
     },
     //判断是否播放，播放图标控制

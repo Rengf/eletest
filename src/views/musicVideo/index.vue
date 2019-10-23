@@ -2,7 +2,7 @@
   <div class="musicVideo">
     <div class="videoMsg">
       <transition name="slide-fade">
-        <div class="videoMsgHeader" v-show="isShowHeader">
+        <div class="videoMsgHeader" :class="{active:isShowHeader}">
           <div class="returnBox">
             <i class="iconfont" @click="returnPre()">&#xe62d;</i>
           </div>
@@ -47,6 +47,10 @@ export default {
 <style lang="scss" scoped>
 .iconfont {
   color: #fff;
+}
+
+.active {
+  opacity: 0;
 }
 
 .slide-fade-enter-active {

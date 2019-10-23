@@ -30,4 +30,6 @@ export const RECEIVE_SINGER_ARTISTS = 'receive_singer_artists' //获取歌手信
 
 export const RECEIVE_SINGER_MV_LIST = 'receive_singer_mv_list' //获取歌手的mv列表
 
+export const RECEIVE_SINGER_ALBUM_LIST = 'receive_singer_album_list' //获取歌手的mv列表
+
 export const RECEIVE_PLAY_VIDEO = 'receive_play_video' //播放视频

@@ -39,11 +39,18 @@ export const reqSingerArtists = (id) => ajax(BASE_URL + "/artists", {
 }, "GET")
 
 //获取歌手mv
-export const reqsingerMvList = (data) => ajax(BASE_URL + "/artist/mv", {
+export const reqSingerMvList = (data) => ajax(BASE_URL + "/artist/mv", {
     id: data.id,
     limit: data.limit,
     offset: data.offset
 }, "GET")
+
+//获取歌手专辑
+export const reqSingerAlbumList = (data) => ajax(BASE_URL + "/artist/album", {
+    id: data.id,
+    limit: data.limit,
+    offset: data.offset
+})
 
 //播放mv
 export const reqPlayVideo = (id) => ajax(BASE_URL + "/mv/url", {

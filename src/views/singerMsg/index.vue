@@ -21,17 +21,16 @@
           :key="index"
           @click="switchTag(index)"
         >
-          <span :class="{active:index==mainTagIndex}">
-            {{mainTag.name}}
-            <i
-              v-if="index==2||index==3||index==4"
-            >{{index==2?singerArtist.albumSize:(index==3?singerArtist.mvSize:0)}}</i>
-          </span>
+          <span :class="{active:index==mainTagIndex}">{{mainTag.name}}</span>
+          <i
+            v-if="index==2||index==3||index==4"
+          >{{index==2?singerArtist.albumSize:(index==3?singerArtist.mvSize:0)}}</i>
         </div>
       </div>
       <div class="singerMsg">
         <HomePage v-if="mainTagIndex==0"></HomePage>
         <SongLists v-if="mainTagIndex==1"></SongLists>
+        <Album v-if="mainTagIndex==2"></Album>
         <MusicVideo v-if="mainTagIndex==3"></MusicVideo>
       </div>
     </div>
@@ -41,7 +40,7 @@
 import HomePage from "./singerMsg/homePage";
 import SongLists from "./singerMsg/songLists";
 import MusicVideo from "./singerMsg/musicVideo";
-import scroll from "@/components/common/scroll";
+import Album from "./singerMsg/album";
 import { mapGetters } from "vuex";
 import axios from "axios";
 export default {
@@ -59,8 +58,12 @@ export default {
       mainTagIndex: 0
     };
   },
+  created() {
+    var id = this.$route.query.id;
+    this.$store.dispatch("getSingerArtists", id);
+  },
   computed: {
-    ...mapGetters(["singerArtist", "fiveHotSongs"])
+    ...mapGetters(["singerArtist"])
   },
   methods: {
     returnPre() {
@@ -71,10 +74,10 @@ export default {
     }
   },
   components: {
-    scroll,
     HomePage,
     SongLists,
-    MusicVideo
+    MusicVideo,
+    Album
   }
 };
 </script>
@@ -125,9 +128,10 @@ export default {
         span {
           font-size: 14px;
           padding: 4px 0;
-          i {
-            font-size: 12px;
-          }
+        }
+        i {
+          font-size: 12px;
+          color: #888;
         }
       }
     }

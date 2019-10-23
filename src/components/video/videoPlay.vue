@@ -1,11 +1,11 @@
 <template>
   <div class="videoWrap" @click="showControls()">
-    <video :src="videoUrl" preload="auto" ref="video" @canplay="getDuration()">
+    <video :src="videoUrl" preload="auto" ref="video" @canplay="getDuration()" @ended="ended">
       <source :src="videoUrl" type="video/mp4" />
       <source :src="videoUrl" type="video/ogg" />
     </video>
     <transition name="slide-fade">
-      <div class="controls" v-show="isShowControls">
+      <div class="controls" :class="{active:isShowControls}">
         <div class="controlsMain">
           <i class="iconfont" v-html="playIcon" @click.stop="playPaused()"></i>
         </div>
@@ -13,12 +13,12 @@
           <div class="playMsg">
             <div class="playTime">{{currentTime|filterTime}}/{{duration|filterTime}}</div>
             <div class="fullScreen">
-              <i class="iconfont">&#xe607;</i>
+              <i class="iconfont">&#xe6aa;</i>
             </div>
           </div>
           <div class="progressBar">
-            <div class="timeBar" ref="timeBar"></div>
-            <div class="timedBar">
+            <div class="timeBar" ref="timeBar" @click.stop="jumpTime"></div>
+            <div class="timedBar" ref="timedBar" @click.stop="jumpTime">
               <span class="timePoint" ref="timePoint" @touchstart="startTime" @touchmove="dragTime"></span>
             </div>
           </div>
@@ -42,6 +42,7 @@ export default {
       duration: 0,
       currentTime: 0,
       timeBarLength: 0,
+      timedBarLength: 0,
       timer: null
     };
   },
@@ -74,11 +75,14 @@ export default {
     });
     this.initDefault();
   },
+  destroyed() {
+    clearInterval(this.timer);
+  },
   watch: {},
   methods: {
     initDefault() {
-      console.log(this.$refs.timeBar.clientWidth);
-      this.timeBarLength = this.$refs.timeBar.clientWidth;
+      this.timeBarLength = this.$refs.timeBar.offsetWidth;
+      this.timeeBarLength = this.$refs.timedBar.offsetWidth;
     },
     showControls() {
       this.isShowControls = !this.isShowControls;
@@ -88,23 +92,51 @@ export default {
       if (this.$refs.video.paused) {
         this.$refs.video.play();
         this.playIcon = "&#xe775;";
+        this.getDuration();
       } else {
         this.$refs.video.pause();
         this.playIcon = "&#xe75e;";
+        clearInterval(this.timer);
       }
     },
     getDuration() {
       var video = this.$refs.video;
-      this.duration = video.duration;
+      this.duration = Math.ceil(video.duration);
+      var pageX = (this.timeBarLength - 10) / this.duration; //减去时间点的宽度
       this.timer = setInterval(() => {
-        this.currentTime = video.currentTime;
-        // this.$refs.timePoint.style.left = pageX + "px";
+        this.currentTime = Math.ceil(video.currentTime);
+        this.$refs.timedBar.style.width = pageX * this.currentTime + "px";
+        this.$refs.timePoint.style.left = pageX * this.currentTime + "px";
       }, 1000);
     },
     startTime(e) {
       console.log(e.touches[0]);
     },
-    dragTime() {}
+    dragTime(e) {
+      var video = this.$refs.video;
+      var slidedis = e.touches[0].pageX;
+      if (slidedis > this.timeBarLength || slidedis < 0) {
+        return;
+      }
+      var newTime = (slidedis / this.timeBarLength) * this.duration;
+      video.currentTime = newTime;
+      this.$refs.timedBar.style.width = slidedis + "px";
+      this.$refs.timePoint.style.left = slidedis + "px";
+    },
+    jumpTime(e) {
+      var video = this.$refs.video;
+      var slidedis = e.offsetX;
+      var newTime = (slidedis / this.timeBarLength) * this.duration;
+      video.currentTime = newTime;
+      this.$refs.timedBar.style.width = slidedis + "px";
+      this.$refs.timePoint.style.left = slidedis + "px";
+    },
+    ended() {
+      setTimeout(() => {
+        clearInterval(this.timer);
+        this.playIcon = "&#xe75e;";
+      }, 1000);
+    }
   }
 };
 </script>
@@ -112,6 +144,10 @@ export default {
 .iconfont {
   color: #fff;
   font-size: 25px;
+}
+
+.active {
+  opacity: 0;
 }
 
 .slide-fade-enter-active {
@@ -148,9 +184,9 @@ export default {
     }
     .controlsFooter {
       width: 100%;
-      height: 30px;
+      height: 35px;
       position: absolute;
-      bottom: -2px;
+      bottom: -6px;
       .playMsg {
         width: 95%;
         height: 25px;
@@ -169,26 +205,26 @@ export default {
       }
       .progressBar {
         width: 100%;
-        height: 5px;
+        height: 10px;
         .timeBar {
           position: relative;
           width: 100%;
-          height: 1px;
-          background: rgba(199, 198, 198, 0.486);
+          height: 2px;
+          background: rgb(255, 255, 255, 0.4);
           top: 2px;
         }
         .timedBar {
           top: 0px;
+          width: 0px;
           position: relative;
-          width: 100%;
-          height: 1px;
+          height: 2px;
           background: rgb(253, 2, 2);
           .timePoint {
             position: absolute;
             display: block;
-            width: 5px;
-            height: 5px;
-            top: -2px;
+            width: 10px;
+            height: 10px;
+            top: -4px;
             background: rgb(255, 1, 1);
             border-radius: 50%;
           }

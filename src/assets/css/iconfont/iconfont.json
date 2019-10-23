@@ -90,6 +90,13 @@
       "unicode_decimal": 58882
     },
     {
+      "icon_id": "3445353",
+      "name": "消息",
+      "font_class": "xiaoxi",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    },
+    {
       "icon_id": "4036669",
       "name": "高分墙-评论icon",
       "font_class": "gaofenqiang-pinglunicon",
@@ -139,11 +146,25 @@
       "unicode_decimal": 59230
     },
     {
+      "icon_id": "6828336",
+      "name": "全屏",
+      "font_class": "quanping",
+      "unicode": "e6aa",
+      "unicode_decimal": 59050
+    },
+    {
       "icon_id": "6982643",
       "name": "每日推荐_画板 1",
       "font_class": "meirituijian_huaban",
       "unicode": "e627",
       "unicode_decimal": 58919
+    },
+    {
+      "icon_id": "7048112",
+      "name": "赞",
+      "font_class": "zan",
+      "unicode": "e610",
+      "unicode_decimal": 58896
     },
     {
       "icon_id": "7214652",
@@ -242,6 +263,13 @@
       "font_class": "customer-service-line",
       "unicode": "e690",
       "unicode_decimal": 59024
+    },
+    {
+      "icon_id": "11283436",
+      "name": "收藏夹",
+      "font_class": "shoucangjia",
+      "unicode": "e69a",
+      "unicode_decimal": 59034
     }
   ]
 }
