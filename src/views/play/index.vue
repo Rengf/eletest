@@ -26,14 +26,9 @@
         <div class="musicLyric" v-else>
           <div class="volume">
             <span class="volumeImg iconfont">&#xec0a;</span>
-            <div class="volumeBar" ref="volumeBar" @click.stop="jumpVolume"></div>
+            <div class="volumeBar" ref="volumeBar"></div>
             <div class="volumedBar" ref="volumedBar">
-              <span
-                ref="volumePoint"
-                class="volumePoint"
-                @touchstart="startVolume"
-                @touchmove="dragVolume"
-              ></span>
+              <span ref="volumePoint" class="volumePoint" @touchmove="dragVolume"></span>
             </div>
           </div>
           <div class="lyric">
@@ -59,12 +54,7 @@
           <span class="currentTime">{{musicMsg.currentTime|filterTime}}</span>
           <div class="timeAxis">
             <div class="timeBar" ref="timeBar" @click.stop="jumpTime"></div>
-            <span
-              ref="timePoint"
-              class="timePoint"
-              @touchstart="controlStart"
-              @touchmove="dragTime"
-            ></span>
+            <span ref="timePoint" class="timePoint" @touchmove="dragTime"></span>
           </div>
           <span class="duration">{{musicMsg.duration|filterTime}}</span>
         </div>
@@ -105,7 +95,6 @@ export default {
     return {
       isShowList: false,
       $timeBar: "",
-      startX: 0, //点击时间时时间的开始位置
       timeBarLength: 0, //  滑竿多长距离
       positionX: 0, //时间点距离
       timer: "", //定时器
@@ -117,7 +106,6 @@ export default {
       currentTime: 0, //已播放时长，秒
       playBackRate: 1, //播放速度
       showImg: false,
-      startVolumeX: 0,
       volumePositionX: 0,
       volumeBarLength: 0,
       lyric: null,
@@ -348,11 +336,6 @@ export default {
         this.isStop = false;
       }
     },
-
-    //滑动起始点
-    controlStart(e) {
-      this.startX = e.touches[0].pageX;
-    },
     //滑动控制进度
     dragTime(e) {
       var slidedis = e.touches[0].pageX;
@@ -394,11 +377,6 @@ export default {
             this.musicMsg.currentTime * this.autox + "px";
         }
       }, 1000);
-    },
-    jumpVolume(e) {},
-    //音量控制起始点
-    startVolume(e) {
-      this.startVolumeX = e.touches[0].pageX;
     },
     //音量控制
     dragVolume(e) {

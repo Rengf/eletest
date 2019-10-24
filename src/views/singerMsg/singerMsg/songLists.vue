@@ -96,14 +96,19 @@ export default {
         margin: 10px 0px;
         .listIndex {
           flex: 1;
-          line-height: 50px;
+          line-height: 40px;
           text-align: center;
         }
         .songMsg {
           flex: 12;
+          width: 80%;
           span {
             display: block;
-            line-height: 25px;
+            width: 100%;
+            line-height: 20px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
           }
           .songName {
             font-size: 15px;

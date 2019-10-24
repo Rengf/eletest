@@ -36,7 +36,12 @@ export default {
   },
 
   created() {
-    this.$store.dispatch("getSheetList", "流行");
+    var data = {
+      limit: 12,
+      cat: "怀旧",
+      offset: 0
+    };
+    this.$store.dispatch("getSheetList", [data, "怀旧"]);
   },
   computed: {
     ...mapGetters(["sheetLists"])

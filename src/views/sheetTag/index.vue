@@ -51,14 +51,18 @@ export default {
   methods: {
     //添加我的歌单分类标签
     addMySheet(tag) {
+      localStorage.removeItem("mySheetTags");
       this.$store.dispatch("setMySheetTags", ["add", tag]);
+      localStorage.setItem("mySheetTags", JSON.stringify(this.mySheetTags));
     },
     //删除我的歌单分类标签
     subMySheet(tag, index) {
       if (index <= 2) {
         return;
       } else {
+        localStorage.removeItem("mySheetTags");
         this.$store.dispatch("setMySheetTags", ["sub", tag]);
+        localStorage.setItem("mySheetTags", JSON.parse(this.mySheetTags));
       }
     }
   },

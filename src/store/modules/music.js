@@ -19,6 +19,7 @@ import {
 
 const state = {
     sheetLists: [], //歌单列表
+    sheetName: "",
     sheetMusicLists: [], //歌单音乐列表
     playMusic: {}, //播放的音乐
     sheetCategoryLists: {}, //歌单分类列表
@@ -62,11 +63,11 @@ const getters = {
 const actions = {
     async getSheetList({
         commit
-    }, data) {
+    }, [data, sheetName]) {
         const result = await reqSheetList(data);
         if (result.code == 200) {
             const sheetLists = result.playlists;
-            commit(RECEIVE_SHEET_LIST, sheetLists);
+            commit(RECEIVE_SHEET_LIST, [sheetLists, sheetName]);
         }
     },
     async getSheetMusicList({
@@ -146,8 +147,13 @@ const actions = {
 };
 
 const mutations = {
-    [RECEIVE_SHEET_LIST](state, sheetLists) {
-        state.sheetLists = sheetLists;
+    [RECEIVE_SHEET_LIST](state, [sheetLists, sheetName]) {
+        if (state.sheetName == sheetName) {
+            state.sheetLists = state.sheetLists.concat(sheetLists)
+        } else {
+            state.sheetLists = sheetLists;
+            state.sheetName = sheetName
+        }
     },
     [RECEIVE_SHEETMUSIC_LIST](state, sheetMusicLists) {
         if (state.playLists.length == 0) {

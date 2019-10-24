@@ -1,11 +1,11 @@
 <template>
-  <div class="videoWrap" @click="showControls()">
+  <div class="videoWrap" ref="videoWrap" @click="showControls()">
     <video :src="videoUrl" preload="auto" ref="video" @canplay="getDuration()" @ended="ended">
       <source :src="videoUrl" type="video/mp4" />
       <source :src="videoUrl" type="video/ogg" />
     </video>
     <transition name="slide-fade">
-      <div class="controls" :class="{active:isShowControls}">
+      <div class="controls" :class="{active:isShowControls}" ref="controls">
         <div class="controlsMain">
           <i class="iconfont" v-html="playIcon" @click.stop="playPaused()"></i>
         </div>
@@ -13,13 +13,13 @@
           <div class="playMsg">
             <div class="playTime">{{currentTime|filterTime}}/{{duration|filterTime}}</div>
             <div class="fullScreen">
-              <i class="iconfont">&#xe6aa;</i>
+              <i class="iconfont" @click.stop="fullScreen()">&#xe6aa;</i>
             </div>
           </div>
           <div class="progressBar">
             <div class="timeBar" ref="timeBar" @click.stop="jumpTime"></div>
             <div class="timedBar" ref="timedBar" @click.stop="jumpTime">
-              <span class="timePoint" ref="timePoint" @touchstart="startTime" @touchmove="dragTime"></span>
+              <span class="timePoint" ref="timePoint" @touchmove="dragTime"></span>
             </div>
           </div>
         </div>
@@ -32,7 +32,7 @@ export default {
   props: {
     videoUrl: {
       type: String,
-      default: ""
+      default: require("../../assets/video/overview.webm")
     }
   },
   data() {
@@ -70,6 +70,7 @@ export default {
   computed: {},
   mounted() {
     this.$nextTick(() => {
+      console.log(this.$refs.video);
       this.$refs.video.play();
       this.playIcon = "&#xe775;";
     });
@@ -100,17 +101,17 @@ export default {
       }
     },
     getDuration() {
+      this.$refs.video.play();
+      clearInterval(this.timer);
       var video = this.$refs.video;
       this.duration = Math.ceil(video.duration);
       var pageX = (this.timeBarLength - 10) / this.duration; //减去时间点的宽度
       this.timer = setInterval(() => {
+        console.log(123);
         this.currentTime = Math.ceil(video.currentTime);
         this.$refs.timedBar.style.width = pageX * this.currentTime + "px";
         this.$refs.timePoint.style.left = pageX * this.currentTime + "px";
       }, 1000);
-    },
-    startTime(e) {
-      console.log(e.touches[0]);
     },
     dragTime(e) {
       var video = this.$refs.video;
@@ -136,6 +137,34 @@ export default {
         clearInterval(this.timer);
         this.playIcon = "&#xe75e;";
       }, 1000);
+    },
+
+    //全屏切换
+    fullScreen() {
+      if (
+        this.$refs.videoWrap.scrollHeight === window.screen.height &&
+        this.$refs.videoWrap.scrollWidth === window.screen.width
+      ) {
+        if (document.exitFullScreen) {
+          document.exitFullScreen();
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        } else if (element.msExitFullscreen) {
+          element.msExitFullscreen();
+        }
+      } else {
+        if (this.$refs.videoWrap.requestFullscreen) {
+          this.$refs.videoWrap.requestFullscreen();
+        } else if (this.$refs.videoWrap.mozRequestFullScreen) {
+          this.$refs.videoWrap.mozRequestFullScreen();
+        } else if (this.$refs.videoWrap.webkitRequestFullscreen) {
+          this.$refs.videoWrap.webkitRequestFullscreen();
+        } else if (this.$refs.videoWrap.msRequestFullscreen) {
+          this.$refs.videoWrap.msRequestFullscreen();
+        }
+      }
     }
   }
 };
@@ -143,7 +172,7 @@ export default {
 <style lang="scss" scoped>
 .iconfont {
   color: #fff;
-  font-size: 25px;
+  font-size: 20px;
 }
 
 .active {
@@ -163,30 +192,40 @@ export default {
   opacity: 0;
 }
 
+video::-webkit-media-controls {
+  display: none !important;
+}
+
 .videoWrap {
   width: 100%;
   position: relative;
   video {
+    position: relative;
     width: 100%;
-    // height: 300px;
+    height: 100%;
+    left: 50%;
+    margin-left: -50%;
   }
   .controls {
     position: absolute;
     top: 0px;
     width: 100%;
-    height: 203px;
+    height: 100%;
     z-index: 999;
     .controlsMain {
+      position: relative;
       width: 25px;
       height: 25px;
-      margin: auto;
-      margin-top: 22%;
+      left: 50%;
+      top: 50%;
+      margin-left: -13px;
+      margin-top: -13px;
     }
     .controlsFooter {
       width: 100%;
       height: 35px;
       position: absolute;
-      bottom: -6px;
+      bottom: 0;
       .playMsg {
         width: 95%;
         height: 25px;

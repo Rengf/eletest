@@ -19,9 +19,9 @@
       </div>
     </div>
     <div class="hotSheet"></div>
-    <div class="sheetList">
+    <scroll class="sheetList" :pullup="pullUp" @scrollToEnd="getMoreSheet()">
       <AllSheet :sheetLists="sheetLists"></AllSheet>
-    </div>
+    </scroll>
   </div>
 </template>
 <script>
@@ -34,11 +34,16 @@ export default {
     return {
       title: "歌单广场",
       activeIndex: 0,
-      tags: []
+      tags: [],
+      limit: 12,
+      page: 1,
+      name: "",
+      pullUp: true
     };
   },
   mounted() {
     this.$store.dispatch("getSheetCategoryList");
+    this.mySheetTags = JSON.parse(localStorage.getItem("mySheetTags"));
   },
   computed: {
     ...mapGetters(["mySheetTags", "sheetLists"])
@@ -46,8 +51,23 @@ export default {
   methods: {
     //获取歌单列表
     getSheet(index, name) {
+      this.name = name;
+      var data = {
+        limit: this.limit,
+        cat: this.name,
+        offset: (this.page - 1) * this.limit
+      };
       this.activeIndex = index;
-      this.$store.dispatch("getSheetList", name);
+      this.$store.dispatch("getSheetList", [data, this.name]);
+    },
+    getMoreSheet() {
+      this.page = this.page + 1;
+      var data = {
+        limit: this.limit,
+        cat: this.name,
+        offset: (this.page - 1) * this.limit
+      };
+      this.$store.dispatch("getSheetList", [data, this.name]);
     },
     //跳转到歌单标签页
     toSheetTag() {
@@ -108,6 +128,8 @@ export default {
   }
   .sheetList {
     width: 100%;
+    height: 578px;
+    overflow: hidden;
     .sheetMain {
       width: 95%;
       display: flex;

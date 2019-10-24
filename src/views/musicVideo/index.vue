@@ -13,9 +13,7 @@
           </div>
         </div>
       </transition>
-      <div class="video">
-        <MyVideo :videoUrl="playVideo.url" @showControls="showHeader"></MyVideo>
-      </div>
+      <MyVideo :videoUrl="playVideo.url" @showControls="showHeader"></MyVideo>
     </div>
   </div>
 </template>
