@@ -22,6 +22,8 @@ export const RECEIVE_PREV_MUSIC = 'receive_prev_music' //控制播放进度
 
 export const RECEIVE_MY_SHEET_TAGS = 'receive_my_sheet_tags' //我的歌单标签
 
+export const RECEIVE_LOCAL_SHEET_TAGS = 'receive_local_sheet_tags'
+
 export const DELETE_PLAYLIST_MUSIC = 'delete_playlist_music' // 删除播放列表中的音乐
 
 export const RECEIVE_SINGER_LIST = 'receive_singer_list' // 获取歌手列表
@@ -33,3 +35,5 @@ export const RECEIVE_SINGER_MV_LIST = 'receive_singer_mv_list' //获取歌手的
 export const RECEIVE_SINGER_ALBUM_LIST = 'receive_singer_album_list' //获取歌手的mv列表
 
 export const RECEIVE_PLAY_VIDEO = 'receive_play_video' //播放视频
+
+export const RECEIVE_VIDEO_DETAIL = 'receive_video_detail'

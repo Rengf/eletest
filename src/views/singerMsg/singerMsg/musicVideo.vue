@@ -53,7 +53,9 @@ export default {
   methods: {
     playMv(id, name) {
       this.$store.dispatch("playVideo", [id, name]).then(() => {
-        this.$router.push("/musicVideo?id=" + id);
+        this.$router.push(
+          "/musicVideo?mvId=" + id + "&singerId=" + this.$route.query.id
+        );
       });
     },
     getMoreMv() {

@@ -57,3 +57,8 @@ export const reqSingerAlbumList = (data) => ajax(BASE_URL + "/artist/album", {
 export const reqPlayVideo = (id) => ajax(BASE_URL + "/mv/url", {
     id: id,
 }, "GET")
+
+//mv详情
+export const reqVideoDetail = (id) => ajax(BASE_URL + "/mv/detail", {
+    mvid: id,
+}, "GET")

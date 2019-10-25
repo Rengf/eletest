@@ -4,6 +4,7 @@ import {
     RECEIVE_PLAY_MUSIC,
     RECEIVE_SHEETCATEGORY_LIST,
     RECEIVE_MY_SHEET_TAGS,
+    RECEIVE_LOCAL_SHEET_TAGS,
     DELETE_PLAYLIST_MUSIC
 } from "../mutations-types";
 
@@ -33,7 +34,7 @@ const state = {
             id: 2
         },
         {
-            name: "推荐",
+            name: "精品",
             id: 3
         }
     ]
@@ -138,7 +139,11 @@ const actions = {
     }, [as, tag]) {
         commit(RECEIVE_MY_SHEET_TAGS, [as, tag]);
     },
-
+    getLocalSheetTags({
+        commit
+    }) {
+        commit(RECEIVE_LOCAL_SHEET_TAGS)
+    },
     deletePlayListMusic({
         commit
     }, index) {
@@ -182,7 +187,7 @@ const mutations = {
     [RECEIVE_MY_SHEET_TAGS](state, [as, tag]) {
         if (as == "add") {
             var possess = state.mySheetTags.find(val => {
-                if (tag == val) {
+                if (tag.name == val.name) {
                     return val;
                 } else {
                     return false;
@@ -191,15 +196,31 @@ const mutations = {
             if (possess) {
                 return;
             } else {
-                state.mySheetTags.push(tag);
+                if (localStorage.getItem("mySheetTags")) {
+                    var mytags = JSON.parse(localStorage.getItem("mySheetTags"));
+                    mytags.push(tag)
+                    localStorage.setItem("mySheetTags", JSON.stringify(mytags));
+                    state.mySheetTags = mytags;
+                } else {
+                    state.mySheetTags.push(tag)
+                    localStorage.setItem("mySheetTags", JSON.stringify(state.mySheetTags));
+                }
             }
         } else {
             state.mySheetTags.forEach((val, index) => {
                 if (val == tag) {
-                    state.mySheetTags.splice(index, 1);
+                    if (localStorage.getItem("mySheetTags")) {
+                        state.mySheetTags.splice(index, 1);
+                        localStorage.setItem("mySheetTags", JSON.stringify(state.mySheetTags));
+                    } else {
+                        return
+                    }
                 }
             });
         }
+    },
+    [RECEIVE_LOCAL_SHEET_TAGS](state) {
+        state.mySheetTags = JSON.parse(localStorage.getItem("mySheetTags"));
     },
     [DELETE_PLAYLIST_MUSIC](state, [index, length]) {
         state.playLists.splice(index, length)

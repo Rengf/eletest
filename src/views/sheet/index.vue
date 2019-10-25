@@ -43,7 +43,7 @@ export default {
   },
   mounted() {
     this.$store.dispatch("getSheetCategoryList");
-    this.mySheetTags = JSON.parse(localStorage.getItem("mySheetTags"));
+    this.$store.dispatch("getLocalSheetTags");
   },
   computed: {
     ...mapGetters(["mySheetTags", "sheetLists"])

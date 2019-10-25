@@ -209,6 +209,13 @@
       "unicode_decimal": 60426
     },
     {
+      "icon_id": "8142438",
+      "name": "加",
+      "font_class": "jia",
+      "unicode": "e64a",
+      "unicode_decimal": 58954
+    },
+    {
       "icon_id": "8154489",
       "name": "视频 (1)",
       "font_class": "shipin",

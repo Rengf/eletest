@@ -1,6 +1,14 @@
 <template>
   <div class="videoWrap" ref="videoWrap" @click="showControls()">
-    <video :src="videoUrl" preload="auto" ref="video" @canplay="getDuration()" @ended="ended">
+    <video
+      :src="videoUrl"
+      preload="auto"
+      ref="video"
+      @canplay="getDuration()"
+      @ended="ended"
+      muted="muted"
+      autoplay
+    >
       <source :src="videoUrl" type="video/mp4" />
       <source :src="videoUrl" type="video/ogg" />
     </video>
@@ -69,11 +77,7 @@ export default {
   },
   computed: {},
   mounted() {
-    this.$nextTick(() => {
-      console.log(this.$refs.video);
-      this.$refs.video.play();
-      this.playIcon = "&#xe775;";
-    });
+    // this.setyl();
     this.initDefault();
   },
   destroyed() {
@@ -81,6 +85,9 @@ export default {
   },
   watch: {},
   methods: {
+    setyl() {
+      this.$refs.video.muted = false;
+    },
     initDefault() {
       this.timeBarLength = this.$refs.timeBar.offsetWidth;
       this.timeeBarLength = this.$refs.timedBar.offsetWidth;
@@ -107,7 +114,6 @@ export default {
       this.duration = Math.ceil(video.duration);
       var pageX = (this.timeBarLength - 10) / this.duration; //减去时间点的宽度
       this.timer = setInterval(() => {
-        console.log(123);
         this.currentTime = Math.ceil(video.currentTime);
         this.$refs.timedBar.style.width = pageX * this.currentTime + "px";
         this.$refs.timePoint.style.left = pageX * this.currentTime + "px";
