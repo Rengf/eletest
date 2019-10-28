@@ -54,11 +54,21 @@ export const reqSingerAlbumList = (data) => ajax(BASE_URL + "/artist/album", {
 })
 
 //播放mv
-export const reqPlayVideo = (id) => ajax(BASE_URL + "/mv/url", {
+export const reqPlayMv = (id) => ajax(BASE_URL + "/mv/url", {
     id: id,
 }, "GET")
 
 //mv详情
-export const reqVideoDetail = (id) => ajax(BASE_URL + "/mv/detail", {
+export const reqMvDetail = (id) => ajax(BASE_URL + "/mv/detail", {
     mvid: id,
+}, "GET")
+
+//播放视频
+export const reqPlayVideo = (id) => ajax(BASE_URL + "/video/url", {
+    id: id,
+}, "GET")
+
+//视频详情
+export const reqVideoDetail = (id) => ajax(BASE_URL + "/video/detail", {
+    id: id,
 }, "GET")

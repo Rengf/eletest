@@ -6,7 +6,6 @@
       ref="video"
       @canplay="getDuration()"
       @ended="ended"
-      muted="muted"
       autoplay
     >
       <source :src="videoUrl" type="video/mp4" />
@@ -108,16 +107,21 @@ export default {
       }
     },
     getDuration() {
-      this.$refs.video.play();
-      clearInterval(this.timer);
-      var video = this.$refs.video;
-      this.duration = Math.ceil(video.duration);
-      var pageX = (this.timeBarLength - 10) / this.duration; //减去时间点的宽度
-      this.timer = setInterval(() => {
-        this.currentTime = Math.ceil(video.currentTime);
-        this.$refs.timedBar.style.width = pageX * this.currentTime + "px";
-        this.$refs.timePoint.style.left = pageX * this.currentTime + "px";
-      }, 1000);
+      try {
+        this.$refs.video.play();
+        this.playIcon = "&#xe775;";
+        clearInterval(this.timer);
+        var video = this.$refs.video;
+        this.duration = Math.ceil(video.duration);
+        var pageX = (this.timeBarLength - 10) / this.duration; //减去时间点的宽度
+        this.timer = setInterval(() => {
+          this.currentTime = Math.ceil(video.currentTime);
+          this.$refs.timedBar.style.width = pageX * this.currentTime + "px";
+          this.$refs.timePoint.style.left = pageX * this.currentTime + "px";
+        }, 1000);
+      } catch (e) {
+        console.log(e);
+      }
     },
     dragTime(e) {
       var video = this.$refs.video;

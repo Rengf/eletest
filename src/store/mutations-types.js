@@ -34,6 +34,10 @@ export const RECEIVE_SINGER_MV_LIST = 'receive_singer_mv_list' //获取歌手的
 
 export const RECEIVE_SINGER_ALBUM_LIST = 'receive_singer_album_list' //获取歌手的mv列表
 
-export const RECEIVE_PLAY_VIDEO = 'receive_play_video' //播放视频
+export const RECEIVE_PLAY_MV = 'receive_play_mv' //播放mv
 
-export const RECEIVE_VIDEO_DETAIL = 'receive_video_detail'
+export const RECEIVE_MV_DETAIL = 'receive_mv_detail' //mv详情
+
+export const RECEIVE_PLAY_VIDEO = 'receive_play_video' //播放mv
+
+export const RECEIVE_VIDEO_DETAIL = 'receive_video_detail' //mv详情

@@ -74,6 +74,14 @@ export default new Router({
             meta: {
                 title: 'mv'
             }
+        }, {
+            path: '/video',
+            name: 'video',
+            component: () =>
+                import ('@/views/video/index.vue'),
+            meta: {
+                title: '视频'
+            }
         }
     ]
 })

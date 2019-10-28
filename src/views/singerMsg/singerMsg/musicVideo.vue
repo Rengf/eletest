@@ -52,7 +52,7 @@ export default {
   },
   methods: {
     playMv(id, name) {
-      this.$store.dispatch("playVideo", [id, name]).then(() => {
+      this.$store.dispatch("playMv", [id, name]).then(() => {
         this.$router.push(
           "/musicVideo?mvId=" + id + "&singerId=" + this.$route.query.id
         );

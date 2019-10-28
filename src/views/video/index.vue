@@ -6,49 +6,49 @@
           <div class="returnBox">
             <i class="iconfont" @click="returnPre()">&#xe62d;</i>
           </div>
-          <div class="videoName" :title="mvDetail.name">{{mvDetail.name}}</div>
+          <div class="videoName" :title="videoDetail.name">{{videoDetail.name}}</div>
           <div class="shareBox">
             <i class="iconfont">&#xe63c;</i>
             <i class="iconfont">&#xe60d;</i>
           </div>
         </div>
       </transition>
-      <MyVideo :videoUrl="playMv.url||mvDetail.brs[1080]" @showControls="showHeader"></MyVideo>
+      <MyVideo :videoUrl="playVideo.url||videoDetail.brs[1080]" @showControls="showHeader"></MyVideo>
       <scroll class="videoMain">
         <div>
-          <div class="mvDetail">
+          <div class="videoDetail">
             <div class="detailTop">
               <div class="videoName">
-                <span>{{mvDetail.name}}</span>
+                <span>{{videoDetail.name}}</span>
               </div>
               <div class="detailShow">
                 <i class="iconfont" style="color:#000" @click="getvideo()">&#xe609;</i>
               </div>
             </div>
-            <div class="playCount">{{mvDetail.playCount|playCountFilter}}次观看</div>
+            <div class="playCount">{{videoDetail.playCount|playCountFilter}}次观看</div>
             <transition name="slide-fade">
               <div class="videoDesc" v-show="isShowDesc">
-                <div class="durationmsTime">{{mvDetail.durationmsTime}} 发布</div>
-                <div class="videoDesc">{{mvDetail.desc}}</div>
+                <div class="durationmsTime">{{videoDetail.durationmsTime}} 发布</div>
+                <div class="videoDesc">{{videoDetail.desc}}</div>
               </div>
             </transition>
           </div>
           <div class="like">
             <div>
               <i class="iconfont">&#xe610;</i>
-              <span class="count">{{mvDetail.likeCount}}</span>
+              <span class="count">{{videoDetail.likeCount}}</span>
             </div>
             <div>
               <i class="iconfont">&#xe625;</i>
-              <span class="count">{{mvDetail.subCount}}</span>
+              <span class="count">{{videoDetail.subscribeCount}}</span>
             </div>
             <div>
               <i class="iconfont">&#xe60e;</i>
-              <span class="count">{{mvDetail.commentCount}}</span>
+              <span class="count">{{videoDetail.commentCount}}</span>
             </div>
             <div>
               <i class="iconfont">&#xe63c;</i>
-              <span class="count">{{mvDetail.shareCount}}</span>
+              <span class="count">{{videoDetail.shareCount}}</span>
             </div>
           </div>
           <div class="singerMsg">
@@ -59,7 +59,7 @@
             <div class="subSinger">
               <div class="subSingerBox">
                 <i class="iconfont">&#xe64a;</i>
-                <span @click="getSimiMv()">&nbsp;收&nbsp;藏</span>
+                <span @click="getSimiVideo()">&nbsp;收&nbsp;藏</span>
               </div>
             </div>
           </div>
@@ -67,25 +67,25 @@
             <h2>相关视频</h2>
             <ul>
               <li
-                v-for="(mv,index) of simiMvLists"
+                v-for="(video,index) of simiVideoLists"
                 :key="index"
-                @click="toPlayMv(mv.vid,mv.title,mv.type)"
+                @click="toPlayVideo(video.vid,video.title,video.type)"
               >
-                <div class="mvLeft mv">
-                  <img :src="mv.coverUrl" :alt="mv.title" />
+                <div class="mvLeft video">
+                  <img :src="video.coverUrl" :alt="video.title" />
                   <span class="clickTotal">
                     <i class="iconfont">&#xe602;</i>
-                    {{mv.playTime|playCountFilter}}
+                    {{video.playTime|playCountFilter}}
                   </span>
                 </div>
-                <div class="mvRight mv">
+                <div class="mvRight video">
                   <div class="videoName">
-                    <i v-if="mv.type==0">mv</i>
-                    <span>{{mv.title}}</span>
+                    <i v-if="video.type==0">video</i>
+                    <span>{{video.title}}</span>
                   </div>
                   <div
                     class="durationmsTime"
-                  >{{mv.durationms|filterTime}} by {{mv.creator[0].userName}}</div>
+                  >{{video.durationms|filterTime}} by {{video.creator[0].userName}}</div>
                 </div>
               </li>
             </ul>
@@ -112,7 +112,7 @@ export default {
       isShowHeader: false,
       showDescIcon: "",
       isShowDesc: false,
-      simiMvLists: []
+      simiVideoLists: []
     };
   },
   components: {
@@ -149,20 +149,19 @@ export default {
     }
   },
   created() {
-    this.$store.dispatch("getMvDetail", this.$route.query.mvId);
+    this.$store.dispatch("getVideoDetail", this.$route.query.videoId);
     this.$store.dispatch("getSingerArtists", this.$route.query.singerId);
   },
   mounted() {
-    this.getSimiMv();
+    this.getSimiVideo();
   },
   computed: {
-    ...mapGetters(["playMv", "mvDetail", "singerArtist"])
+    ...mapGetters(["playVideo", "videoDetail", "singerArtist"])
   },
   watch: {
     $route: {
       handler(newval, oldval) {
-        console.log(newval);
-        this.getSimiMv();
+        this.getSimiVideo();
       }
     }
   },
@@ -177,15 +176,17 @@ export default {
     showDetail() {
       this.isShowDesc = !this.isShowDesc;
     },
-    getSimiMv() {
+    getSimiVideo() {
       axios
         .get(
-          "http://localhost:3000/related/allvideo?id=" + this.$route.query.mvId
+          "http://localhost:3000/related/allvideo?id=" +
+            this.$route.query.videoId
         )
         .then(
           res => {
             if (res.status == 200) {
-              this.simiMvLists = res.data.data;
+              this.simiVideoLists = res.data.data;
+              console.log(this.simiVideoLists);
             }
           },
           res => {
@@ -193,9 +194,9 @@ export default {
           }
         );
     },
-    toPlayMv(id, name, type) {
+    toPlayVideo(id, name, type) {
       if (type == 0) {
-        this.$store.dispatch("playMv", [id, name]).then(() => {
+        this.$store.dispatch("playVideo", [id, name]).then(() => {
           this.$router.push(
             "/musicVideo?mvId=" + id + "&singerId=" + this.$route.query.singerId
           );
@@ -203,7 +204,10 @@ export default {
       } else if (type == 1) {
         this.$store.dispatch("playVideo", [id, name]).then(() => {
           this.$router.push(
-            "/video?videoId=" + id + "&singerId=" + this.$route.query.singerId
+            "/musicVideo?videoId=" +
+              id +
+              "&singerId=" +
+              this.$route.query.singerId
           );
         });
       }
@@ -275,7 +279,7 @@ export default {
       width: 100%;
       height: 435px;
       overflow: hidden;
-      .mvDetail {
+      .videoDetail {
         width: 95%;
         margin: auto;
         margin-top: 5px;
