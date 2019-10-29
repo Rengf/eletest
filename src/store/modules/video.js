@@ -69,7 +69,6 @@ const actions = {
         commit
     }, id) {
         const result = await reqVideoDetail(id);
-        console.log(result)
         if (result.code == 200) {
             const videoDetail = result.data;
             commit(RECEIVE_VIDEO_DETAIL, videoDetail);

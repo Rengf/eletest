@@ -162,6 +162,7 @@ export default {
     $route: {
       handler(newval, oldval) {
         this.getSimiVideo();
+        this.$store.dispatch("getVideoDetail", this.$route.query.videoId);
       }
     }
   },
@@ -186,7 +187,6 @@ export default {
           res => {
             if (res.status == 200) {
               this.simiVideoLists = res.data.data;
-              console.log(this.simiVideoLists);
             }
           },
           res => {
@@ -272,6 +272,7 @@ export default {
         line-height: 25px;
         i {
           margin: 0px 5px;
+          color: #fff;
         }
       }
     }

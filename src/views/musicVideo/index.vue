@@ -91,10 +91,48 @@
             </ul>
           </div>
           <div class="videoComment">
-            <h2>精彩评论</h2>
-            <ul>
-              <li></li>
-            </ul>
+            <div class="comment">
+              <h2>精彩评论</h2>
+              <ul>
+                <li v-for="(hotComments,index) of mvCommentLists.hotComments" :key="index">
+                  <div class="commentMsg">
+                    <div class="avatar">
+                      <img :src="hotComments.user.avatarUrl" alt="头像" />
+                    </div>
+                    <div class="nickName">
+                      <span class="name">{{hotComments.user.nickname}}</span>
+                      <span class="time">{{hotComments.time|dateformat("YYYY-MM-DD")}}</span>
+                    </div>
+                    <div class="likeCount">
+                      <span>{{hotComments.likedCount}}</span>
+                      <i class="iconfont">&#xe610;</i>
+                    </div>
+                  </div>
+                  <div class="commentContent" v-html="hotComments.content"></div>
+                </li>
+              </ul>
+            </div>
+            <div class="comment">
+              <h2>精彩评论</h2>
+              <ul>
+                <li v-for="(comments,index) of mvCommentLists.comments" :key="index">
+                  <div class="commentMsg">
+                    <div class="avatar">
+                      <img :src="comments.user.avatarUrl" alt="头像" />
+                    </div>
+                    <div class="nickName">
+                      <span class="name">{{comments.user.nickname}}</span>
+                      <span class="time">{{comments.time|dateformat("YYYY-MM-DD ")}}</span>
+                    </div>
+                    <div class="likeCount">
+                      <span>{{comments.likedCount}}</span>
+                      <i class="iconfont">&#xe610;</i>
+                    </div>
+                  </div>
+                  <div class="commentContent" v-html="comments.content"></div>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </scroll>
@@ -112,7 +150,8 @@ export default {
       isShowHeader: false,
       showDescIcon: "",
       isShowDesc: false,
-      simiMvLists: []
+      simiMvLists: [],
+      mvCommentLists: []
     };
   },
   components: {
@@ -154,6 +193,7 @@ export default {
   },
   mounted() {
     this.getSimiMv();
+    this.getMvComment();
   },
   computed: {
     ...mapGetters(["playMv", "mvDetail", "singerArtist"])
@@ -161,8 +201,9 @@ export default {
   watch: {
     $route: {
       handler(newval, oldval) {
-        console.log(newval);
         this.getSimiMv();
+        this.getMvComment();
+        this.$store.dispatch("getMvDetail", this.$route.query.mvId);
       }
     }
   },
@@ -193,12 +234,32 @@ export default {
           }
         );
     },
+    getMvComment() {
+      axios
+        .get(
+          "http://localhost:3000/comment/mv?id=" +
+            this.$route.query.mvId +
+            "&limit=30"
+        )
+        .then(
+          res => {
+            if (res.status == 200) {
+              console.log(res);
+              this.mvCommentLists = res.data;
+            }
+          },
+          res => {
+            console.log(res);
+          }
+        );
+    },
     toPlayMv(id, name, type) {
       if (type == 0) {
         this.$store.dispatch("playMv", [id, name]).then(() => {
           this.$router.push(
             "/musicVideo?mvId=" + id + "&singerId=" + this.$route.query.singerId
           );
+          console.log(this.mvDetail);
         });
       } else if (type == 1) {
         this.$store.dispatch("playVideo", [id, name]).then(() => {
@@ -268,6 +329,7 @@ export default {
         line-height: 25px;
         i {
           margin: 0px 5px;
+          color: #fff;
         }
       }
     }
@@ -444,6 +506,78 @@ export default {
               }
             }
           }
+        }
+      }
+      .videoComment {
+        width: 95%;
+        margin: auto;
+        .comment {
+          width: 100%;
+          margin-top: 30px;
+          h2 {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+          }
+          ul {
+            width: 100%;
+            li {
+              width: 100%;
+              margin: 15px 0px;
+            }
+          }
+        }
+        .commentMsg {
+          width: 100%;
+          height: 30px;
+          display: flex;
+          .avatar {
+            flex: 2;
+            text-align: center;
+            img {
+              width: 30px;
+              height: 30px;
+              border-radius: 50%;
+            }
+          }
+          .nickName {
+            flex: 10;
+            span {
+              display: block;
+              height: 15px;
+            }
+            .name {
+              font-size: 14px;
+              color: #000;
+            }
+            .time {
+              font-size: 12px;
+              color: #888;
+            }
+          }
+          .likeCount {
+            flex: 2;
+            span {
+              font-size: 12px;
+              color: #888;
+              line-height: 30px;
+              margin-left: 50%;
+            }
+            i {
+              font-size: 14px;
+              color: #000;
+              line-height: 30px;
+            }
+          }
+        }
+        .commentContent {
+          width: 86%;
+          margin-left: 14%;
+          margin-top: 5px;
+          padding-bottom: 15px;
+          font-size: 14px;
+          line-height: 18px;
+          border-bottom: 1px solid #efefef;
         }
       }
     }

@@ -1,5 +1,8 @@
 <template>
-  <div class="playWrap">
+  <div
+    class="playWrap"
+    :style="{backgroundImage:'url('+playMusic.image+')',backgroundSize:'100% 100%',backgroundRepeat:'no-repeat'}"
+  >
     <div class="playBox">
       <div class="palyHeader">
         <ul>
@@ -21,14 +24,16 @@
           </li>
         </ul>
       </div>
-      <div class="playMain">
-        <div class="musicImg" v-if="showImg"></div>
+      <div class="playMain" @click="isShowImg()">
+        <div class="musicImg" v-if="showImg">
+          <img :src="playMusic.image" alt="图片" />
+        </div>
         <div class="musicLyric" v-else>
           <div class="volume">
             <span class="volumeImg iconfont">&#xec0a;</span>
             <div class="volumeBar" ref="volumeBar"></div>
             <div class="volumedBar" ref="volumedBar">
-              <span ref="volumePoint" class="volumePoint" @touchmove="dragVolume"></span>
+              <span ref="volumePoint" class="volumePoint" @touchmove.stop="dragVolume"></span>
             </div>
           </div>
           <div class="lyric">
@@ -165,6 +170,7 @@ export default {
   },
   watch: {
     playMusic() {
+      console.log(this.playMusic);
       if (this.lyric) {
         this.lyric.stop();
         this.currentLineNum = 0;
@@ -191,6 +197,9 @@ export default {
     clearTimeout(this.timer);
   },
   methods: {
+    isShowImg() {
+      this.showImg = !this.showImg;
+    },
     toSingerMsg(id) {
       this.$store.dispatch("getSingerArtists", id).then(() => {
         this.$router.push("/singerMsg?id=" + id);
@@ -434,21 +443,34 @@ export default {
   transform: translateY(100%);
   opacity: 1;
 }
+.playWrap:after {
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: inherit;
+  filter: blur(20px);
+  z-index: 1;
+}
+
 .playWrap {
   width: 100%;
-  background: #efefef;
+  z-index: 0;
+
   .playBox {
+    position: absolute;
     width: 100%;
+    z-index: 2;
     .palyHeader {
       width: 95%;
       margin: auto;
       height: 45px;
-      background: #ccc;
       ul {
         display: flex;
         li {
           height: 45px;
-          border: 1px solid #ccc;
         }
         .return {
           flex: 1;
@@ -502,7 +524,41 @@ export default {
       width: 95%;
       margin: 10px auto;
       height: 530px;
-      background: #bcbcbc;
+      .musicImg {
+        position: relative;
+        width: 150px;
+        height: 150px;
+        top: 25%;
+        left: 50%;
+        margin-left: -75px;
+        animation: musicimg 30s linear infinite;
+        img {
+          width: 150px;
+          height: 150px;
+          border-radius: 50%;
+        }
+      }
+      @-webkit-keyframes musicimg {
+        0% {
+          -webkit-transform: rotate(0deg);
+        }
+
+        25% {
+          -webkit-transform: rotate(90deg);
+        }
+
+        50% {
+          -webkit-transform: rotate(180deg);
+        }
+
+        75% {
+          -webkit-transform: rotate(270deg);
+        }
+
+        100% {
+          -webkit-transform: rotate(360deg);
+        }
+      }
       .musicLyric {
         width: 100%;
         .volume {
@@ -570,7 +626,11 @@ export default {
         width: 95%;
         height: 15px;
         margin: auto;
-        background: #ccc;
+        .duration,
+        .currentTime {
+          color: #fff;
+        }
+
         .timeAxis {
           flex: 12;
           position: relative;
@@ -606,7 +666,6 @@ export default {
         ul {
           width: 100%;
           height: 30px;
-          background: #bcbcbc;
           display: flex;
           li {
             flex: 1;

@@ -4,7 +4,7 @@
       <div class="imageBox">
         <transition-group tag="ul" name="image">
           <li v-show="lunboIndex === index" v-for="(image,index) in imageList" :key="index">
-            <img :src="image.url" :alt="index+'.png'" />
+            <img :src="image.pic" :alt="index+'.png'" />
           </li>
         </transition-group>
       </div>
@@ -19,31 +19,32 @@
   </div>
 </template>
 <script>
+import axios from "axios";
 export default {
   data() {
     return {
       lunboIndex: 0,
       imageList: [
         {
-          url: require("../../../../assets/images/avatar.png")
+          pic: require("../../../../assets/images/avatar.png")
         },
         {
-          url: require("../../../../assets/images/avatar.png")
+          pic: require("../../../../assets/images/avatar.png")
         },
         {
-          url: require("../../../../assets/images/avatar.png")
+          pic: require("../../../../assets/images/avatar.png")
         },
         {
-          url: require("../../../../assets/images/avatar.png")
+          pic: require("../../../../assets/images/avatar.png")
         },
         {
-          url: require("../../../../assets/images/avatar.png")
+          pic: require("../../../../assets/images/avatar.png")
         },
         {
-          url: require("../../../../assets/images/avatar.png")
+          pic: require("../../../../assets/images/avatar.png")
         },
         {
-          url: require("../../../../assets/images/avatar.png")
+          pic: require("../../../../assets/images/avatar.png")
         }
       ],
       timer: ""
@@ -54,6 +55,7 @@ export default {
   },
   mounted() {
     this.jumpadd();
+    this.getImg();
   },
   methods: {
     //点击跳到第几张
@@ -64,10 +66,17 @@ export default {
     jumpadd() {
       this.timer = setInterval(() => {
         this.lunboIndex++;
-        if (this.lunboIndex == 7) {
+        if (this.lunboIndex == this.imageList.length) {
           this.lunboIndex = 0;
         }
       }, 3000);
+    },
+    getImg() {
+      axios.get("http://localhost:3000/banner?type=2").then(res => {
+        if (res.status == 200) {
+          this.imageList = res.data.banners;
+        }
+      });
     }
   }
 };
@@ -104,13 +113,12 @@ export default {
     }
   }
   .buttonBox {
-    width: 22%;
     z-index: 99999;
     position: absolute;
     bottom: 10px;
-    left: 0;
+    left: 50%;
     right: 0;
-    margin: 0 auto;
+    margin-left: -13%;
     ul {
       li {
         width: 7px;
