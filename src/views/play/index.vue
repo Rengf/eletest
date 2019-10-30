@@ -3,6 +3,7 @@
     class="playWrap"
     :style="{backgroundImage:'url('+playMusic.image+')',backgroundSize:'100% 100%',backgroundRepeat:'no-repeat'}"
   >
+    <div class="backBox"></div>
     <div class="playBox">
       <div class="palyHeader">
         <ul>
@@ -59,7 +60,9 @@
           <span class="currentTime">{{musicMsg.currentTime|filterTime}}</span>
           <div class="timeAxis">
             <div class="timeBar" ref="timeBar" @click.stop="jumpTime"></div>
-            <span ref="timePoint" class="timePoint" @touchmove="dragTime"></span>
+            <div class="timedBar" ref="timedBar">
+              <span ref="timePoint" class="timePoint" @touchmove="dragTime"></span>
+            </div>
           </div>
           <span class="duration">{{musicMsg.duration|filterTime}}</span>
         </div>
@@ -101,6 +104,7 @@ export default {
       isShowList: false,
       $timeBar: "",
       timeBarLength: 0, //  滑竿多长距离
+      timedBarLength: 0,
       positionX: 0, //时间点距离
       timer: "", //定时器
       autox: 0, //每秒移动距离
@@ -118,11 +122,7 @@ export default {
       isStop: false
     };
   },
-  created() {
-    this.$nextTick(() => {
-      this.initDefault();
-    });
-  },
+  created() {},
   mounted() {
     this.initDefault();
     this.getPlaying();
@@ -170,7 +170,6 @@ export default {
   },
   watch: {
     playMusic() {
-      console.log(this.playMusic);
       if (this.lyric) {
         this.lyric.stop();
         this.currentLineNum = 0;
@@ -334,7 +333,6 @@ export default {
       this.timeBarLength = this.$timeBar.clientWidth;
       this.volumeBarLength = this.$volumeBar.clientWidth;
       this.volumePositionX = 0.5 * this.volumeBarLength;
-      this.volumePositionX = this.volumeBarLength * this.musicMsg.volume;
       this.$refs.volumePoint.style.left = this.volumePositionX + "px";
       this.$refs.volumedBar.style.width = this.volumePositionX + "px";
       this.currentSong = this.playMusic.url;
@@ -374,14 +372,18 @@ export default {
     },
     //进度条显示
     autoPlay() {
+      this.autox = this.timeBarLength / this.musicMsg.duration;
       this.$refs.timePoint.style.left =
         this.musicMsg.currentTime * this.autox + "px";
       clearInterval(this.timer);
       this.timer = setInterval(() => {
         if (this.timeBarLength < this.positionX + this.autox) {
+          this.$refs.timedBar.style.width = this.timeBarLength - 5 + "px";
           this.$refs.timePoint.style.left = this.timeBarLength - 5 + "px";
           clearInterval(this.timer);
         } else {
+          this.$refs.timedBar.style.width =
+            this.musicMsg.currentTime * this.autox + "px";
           this.$refs.timePoint.style.left =
             this.musicMsg.currentTime * this.autox + "px";
         }
@@ -458,7 +460,15 @@ export default {
 .playWrap {
   width: 100%;
   z-index: 0;
-
+  .backBox {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(36, 36, 36, 0.333);
+    z-index: 2;
+  }
   .playBox {
     position: absolute;
     width: 100%;
@@ -635,6 +645,7 @@ export default {
           flex: 12;
           position: relative;
           .timeBar {
+            position: relative;
             width: 100%;
             margin: auto;
             height: 1px;
@@ -642,14 +653,22 @@ export default {
             border-radius: 1px 1px 1px 1px;
             background: #bc381c;
           }
-          .timePoint {
-            top: 5px;
-            position: absolute;
-            width: 5px;
-            height: 5px;
-            display: block;
-            border-radius: 50%;
-            background: #1b2af2;
+          .timedBar {
+            width: 0px;
+            position: relative;
+            top: -2px;
+            height: 3px;
+            background: #fff;
+            border-radius: 1px 1px 1px 1px;
+            .timePoint {
+              top: -4px;
+              position: absolute;
+              width: 10px;
+              height: 10px;
+              display: block;
+              border-radius: 50%;
+              background: #1b2af2;
+            }
           }
         }
         span {

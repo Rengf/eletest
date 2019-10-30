@@ -154,7 +154,16 @@ const actions = {
 const mutations = {
     [RECEIVE_SHEET_LIST](state, [sheetLists, sheetName]) {
         if (state.sheetName == sheetName) {
-            state.sheetLists = state.sheetLists.concat(sheetLists)
+            sheetLists.forEach(newval => {
+                var newSheet = state.sheetLists.find((val) => {
+                    if (val.name == newval.name) {
+                        return newval
+                    }
+                })
+                if (!newSheet) {
+                    state.sheetLists.push(newval)
+                }
+            })
         } else {
             state.sheetLists = sheetLists;
             state.sheetName = sheetName
