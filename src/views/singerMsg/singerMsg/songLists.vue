@@ -44,7 +44,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["singerHotSongs"])
+    ...mapGetters(["singerHotSongs", "playLists"])
   },
   methods: {
     playMusic(index) {
@@ -52,9 +52,12 @@ export default {
         this.singerHotSongs[index].id,
         this.singerHotSongs[index].name,
         this.singerHotSongs[index].ar[0].name,
-        this.singerHotSongs[index].al.picUrl
+        this.singerHotSongs[index].al.picUrl,
+        this.$route.query.id
       ];
-      this.$store.dispatch("playMusicIndex", 0);
+      var oneSong = [this.singerHotSongs[index]];
+      this.$store.dispatch("getSheetMusicList", oneSong);
+      this.$store.dispatch("playMusicIndex", this.playLists.length - 1);
       this.$store.dispatch("getPlayMusic", playMusic);
       this.$store.dispatch("isPlaying", true);
     },

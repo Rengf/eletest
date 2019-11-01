@@ -72,3 +72,6 @@ export const reqPlayVideo = (id) => ajax(BASE_URL + "/video/url", {
 export const reqVideoDetail = (id) => ajax(BASE_URL + "/video/detail", {
     id: id,
 }, "GET")
+
+//视频详情
+export const reqTopList = (id) => ajax(BASE_URL + "/toplist/detail", {}, "GET")

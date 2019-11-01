@@ -1,7 +1,7 @@
 <template>
   <div class="sheetTag">
     <ReturnHeader :title="title"></ReturnHeader>
-    <div class="tagLists">
+    <scroll class="tagLists">
       <ul>
         <li class="tagCategory">
           <span>我的歌单</span>
@@ -30,11 +30,12 @@
           </ul>
         </li>
       </ul>
-    </div>
+    </scroll>
   </div>
 </template>
 <script>
 import ReturnHeader from "@/components/common/returnHeader";
+import scroll from "@/components/common/scroll";
 import { mapGetters } from "vuex";
 export default {
   data() {
@@ -64,7 +65,8 @@ export default {
     }
   },
   components: {
-    ReturnHeader
+    ReturnHeader,
+    scroll
   }
 };
 </script>
@@ -74,7 +76,9 @@ export default {
   margin: auto;
   .tagLists {
     width: 95%;
+    height: calc(100vh - 30px);
     margin: auto;
+    overflow: hidden;
     .tagCategory {
       width: 100%;
       line-height: 40px;

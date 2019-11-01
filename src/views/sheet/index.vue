@@ -22,9 +22,11 @@
     <scroll class="sheetList" :pullup="pullUp" @scrollToEnd="getMoreSheet()">
       <AllSheet :sheetLists="sheetLists"></AllSheet>
     </scroll>
+    <NavBar v-if="isMusicPlay"></NavBar>
   </div>
 </template>
 <script>
+import NavBar from "@/components/navBar/navBar";
 import AllSheet from "@/components/sheet/sheet";
 import scroll from "@/components/common/scroll";
 import ReturnHeader from "@/components/common/returnHeader";
@@ -38,15 +40,24 @@ export default {
       limit: 12,
       page: 1,
       name: "",
-      pullUp: true
+      pullUp: true,
+      isMusicPlay: false
     };
   },
   mounted() {
     this.$store.dispatch("getSheetCategoryList");
     this.$store.dispatch("getLocalSheetTags");
+    if (this.playMusic.name) {
+      this.isMusicPlay = true;
+    }
   },
   computed: {
-    ...mapGetters(["mySheetTags", "sheetLists"])
+    ...mapGetters(["mySheetTags", "sheetLists", "playMusic"])
+  },
+  watch: {
+    playMusic() {
+      this.isMusicPlay = true;
+    }
   },
   methods: {
     //获取歌单列表
@@ -77,7 +88,8 @@ export default {
   components: {
     ReturnHeader,
     scroll,
-    AllSheet
+    AllSheet,
+    NavBar
   }
 };
 </script>
@@ -105,11 +117,11 @@ export default {
         float: left;
         overflow: hidden;
         ul {
-          width: 2000px;
-          overflow: hidden;
           height: 30px;
+          white-space: nowrap;
+          display: inline-block;
           li {
-            float: left;
+            display: inline-block;
             height: 28px;
             margin: 0 10px;
             line-height: 28px;

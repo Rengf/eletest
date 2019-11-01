@@ -38,7 +38,7 @@
             </div>
           </div>
           <div class="lyric">
-            <scroll class="lyricList" ref="lyricList" :data="lyricData">
+            <scroll class="lyricList" ref="lyricList">
               <div class="lyricBox">
                 <div v-if="lyricData">
                   <p
@@ -52,7 +52,7 @@
               </div>
             </scroll>
           </div>
-          <div clsss="subMenu"></div>
+          <div class="subMenu"></div>
         </div>
       </div>
       <div class="playBar">
@@ -60,7 +60,7 @@
           <span class="currentTime">{{musicMsg.currentTime|filterTime}}</span>
           <div class="timeAxis">
             <div class="timeBar" ref="timeBar" @click.stop="jumpTime"></div>
-            <div class="timedBar" ref="timedBar">
+            <div class="timedBar" ref="timedBar" @click.stop="jumpTime">
               <span ref="timePoint" class="timePoint" @touchmove="dragTime"></span>
             </div>
           </div>
@@ -277,6 +277,7 @@ export default {
     },
     //下一首
     next() {
+      this.lyric.stop();
       this.currentLineNum = 0;
       this.lyric = null;
       var index = 0;
@@ -299,6 +300,7 @@ export default {
     },
     //上一首
     prev() {
+      this.lyric.stop();
       this.currentLineNum = 0;
       this.lyric = null;
       this.$store.dispatch("setPrevMusic");
@@ -332,7 +334,7 @@ export default {
       this.$volumeBar = this.$refs.volumeBar;
       this.timeBarLength = this.$timeBar.clientWidth;
       this.volumeBarLength = this.$volumeBar.clientWidth;
-      this.volumePositionX = 0.5 * this.volumeBarLength;
+      this.volumePositionX = this.volumeBarLength / 2;
       this.$refs.volumePoint.style.left = this.volumePositionX + "px";
       this.$refs.volumedBar.style.width = this.volumePositionX + "px";
       this.currentSong = this.playMusic.url;
@@ -352,7 +354,9 @@ export default {
       var newTime =
         (this.positionX / this.timeBarLength) * this.musicMsg.duration;
       this.$store.dispatch("setCurrentTime", newTime);
+      this.lyric.seek(this.musicMsg.currentTime * 1000);
       this.positionX = slidedis - 43;
+      this.$refs.timedBar.style.width = this.positionX + "px";
       this.$refs.timePoint.style.left = this.positionX + "px";
     },
     //点击控制进度
@@ -365,6 +369,7 @@ export default {
       this.lyric.seek(this.musicMsg.currentTime * 1000);
       if (this.timeBarLength < this.positionX + 5) {
         clearInterval(this.timer);
+        this.$refs.timedBar.style.width = this.timeBarLength - 5 + "px";
         this.$refs.timePoint.style.left = this.timeBarLength - 5 + "px";
       } else {
         this.autoPlay();
@@ -590,13 +595,14 @@ export default {
           }
           .volumedBar {
             position: absolute;
-            width: 0px;
+            width: 130px;
             height: 2px;
             background: #fff;
             margin: 9px 0px 9px 30px;
             .volumePoint {
               position: absolute;
               width: 10px;
+              left: 130px;
               height: 10px;
               border-radius: 50%;
               background: #fff;

@@ -82,6 +82,14 @@ export default new Router({
             meta: {
                 title: '视频'
             }
+        }, {
+            path: '/topList',
+            name: 'topList',
+            component: () =>
+                import ('@/views/topList/index.vue'),
+            meta: {
+                title: '排行榜'
+            }
         }
     ]
 })

@@ -29,7 +29,7 @@
             </li>
           </ul>
         </div>
-        <div class="moreSongs"></div>
+        <div class="moreSongs" @click="getindex()">dfasdf</div>
       </div>
     </div>
   </scroll>
@@ -39,23 +39,28 @@ import scroll from "@/components/common/scroll";
 import { mapGetters } from "vuex";
 export default {
   computed: {
-    ...mapGetters(["singerHotSongs"])
+    ...mapGetters(["singerHotSongs", "playLists", "playIndex"])
   },
   methods: {
     playHotSongs() {
       this.$store.dispatch("getSheetMusicList", this.singerHotSongs);
-      this.playMusic(0);
     },
     playMusic(index) {
       var playMusic = [
         this.singerHotSongs[index].id,
         this.singerHotSongs[index].name,
         this.singerHotSongs[index].ar[0].name,
-        this.singerHotSongs[index].al.picUrl
+        this.singerHotSongs[index].al.picUrl,
+        this.$route.query.id
       ];
-      this.$store.dispatch("playMusicIndex", 0);
+      var oneSong = [this.singerHotSongs[index]];
+      this.$store.dispatch("getSheetMusicList", oneSong);
+      this.$store.dispatch("playMusicIndex", this.playLists.length - 1);
       this.$store.dispatch("getPlayMusic", playMusic);
       this.$store.dispatch("isPlaying", true);
+    },
+    getindex() {
+      console.log(this.playIndex);
     }
   },
   components: {

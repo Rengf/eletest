@@ -29,9 +29,11 @@
         </li>
       </ul>
     </scroll>
+    <NavBar v-if="isMusicPlay"></NavBar>
   </div>
 </template>
 <script>
+import NavBar from "@/components/navBar/navBar";
 import ReturnHeader from "@/components/common/returnHeader";
 import scroll from "@/components/common/scroll";
 import { mapGetters } from "vuex";
@@ -62,10 +64,14 @@ export default {
           { id: "3", name: "组合" }
         ]
       },
-      pullup: true
+      pullup: true,
+      isMusicPlay: false
     };
   },
   mounted() {
+    if (this.playMusic.name) {
+      this.isMusicPlay = true;
+    }
     var data = {
       cat: 1001,
       limit: 30,
@@ -74,7 +80,12 @@ export default {
     this.$store.dispatch("getSingerList", [data, "1001"]);
   },
   computed: {
-    ...mapGetters(["singerLists", "singerArtists"])
+    ...mapGetters(["singerLists", "singerArtist", "playMusic"])
+  },
+  watch: {
+    playMusic() {
+      this.isMusicPlay = true;
+    }
   },
   methods: {
     setArea(index, id) {
@@ -136,7 +147,8 @@ export default {
   },
   components: {
     ReturnHeader,
-    scroll
+    scroll,
+    NavBar
   }
 };
 </script>

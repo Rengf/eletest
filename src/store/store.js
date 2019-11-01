@@ -8,6 +8,7 @@ import Music from './modules/music'
 import play from './modules/play'
 import singer from './modules/singer'
 import Video from './modules/video'
+import Top from './modules/top'
 
 Vue.use(Vuex)
 
@@ -20,6 +21,7 @@ export default new Vuex.Store({
         Music,
         play,
         singer,
-        Video
+        Video,
+        Top
     }
 })

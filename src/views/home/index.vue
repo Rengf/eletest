@@ -5,17 +5,13 @@
     </transition>
     <HeaderBar @showSliderBar="showSliderBar"></HeaderBar>
     <router-view></router-view>
-    <transition name="slide-fade">
-      <MusicList v-if="isShowList" @showMusicList="showMusicList"></MusicList>
-    </transition>
-    <NavBar @showMusicList="showMusicList"></NavBar>
+    <NavBar></NavBar>
   </div>
 </template>
 
 <script>
 import HeaderBar from "@/components/common/headerBar";
-import NavBar from "@/components/common/navBar"; // 组件
-import MusicList from "@/components/musicList/musicList";
+import NavBar from "@/components/navBar/navBar"; // 组件
 import SliderBar from "@/components/sliderBar/sliderBar";
 import MusicPlay from "views/play/index";
 import { mapGetters } from "vuex";
@@ -23,14 +19,12 @@ export default {
   name: "home",
   components: {
     NavBar,
-    MusicList,
     HeaderBar,
     SliderBar,
     MusicPlay
   },
   data() {
     return {
-      isShowList: false,
       isShowSlider: false
     };
   },
@@ -44,10 +38,6 @@ export default {
     ...mapGetters(["sheetCategoryLists"])
   },
   methods: {
-    //显示音乐列表
-    showMusicList(showMusicList) {
-      this.isShowList = showMusicList;
-    },
     //显示设置页
     showSliderBar(showSliderBar) {
       this.isShowSlider = showSliderBar;

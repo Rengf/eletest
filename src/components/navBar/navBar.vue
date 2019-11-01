@@ -37,10 +37,14 @@
         </div>
       </el-col>
     </el-row>
+    <transition name="slide-fade">
+      <MusicList v-if="isShowList" @showMusicList="showMusicList"></MusicList>
+    </transition>
   </div>
 </template>
 <script>
 import { mapGetters } from "vuex";
+import MusicList from "@/components/musicList/musicList";
 export default {
   data() {
     return {
@@ -51,7 +55,8 @@ export default {
       currentTime: 0, //当前播放时长
       duration: 0, //总时长
       timer: "",
-      isActive: false
+      isActive: false,
+      isShowList: false
     };
   },
   mounted() {
@@ -96,12 +101,15 @@ export default {
     //显示音乐列表
     showMusicList(e) {
       this.cancelBubble(e);
-      this.$emit("showMusicList", true);
+      this.isShowList = !this.isShowList;
     },
     //跳转到播放页
     toPlay() {
       this.$router.push({ path: "/play" });
     }
+  },
+  components: {
+    MusicList
   }
 };
 </script>
