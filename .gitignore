@@ -2,7 +2,7 @@
 node_modules
 /dist
 package-lock.json
-server/NeteaseCloudMusicApi-master
+server/NeteaseCloudMusicApi-3.24.2
 
 # local env files
 .env.local

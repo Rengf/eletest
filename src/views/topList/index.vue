@@ -19,7 +19,12 @@
         </div>
         <div class="gengduo">
           <h2>更多榜单</h2>
-          <div class="topBox" v-for="(top,index) of topOtherLists" :key="index">
+          <router-link
+            class="topBox"
+            v-for="(top,index) of topOtherLists"
+            :key="index"
+            :to="'/musicList?topId='+top.id"
+          >
             <div class="topImg">
               <img :src="top.coverImgUrl" alt="图片" />
               <span>{{top.updateFrequency}}</span>
@@ -27,7 +32,7 @@
             <div class="topName">
               <span>{{top.name}}</span>
             </div>
-          </div>
+          </router-link>
         </div>
       </div>
     </scroll>
@@ -49,11 +54,7 @@ export default {
   computed: {
     ...mapGetters(["topOriginalLists", "topOtherLists"])
   },
-  methods: {
-    getList() {
-      console.log(this.topLists);
-    }
-  },
+  methods: {},
   components: {
     ReturnHeader,
     scroll

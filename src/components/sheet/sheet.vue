@@ -1,10 +1,10 @@
 <template>
   <div class="sheetBox">
-    <div
+    <router-link
       class="sheet"
       v-for="(sheet,index) of sheetLists"
       :key="sheet.id"
-      @click="getSheetMusicList(sheet.id)"
+      :to="'/musicList?sheetId='+sheet.id"
     >
       <span class="clickTotal">
         <i class="iconfont">&#xe602;</i>
@@ -12,7 +12,7 @@
       </span>
       <img :src="sheet.coverImgUrl" :alt="index+'.png'" />
       <span class="sheetTip">{{sheet.name}}</span>
-    </div>
+    </router-link>
   </div>
 </template>
 <script>
@@ -38,7 +38,7 @@ export default {
   },
   methods: {
     //获取歌单音乐列表
-    async getSheetMusicList(id) {
+    getSheetMusicList(id) {
       if (this.playLists.length == 0) {
         this.$store.dispatch("getSheetMusicList", id).then(() => {
           this.playMusic(0);
@@ -81,6 +81,7 @@ export default {
     height: 135px;
     margin: 1%;
     justify-content: center;
+    color: #333;
     .clickTotal {
       position: absolute;
       font-size: 8px;

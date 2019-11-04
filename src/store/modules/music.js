@@ -75,12 +75,13 @@ const actions = {
         commit
     }, data) {
         if (isArray(data)) {
-            commit(RECEIVE_SHEETMUSIC_LIST, data);
+            commit(RECEIVE_SHEETMUSIC_LIST, [, data]);
         } else {
             const result = await reqSheetMusicList(data);
             if (result.code == 200) {
-                const sheetMusicLists = result.playlist.tracks;
-                commit(RECEIVE_SHEETMUSIC_LIST, sheetMusicLists);
+                const sheetMusicLists = result.playlist;
+                // const tracks = result.playlist.tracks;
+                commit(RECEIVE_SHEETMUSIC_LIST, [sheetMusicLists, tracks]);
             }
 
         }
@@ -169,11 +170,11 @@ const mutations = {
             state.sheetName = sheetName
         }
     },
-    [RECEIVE_SHEETMUSIC_LIST](state, sheetMusicLists) {
+    [RECEIVE_SHEETMUSIC_LIST](state, [sheetMusicLists, tracks]) {
         if (state.playLists.length == 0) {
-            state.playLists = sheetMusicLists;
+            state.playLists = tracks;
         } else {
-            sheetMusicLists.forEach(val => {
+            tracks.forEach(val => {
                 var oldplay;
                 state.playLists.forEach(oldval => {
                     if (val.name == oldval.name) {
