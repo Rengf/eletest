@@ -11,8 +11,23 @@ const state = {
 }
 
 const getters = {
-    topLists(state) {
-        return state.topLists
+    topOriginalLists(state) {
+        let originalLists = [];
+        state.topLists.forEach(val => {
+            if (val.tracks.length == 3) {
+                originalLists.push(val)
+            }
+        })
+        return originalLists;
+    },
+    topOtherLists(state) {
+        let topOtherLists = [];
+        state.topLists.forEach(val => {
+            if (val.tracks.length == 0) {
+                topOtherLists.push(val)
+            }
+        })
+        return topOtherLists
     }
 }
 
@@ -23,9 +38,10 @@ const actions = {
         const result = await reqTopList();
         console.log(result)
         if (result.code == 200) {
-            console.log(result)
+            const topLists = result.list;
+            commit(RECEIVE_TOP_LIST, topLists)
         }
-        // commit(RECEIVE_TOP_LIST, topLists)
+
     }
 }
 

@@ -13,12 +13,12 @@
         </span>
         <span class="font">歌单</span>
       </router-link>
-      <div class="menuList">
+      <router-link class="menuList" to="/topList">
         <span class="imgIcon">
           <i class="iconfont">&#xe6c2;</i>
         </span>
         <span class="font">排行榜</span>
-      </div>
+      </router-link>
       <div class="menuList">
         <span class="imgIcon">
           <i class="iconfont">&#xe696;</i>

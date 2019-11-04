@@ -90,6 +90,14 @@ export default new Router({
             meta: {
                 title: '排行榜'
             }
+        }, {
+            path: '/musicList',
+            name: 'musicList',
+            component: () =>
+                import ('@/views/musicList/index.vue'),
+            meta: {
+                title: '歌单'
+            }
         }
     ]
 })
