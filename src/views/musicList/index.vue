@@ -1,13 +1,13 @@
 <template>
   <div
     class="musicListWrap"
-    :style="{backgroundImage:'url('+musicList.coverImgUrl+')',backgroundSize:'100% 100%',backgroundRepeat:'no-repeat'}"
+    :style="{backgroundImage:'url('+musicList.coverImgUrl+')',backgroundSize:'150% 150%;',backgroundRepeat:'no-repeat'}"
   >
     <div class="returnHeader">
       <div class="returnBox" @click="returnPrv">
         <i class="iconfont">&#xe62d;</i>
       </div>
-      <div class="musicListName">{{musicListName}}</div>
+      <div class="musicListName">{{musicList.name}}</div>
       <div class="shareBox">
         <i class="iconfont">&#xe630;</i>
         <i class="iconfont">&#xe60d;</i>
@@ -16,7 +16,7 @@
     <scroll class="allScroll">
       <div>
         <div class="musicListMsg">
-          <div class="msgMain">
+          <div class="msgMain" @click="showCoverImg()">
             <div class="musicListImg">
               <img :src="musicList.coverImgUrl||require('../../assets/images/avatar.png')" alt="图片" />
               <span>
@@ -32,10 +32,10 @@
                   :src="musicList.creator.avatarUrl||require('../../assets/images/avatar.png')"
                   alt="图片"
                 />
-                <span>
+                <router-link to="/login">
                   {{musicList.creator.nickname}}
                   <i class="iconfont">&#xe60c;</i>
-                </span>
+                </router-link>
               </div>
               <div class="msgDesc">
                 <span>最近更新:{{musicList.trackUpdateTime|dateformat("MM月DD日")}}</span>
@@ -65,12 +65,41 @@
             </div>
           </div>
         </div>
-        <MusicList :musicLists="musicList" @playAllSongs="playAllSongs()" @playMusic="playMusic"></MusicList>
+        <MusicList :musicLists="musicList" @playAllSongs="playAllSongs()" @playMusic="toPlayMusic"></MusicList>
       </div>
     </scroll>
+    <NavBar v-if="isMusicPlay"></NavBar>
+    <div
+      class="coverImg"
+      :style="{backgroundImage:'url('+musicList.coverImgUrl+')',backgroundSize:'100% 100%',backgroundRepeat:'no-repeat'}"
+      v-if="isShowCover"
+    >
+      <div class="closeButton" @click="showCoverImg()">
+        <i class="iconfont">&#xe607;</i>
+      </div>
+      <scroll class="scrollCover">
+        <div>
+          <div class="nameCover">
+            <img :src="musicList.coverImgUrl" alt="图片" />
+            <span>{{musicList.name}}</span>
+          </div>
+          <div class="tagDesc">
+            <div class="tags">
+              <span>标签：</span>
+              <span class="tag" v-for="(tag,index) of musicList.tags" :key="index">{{tag}}</span>
+            </div>
+            <div class="desc">
+              <p v-html="musicList.description"></p>
+            </div>
+          </div>
+        </div>
+      </scroll>
+      <div class="saveCover">保存封面</div>
+    </div>
   </div>
 </template>
 <script>
+import NavBar from "@/components/navBar/navBar";
 import scroll from "@/components/common/scroll";
 import ReturnHeader from "@/components/common/returnHeader";
 import MusicList from "@/components/musicList/globalMusicList";
@@ -81,11 +110,18 @@ export default {
     return {
       title: "歌单",
       musicListName: "歌单",
-      musicList: { creator: { avatarUrl: "" }, tracks: [] }
+      musicList: { creator: { avatarUrl: "" }, tracks: [] },
+      isMusicPlay: false,
+      isShowCover: false
     };
   },
   created() {
     this.getMusicLsit();
+  },
+  mounted() {
+    if (this.playMusic.name) {
+      this.isMusicPlay = true;
+    }
   },
   filters: {
     playCountFilter(value) {
@@ -97,7 +133,12 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["playLists", "sheetMusicLists"])
+    ...mapGetters(["playLists", "sheetMusicLists", "playMusic"])
+  },
+  watch: {
+    playMusic() {
+      this.isMusicPlay = true;
+    }
   },
   methods: {
     getMusicLsit() {
@@ -115,9 +156,17 @@ export default {
         });
     },
     playAllSongs() {
-      this.$store.dispatch("getSheetMusicList", this.musicList.tracks);
+      if (this.playLists.length == 0) {
+        this.$store
+          .dispatch("getSheetMusicList", this.musicList.tracks)
+          .then(() => {
+            this.toPlayMusic(0);
+          });
+      } else {
+        this.$store.dispatch("getSheetMusicList", this.musicList.tracks);
+      }
     },
-    playMusic(index) {
+    toPlayMusic(index) {
       var playMusic = [
         this.musicList.tracks[index].id,
         this.musicList.tracks[index].name,
@@ -131,6 +180,9 @@ export default {
       this.$store.dispatch("getPlayMusic", playMusic);
       this.$store.dispatch("isPlaying", true);
     },
+    showCoverImg() {
+      this.isShowCover = !this.isShowCover;
+    },
     returnPrv() {
       this.$router.go(-1);
     }
@@ -138,11 +190,13 @@ export default {
   components: {
     ReturnHeader,
     MusicList,
-    scroll
+    scroll,
+    NavBar
   }
 };
 </script>
 <style lang="scss" scoped>
+.coverImg:after,
 .musicListWrap:after {
   content: "";
   width: 100%;
@@ -151,7 +205,7 @@ export default {
   left: 0;
   top: 0;
   background: inherit;
-  filter: blur(21px);
+  filter: blur(6px);
   z-index: -1;
 }
 .musicListWrap {
@@ -248,7 +302,7 @@ export default {
               border-radius: 50%;
               vertical-align: middle;
             }
-            span {
+            a {
               display: inline-block;
               margin-left: 5px;
               height: 25px;
@@ -297,6 +351,105 @@ export default {
           }
         }
       }
+    }
+  }
+  .coverImg {
+    position: fixed;
+    width: 100%;
+    height: 100;
+    top: 0;
+    bottom: 0;
+
+    .closeButton {
+      width: 30px;
+      height: 30px;
+      float: right;
+      line-height: 30px;
+      text-align: center;
+      i {
+        font-size: 30px;
+        color: #fff;
+      }
+    }
+    .scrollCover {
+      width: 100%;
+      height: 565px;
+      margin-top: -270px;
+      overflow: hidden;
+      .nameCover {
+        position: relative;
+        width: 100%;
+        height: 250px;
+        text-align: center;
+        border-bottom: 1px solid transparent;
+        border-image: -webkit-linear-gradient(
+            left,
+            rgba(136, 136, 136, 0) 0%,
+            #bababa 50%,
+            rgba(136, 136, 136, 0) 100%
+          )
+          5;
+        img {
+          display: block;
+          width: 200px;
+          height: 200px;
+          margin: auto;
+          border-radius: 10px;
+        }
+        span {
+          color: #fff;
+          font-weight: bold;
+          font-size: 16px;
+          line-height: 50px;
+        }
+      }
+      .tagDesc {
+        position: relative;
+        width: 90%;
+        margin: auto;
+        top: 50%;
+        margin-top: 15px;
+        .tags {
+          font-size: 12px;
+          color: #fff;
+          line-height: 20px;
+          span {
+            padding: 0 10px;
+          }
+          .tag {
+            background: rgba(143, 143, 143, 0.62);
+            border-radius: 10px;
+            margin: 3px 5px;
+          }
+        }
+        .desc {
+          margin-top: 20px;
+          padding: 0 10px;
+          color: #fff;
+          font-size: 12px;
+          line-height: 20px;
+          width: 90%;
+          p {
+            white-space: pre-wrap;
+          }
+        }
+      }
+    }
+
+    .saveCover {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      margin-left: -40px;
+      width: 80px;
+      height: 20px;
+      border: 1px solid #acacac;
+      border-radius: 10px;
+      line-height: 20px;
+      text-align: center;
+      font-size: 12px;
+      color: #fff;
+      background: rgba(143, 143, 143, 0.42);
     }
   }
 }

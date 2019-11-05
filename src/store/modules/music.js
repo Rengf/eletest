@@ -81,7 +81,7 @@ const actions = {
             if (result.code == 200) {
                 const sheetMusicLists = result.playlist;
                 // const tracks = result.playlist.tracks;
-                commit(RECEIVE_SHEETMUSIC_LIST, [sheetMusicLists, tracks]);
+                commit(RECEIVE_SHEETMUSIC_LIST, [sheetMusicLists, ]);
             }
 
         }
@@ -171,9 +171,9 @@ const mutations = {
         }
     },
     [RECEIVE_SHEETMUSIC_LIST](state, [sheetMusicLists, tracks]) {
-        if (state.playLists.length == 0) {
+        if (state.playLists.length == 0 && tracks) {
             state.playLists = tracks;
-        } else {
+        } else if (tracks) {
             tracks.forEach(val => {
                 var oldplay;
                 state.playLists.forEach(oldval => {

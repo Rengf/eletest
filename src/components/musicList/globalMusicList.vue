@@ -116,6 +116,7 @@ export default {
         }
         span {
           line-height: 30px;
+          vertical-align: top;
         }
       }
     }

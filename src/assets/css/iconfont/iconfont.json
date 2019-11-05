@@ -48,6 +48,13 @@
       "unicode_decimal": 58880
     },
     {
+      "icon_id": "1366107",
+      "name": "多选",
+      "font_class": "duoxuan",
+      "unicode": "e611",
+      "unicode_decimal": 58897
+    },
+    {
       "icon_id": "1406162",
       "name": "分享",
       "font_class": "fenxiang",
@@ -74,6 +81,13 @@
       "font_class": "bofang",
       "unicode": "e658",
       "unicode_decimal": 58968
+    },
+    {
+      "icon_id": "2840615",
+      "name": "加",
+      "font_class": "jia1",
+      "unicode": "e621",
+      "unicode_decimal": 58913
     },
     {
       "icon_id": "3280425",
