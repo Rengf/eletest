@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "159271",
+      "name": "专辑",
+      "font_class": "zhuanji",
+      "unicode": "e675",
+      "unicode_decimal": 58997
+    },
+    {
       "icon_id": "197805",
       "name": "随机播放",
       "font_class": "suijibofang",
@@ -32,6 +39,13 @@
       "font_class": "sousuo",
       "unicode": "e630",
       "unicode_decimal": 58928
+    },
+    {
+      "icon_id": "894778",
+      "name": "购买",
+      "font_class": "goumai",
+      "unicode": "e612",
+      "unicode_decimal": 58898
     },
     {
       "icon_id": "1050425",
@@ -76,6 +90,13 @@
       "unicode_decimal": 59074
     },
     {
+      "icon_id": "2356827",
+      "name": "歌手",
+      "font_class": "geshou",
+      "unicode": "e647",
+      "unicode_decimal": 58951
+    },
+    {
       "icon_id": "2465497",
       "name": "播放",
       "font_class": "bofang",
@@ -118,6 +139,13 @@
       "unicode_decimal": 58948
     },
     {
+      "icon_id": "4942557",
+      "name": "排行榜",
+      "font_class": "paihangbang",
+      "unicode": "e6ec",
+      "unicode_decimal": 59116
+    },
+    {
       "icon_id": "5380180",
       "name": "gs-icons-live",
       "font_class": "live",
@@ -144,6 +172,13 @@
       "font_class": "fanhui",
       "unicode": "e62d",
       "unicode_decimal": 58925
+    },
+    {
+      "icon_id": "6395682",
+      "name": "关  闭",
+      "font_class": "guanbi",
+      "unicode": "e626",
+      "unicode_decimal": 58918
     },
     {
       "icon_id": "6433102",
@@ -200,6 +235,13 @@
       "font_class": "shanchu",
       "unicode": "e601",
       "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "7857924",
+      "name": "铃声",
+      "font_class": "lingsheng",
+      "unicode": "e613",
+      "unicode_decimal": 58899
     },
     {
       "icon_id": "7900631",

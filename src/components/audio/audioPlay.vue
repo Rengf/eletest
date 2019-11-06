@@ -22,7 +22,8 @@ export default {
       "playLists",
       "musicMsg",
       "playIndex",
-      "newCurrentTime"
+      "newCurrentTime",
+      "nextPlayMusic"
     ])
   },
   watch: {
@@ -63,23 +64,37 @@ export default {
     },
     //下一曲
     next() {
-      var index = 0;
-      if (this.loopIndex == 0) {
-        index = this.playIndex;
-      } else if (this.loopIndex == 1) {
-        index = this.playIndex + 1;
+      if (this.nextPlayMusic.name) {
+        console.log(this.nextPlayMusic);
+        var playMusic = [
+          this.nextPlayMusic.id,
+          this.nextPlayMusic.name,
+          this.nextPlayMusic.ar[0].name,
+          this.nextPlayMusic.al.picUrl,
+          this.nextPlayMusic.ar[0].id
+        ];
+        this.$store.dispatch("playMusicIndex", this.playIndex);
+        this.$store.dispatch("getPlayMusic", playMusic);
+        this.$store.dispatch("setNextPlayMusic", {});
       } else {
-        index = parseInt(Math.random() * this.playLists.length);
+        var index = 0;
+        if (this.loopIndex == 0) {
+          index = this.playIndex;
+        } else if (this.loopIndex == 1) {
+          index = this.playIndex + 1;
+        } else {
+          index = parseInt(Math.random() * this.playLists.length);
+        }
+        var playMusic = [
+          this.playLists[index].id,
+          this.playLists[index].name,
+          this.playLists[index].ar[0].name,
+          this.playLists[index].al.picUrl,
+          this.playLists[index].ar[0].id
+        ];
+        this.$store.dispatch("playMusicIndex", index);
+        this.$store.dispatch("getPlayMusic", playMusic);
       }
-      var playMusic = [
-        this.playLists[index].id,
-        this.playLists[index].name,
-        this.playLists[index].ar[0].name,
-        this.playLists[index].al.picUrl,
-        this.playLists[index].ar[0].id
-      ];
-      this.$store.dispatch("playMusicIndex", index);
-      this.$store.dispatch("getPlayMusic", playMusic);
     },
     //获取音乐信息
     getDuration() {

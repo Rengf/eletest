@@ -25,9 +25,13 @@
                 <span class="singer">{{song.ar[0].name}}-{{song.al.name}}</span>
               </div>
               <div class="musicVideo">
-                <i class="iconfont">&#xe60f;</i>
+                <i
+                  class="iconfont"
+                  v-show="song.mv!=0"
+                  @click.stop="playMv(song.mv,song.name,song.ar[0].id)"
+                >&#xe60f;</i>
               </div>
-              <div class="moreMsg">
+              <div class="moreMsg" @click.stop="showMore(song.id)">
                 <i class="iconfont">&#xe60d;</i>
               </div>
             </li>
@@ -62,6 +66,18 @@ export default {
     },
     playMusic(index) {
       this.$emit("playMusic", index);
+    },
+    showMore(id) {
+      var data = {
+        id: id,
+        isShowControl: true
+      };
+      this.$emit("showControl", data);
+    },
+    playMv(id, name, singerId) {
+      this.$store.dispatch("playMv", [id, name]).then(() => {
+        this.$router.push("/musicVideo?mvId=" + id + "&singerId=" + singerId);
+      });
     }
   },
   components: {

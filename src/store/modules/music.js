@@ -5,7 +5,8 @@ import {
     RECEIVE_SHEETCATEGORY_LIST,
     RECEIVE_MY_SHEET_TAGS,
     RECEIVE_LOCAL_SHEET_TAGS,
-    DELETE_PLAYLIST_MUSIC
+    DELETE_PLAYLIST_MUSIC,
+    SET_NEXT_PLAY_MUSIC
 } from "../mutations-types";
 
 import {
@@ -37,7 +38,8 @@ const state = {
             name: "精品",
             id: 3
         }
-    ]
+    ],
+    nextPlayMusic: {}
 };
 
 const getters = {
@@ -58,6 +60,9 @@ const getters = {
     },
     mySheetTags(state) {
         return state.mySheetTags;
+    },
+    nextPlayMusic(state) {
+        return state.nextPlayMusic;
     }
 };
 
@@ -149,6 +154,11 @@ const actions = {
         commit
     }, index) {
         commit(DELETE_PLAYLIST_MUSIC, index)
+    },
+    setNextPlayMusic({
+        commit
+    }, nextPlayMusic) {
+        commit(SET_NEXT_PLAY_MUSIC, nextPlayMusic)
     }
 };
 
@@ -234,6 +244,9 @@ const mutations = {
     },
     [DELETE_PLAYLIST_MUSIC](state, [index, length]) {
         state.playLists.splice(index, length)
+    },
+    [SET_NEXT_PLAY_MUSIC](state, nextPlayMusic) {
+        state.nextPlayMusic = nextPlayMusic;
     }
 };
 export default {

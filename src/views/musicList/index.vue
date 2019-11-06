@@ -65,7 +65,12 @@
             </div>
           </div>
         </div>
-        <MusicList :musicLists="musicList" @playAllSongs="playAllSongs()" @playMusic="toPlayMusic"></MusicList>
+        <MusicList
+          :musicLists="musicList"
+          @playAllSongs="playAllSongs()"
+          @playMusic="toPlayMusic"
+          @showControl="showControl"
+        ></MusicList>
       </div>
     </scroll>
     <NavBar v-if="isMusicPlay"></NavBar>
@@ -96,6 +101,9 @@
       </scroll>
       <div class="saveCover">保存封面</div>
     </div>
+    <transition name="slide-fade">
+      <MusicControl v-if="isShowControl" @showControl="showControl" :songMsg="songMsg"></MusicControl>
+    </transition>
   </div>
 </template>
 <script>
@@ -103,6 +111,7 @@ import NavBar from "@/components/navBar/navBar";
 import scroll from "@/components/common/scroll";
 import ReturnHeader from "@/components/common/returnHeader";
 import MusicList from "@/components/musicList/globalMusicList";
+import MusicControl from "./control/musicControl";
 import axios from "axios";
 import { mapGetters } from "vuex";
 export default {
@@ -112,7 +121,9 @@ export default {
       musicListName: "歌单",
       musicList: { creator: { avatarUrl: "" }, tracks: [] },
       isMusicPlay: false,
-      isShowCover: false
+      isShowCover: false,
+      isShowControl: false,
+      songMsg: ""
     };
   },
   created() {
@@ -185,13 +196,28 @@ export default {
     },
     returnPrv() {
       this.$router.go(-1);
+    },
+    showControl(data) {
+      if (data.id) {
+        axios
+          .get("http://localhost:3000/song/detail?ids=" + data.id)
+          .then(res => {
+            if (res.status == 200) {
+              this.songMsg = res.data.songs[0];
+              this.isShowControl = data.isShowControl;
+            }
+          });
+      } else {
+        this.isShowControl = data.isShowControl;
+      }
     }
   },
   components: {
     ReturnHeader,
     MusicList,
     scroll,
-    NavBar
+    NavBar,
+    MusicControl
   }
 };
 </script>

@@ -42,4 +42,6 @@ export const RECEIVE_PLAY_VIDEO = 'receive_play_video' //播放mv
 
 export const RECEIVE_VIDEO_DETAIL = 'receive_video_detail' //mv详情
 
-export const RECEIVE_TOP_LIST = 'receive_top_list'
+export const RECEIVE_TOP_LIST = 'receive_top_list' //榜单列表
+
+export const SET_NEXT_PLAY_MUSIC = 'set_next_play_music'
