@@ -38,10 +38,10 @@ export default {
   created() {
     var data = {
       limit: 12,
-      cat: "怀旧",
+      cat: "推荐",
       offset: 0
     };
-    this.$store.dispatch("getSheetList", [data, "怀旧"]);
+    this.$store.dispatch("getPersonaLizedList", [data, "推荐"]);
   },
   computed: {
     ...mapGetters(["sheetLists"])

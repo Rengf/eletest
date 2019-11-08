@@ -12,6 +12,11 @@ export const reqSheetList = (data) =>
         offset: data.offset
     }, "GET");
 
+//推荐歌单
+export const reqPersonaLizedList = (data) => ajax(BASE_URL + "/personalized", {
+    limit: 12,
+}, "GET")
+
 //歌曲列表
 export const reqSheetMusicList = (id) =>
     ajax(BASE_URL + "/playlist/detail", {

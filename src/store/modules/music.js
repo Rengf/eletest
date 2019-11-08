@@ -13,7 +13,8 @@ import {
     reqSheetList,
     reqSheetMusicList,
     reqPlayMusic,
-    reqSheetCategoryList
+    reqSheetCategoryList,
+    reqPersonaLizedList
 } from "./../../api/index";
 import {
     isArray
@@ -73,6 +74,15 @@ const actions = {
         const result = await reqSheetList(data);
         if (result.code == 200) {
             const sheetLists = result.playlists;
+            commit(RECEIVE_SHEET_LIST, [sheetLists, sheetName]);
+        }
+    },
+    async getPersonaLizedList({
+        commit
+    }, [data, sheetName]) {
+        const result = await reqPersonaLizedList(data);
+        if (result.code == 200) {
+            const sheetLists = result.result;
             commit(RECEIVE_SHEET_LIST, [sheetLists, sheetName]);
         }
     },

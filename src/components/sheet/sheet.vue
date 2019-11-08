@@ -10,7 +10,7 @@
         <i class="iconfont">&#xe602;</i>
         {{sheet.playCount|playCountFilter}}
       </span>
-      <img :src="sheet.coverImgUrl" :alt="index+'.png'" />
+      <img :src="sheet.coverImgUrl||sheet.picUrl" :alt="index+'.png'" />
       <span class="sheetTip">{{sheet.name}}</span>
     </router-link>
   </div>
@@ -26,8 +26,8 @@ export default {
   },
   filters: {
     playCountFilter(value) {
-      if (value > 100000) {
-        return parseInt(value / 100000) + "万";
+      if (value > 10000) {
+        return parseInt(value / 10000) + "万";
       } else {
         return value;
       }

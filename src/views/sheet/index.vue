@@ -50,6 +50,7 @@ export default {
     if (this.playMusic.name) {
       this.isMusicPlay = true;
     }
+    this.getPersonaLizedList();
   },
   computed: {
     ...mapGetters(["mySheetTags", "sheetLists", "playMusic"])
@@ -62,14 +63,27 @@ export default {
   methods: {
     //获取歌单列表
     getSheet(index, name) {
-      this.name = name;
+      if (index == 0) {
+        this.getPersonaLizedList();
+      } else {
+        this.name = name;
+        var data = {
+          limit: this.limit,
+          cat: this.name,
+          offset: (this.page - 1) * this.limit
+        };
+        this.activeIndex = index;
+        this.$store.dispatch("getSheetList", [data, this.name]);
+      }
+    },
+    //获取推荐列表
+    getPersonaLizedList() {
       var data = {
-        limit: this.limit,
-        cat: this.name,
-        offset: (this.page - 1) * this.limit
+        limit: 12,
+        cat: "推荐",
+        offset: 0
       };
-      this.activeIndex = index;
-      this.$store.dispatch("getSheetList", [data, this.name]);
+      this.$store.dispatch("getPersonaLizedList", [data, "推荐"]);
     },
     getMoreSheet() {
       this.page = this.page + 1;

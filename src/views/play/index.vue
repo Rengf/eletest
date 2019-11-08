@@ -26,10 +26,20 @@
         </ul>
       </div>
       <div class="playMain" @click="isShowImg()">
-        <div class="musicImg" v-if="showImg">
-          <img :src="playMusic.image" alt="图片" />
+        <div class="musicImg" v-show="showImg">
+          <div class="changtou">
+            <img
+              src="../../assets/images/2.png"
+              ref="changtou"
+              :class="{changtouImg:playing}"
+              alt="图片"
+            />
+          </div>
+          <div class="changpian">
+            <img :src="playMusic.image" alt="图片" />
+          </div>
         </div>
-        <div class="musicLyric" v-else>
+        <div class="musicLyric" v-show="!showImg">
           <div class="volume">
             <span class="volumeImg iconfont">&#xec0a;</span>
             <div class="volumeBar" ref="volumeBar"></div>
@@ -347,15 +357,15 @@ export default {
     },
     //滑动控制进度
     dragTime(e) {
-      var slidedis = e.touches[0].pageX;
-      if (slidedis - 43 > this.timeBarLength || slidedis - 43 < 0) {
+      var slidedis = e.touches[0].pageX - 43;
+      if (slidedis > this.timeBarLength || slidedis < 0) {
         return;
       }
       var newTime =
         (this.positionX / this.timeBarLength) * this.musicMsg.duration;
       this.$store.dispatch("setCurrentTime", newTime);
       this.lyric.seek(this.musicMsg.currentTime * 1000);
-      this.positionX = slidedis - 43;
+      this.positionX = slidedis;
       this.$refs.timedBar.style.width = this.positionX + "px";
       this.$refs.timePoint.style.left = this.positionX + "px";
     },
@@ -462,6 +472,10 @@ export default {
   z-index: 1;
 }
 
+.changtouImg {
+  transform: rotate(25deg);
+  transform-origin: left top;
+}
 .playWrap {
   width: 100%;
   z-index: 0;
@@ -539,18 +553,42 @@ export default {
       width: 95%;
       margin: 10px auto;
       height: 530px;
+      overflow: hidden;
       .musicImg {
         position: relative;
-        width: 150px;
-        height: 150px;
-        top: 25%;
-        left: 50%;
-        margin-left: -75px;
-        animation: musicimg 30s linear infinite;
-        img {
-          width: 150px;
-          height: 150px;
-          border-radius: 50%;
+        width: 100%;
+        height: 500px;
+        .changtou {
+          width: 100%;
+          margin: auto;
+          height: 200px;
+
+          img {
+            position: relative;
+            left: 50%;
+            margin-left: -10px;
+            z-index: 1;
+          }
+        }
+        .changpian {
+          position: relative;
+          width: 300px;
+          height: 300px;
+          left: 50%;
+          margin-left: -150px;
+          margin-top: -100px;
+          animation: musicimg 30s linear infinite;
+          background: url(../../assets/images/1.png);
+          background-size: cover;
+          background-repeat: no-repeat;
+          img {
+            position: absolute;
+            top: 50px;
+            left: 50px;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+          }
         }
       }
       @-webkit-keyframes musicimg {
@@ -637,6 +675,8 @@ export default {
     }
     .playBar {
       width: 100%;
+      position: fixed;
+      bottom: 5px;
       .timeAxisBox {
         display: flex;
         width: 95%;
