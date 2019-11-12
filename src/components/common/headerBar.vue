@@ -71,7 +71,7 @@ export default {
       } else if (val === "menu") {
         this.$emit("showSliderBar", true);
       } else if (val === "search") {
-        this.$router.push("/login");
+        this.$router.push("/search");
       }
     }
   }

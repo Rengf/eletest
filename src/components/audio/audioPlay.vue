@@ -65,7 +65,6 @@ export default {
     //下一曲
     next() {
       if (this.nextPlayMusic.name) {
-        console.log(this.nextPlayMusic);
         var playMusic = [
           this.nextPlayMusic.id,
           this.nextPlayMusic.name,

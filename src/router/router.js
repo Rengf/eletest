@@ -16,20 +16,19 @@ export default new Router({
                 name: 'find',
                 component: Find,
                 meta: {
-                    title: '首页'
+                    title: '首页',
+                    keepAlive: false,
                 }
             }]
         },
         {
             path: '/play',
             name: 'play',
-            // route level code-splitting
-            // this generates a separate chunk (about.[hash].js) for this route
-            // which is lazy-loaded when the route is visited.
             component: () =>
                 import ('@/views/play/index.vue'),
             meta: {
-                title: '播放页面'
+                title: '播放页面',
+                keepAlive: false,
             }
         },
         {
@@ -38,7 +37,8 @@ export default new Router({
             component: () =>
                 import ('@/views/sheet/index.vue'),
             meta: {
-                title: '歌单广场'
+                title: '歌单广场',
+                keepAlive: true,
             }
         },
         {
@@ -47,7 +47,8 @@ export default new Router({
             component: () =>
                 import ('@/views/sheetTag/index.vue'),
             meta: {
-                title: '歌单广场'
+                title: '歌单标签',
+                keepAlive: false,
             }
         },
         {
@@ -56,7 +57,8 @@ export default new Router({
             component: () =>
                 import ('@/views/singer/index.vue'),
             meta: {
-                title: '歌手'
+                title: '歌手',
+                keepAlive: true,
             }
         }, {
             path: '/singerMsg',
@@ -64,7 +66,8 @@ export default new Router({
             component: () =>
                 import ('@/views/singerMsg/index.vue'),
             meta: {
-                title: '歌手信息'
+                title: '歌手信息',
+                keepAlive: true,
             }
         }, {
             path: '/musicVideo',
@@ -72,7 +75,8 @@ export default new Router({
             component: () =>
                 import ('@/views/musicVideo/index.vue'),
             meta: {
-                title: 'mv'
+                title: 'mv',
+                keepAlive: true,
             }
         }, {
             path: '/video',
@@ -80,7 +84,8 @@ export default new Router({
             component: () =>
                 import ('@/views/video/index.vue'),
             meta: {
-                title: '视频'
+                title: '视频',
+                keepAlive: true,
             }
         }, {
             path: '/topList',
@@ -88,7 +93,8 @@ export default new Router({
             component: () =>
                 import ('@/views/topList/index.vue'),
             meta: {
-                title: '排行榜'
+                title: '排行榜',
+                keepAlive: false,
             }
         }, {
             path: '/musicList',
@@ -96,7 +102,26 @@ export default new Router({
             component: () =>
                 import ('@/views/musicList/index.vue'),
             meta: {
-                title: '歌单'
+                title: '歌单',
+                keepAlive: true,
+            }
+        }, {
+            path: '/search',
+            name: 'search',
+            component: () =>
+                import ('@/views/search/index.vue'),
+            meta: {
+                title: '搜索',
+                keepAlive: true,
+            }
+        }, {
+            path: '/searchdetail',
+            name: 'searchDetail',
+            component: () =>
+                import ('@/views/searchDetail/index.vue'),
+            meta: {
+                title: '搜索',
+                keepAlive: true,
             }
         }
     ]

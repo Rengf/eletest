@@ -36,7 +36,7 @@
             />
           </div>
           <div class="changpian">
-            <img :src="playMusic.image" alt="图片" />
+            <img :src="playMusic.image||require('../../assets/images/2.png')" alt="图片" />
           </div>
         </div>
         <div class="musicLyric" v-show="!showImg">
