@@ -14,12 +14,12 @@
         <li
           v-for="(tag,index) of myTags"
           :key="index"
-          @click="getTags(index,tag.tag,tag.type)"
+          @click="getTags(index,tag.tag)"
           :class="{active:activeIndex==index}"
         >{{tag.name}}</li>
       </ul>
     </scroll>
-    <div :is="currentView" :searchData="searchData" :keyWords="keyWords"></div>
+    <div :is="currentView" :searchData="searchData" :keyWords="keyWords" @more="more"></div>
     <NavBar v-if="isMusicPlay"></NavBar>
   </div>
 </template>
@@ -28,6 +28,7 @@ import NavBar from "@/components/navBar/navBar";
 import scroll from "@/components/common/scroll";
 import MusicList from "./component/musicLists";
 import Comprehensive from "./component/comprehensive";
+import Video from "./component/video";
 import { mapGetters } from "vuex";
 import axios from "axios";
 export default {
@@ -40,7 +41,7 @@ export default {
         { name: "综合", tag: "comprehensive", type: "1018" },
         { name: "单曲", tag: "MusicList", type: "1" },
         { name: "云村" },
-        { name: "视频" },
+        { name: "视频", tag: "Video" },
         { name: "歌手" },
         { name: "专辑" },
         { name: "歌单" },
@@ -93,7 +94,11 @@ export default {
     clearKeyWords() {
       this.keyWords = "";
     },
-    getTags(index, tag, type) {
+    getTags(index, tag) {
+      this.activeIndex = index;
+      this.currentView = tag;
+    },
+    more(tag, index) {
       this.activeIndex = index;
       this.currentView = tag;
     }
@@ -102,7 +107,8 @@ export default {
     scroll,
     NavBar,
     MusicList,
-    Comprehensive
+    Comprehensive,
+    Video
   }
 };
 </script>
@@ -115,7 +121,8 @@ export default {
 .searchDetailWrap {
   width: 100%;
   .searchHeader {
-    width: 100%;
+    width: 95%;
+    margin: auto;
     height: 30px;
     display: flex;
     .returnBox {
