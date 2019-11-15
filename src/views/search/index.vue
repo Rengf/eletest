@@ -1,15 +1,15 @@
 <template>
   <div class="searchWrap">
     <div class="searchHeader">
-      <div class="returnBox">
+      <div class="returnBox" @click="returnPre()">
         <i class="iconfont">&#xe62d;</i>
       </div>
       <div class="searchBox">
         <input type="text" :placeholder="palceHolder" v-model="keyWords" @keyup.enter="search()" />
       </div>
-      <div class="singer">
+      <router-link class="singer" to="/singer">
         <i class="iconfont">&#xe647;</i>
-      </div>
+      </router-link>
     </div>
     <scroll class="hotSearch">
       <div class="hotLists">
@@ -86,14 +86,10 @@ export default {
       if (keywords) {
         this.keyWords = keywords;
       }
-      axios
-        .get("http://localhost:3000/search?keywords=" + this.keyWords)
-        .then(res => {
-          console.log(res);
-          if (res.status == 200) {
-            // this.hotSearchLists = res.data.data;
-          }
-        });
+      this.$router.push("/searchdetail?keywords=" + this.keyWords);
+    },
+    returnPre() {
+      this.$router.go(-1);
     }
   },
   components: {

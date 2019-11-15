@@ -5,12 +5,12 @@
       <div class="songs" v-if="song">
         <div class="songsHeader">
           <span class="typeName">单曲</span>
-          <span class="playAll">
+          <span class="playAll" @click="playAllSongs()">
             <i class="iconfont">&#xe658;</i>播放全部
           </span>
         </div>
         <ul>
-          <li v-for="(song,index) in song.songs" :key="index">
+          <li v-for="(song,index) in song.songs" :key="index" @click="playMusic(index)">
             <div class="songMsg">
               <span class="songName">{{song.name}}</span>
               <span class="singer">{{song.ar[0].name}}-{{song.al.name}}</span>
@@ -55,7 +55,11 @@
       <div class="playList" v-if="playList">
         <h2 class="typeName">歌单</h2>
         <ul>
-          <li v-for="(play,index) in playList.playLists" :key="index">
+          <li
+            v-for="(play,index) in playList.playLists"
+            :key="index"
+            @click="toMusicLists(play.id)"
+          >
             <div class="playListImg">
               <img :src="play.coverImgUrl" alt="图片" />
             </div>
@@ -130,7 +134,7 @@
         <h2 class="typeName">歌手</h2>
         <ul>
           <li v-for="(singer,index) in artist.artists" :key="index">
-            <div class="artistBox">
+            <div class="artistBox" @click="getSingerArtists(singer.id)">
               <div class="artistImg">
                 <img :src="singer.img1v1Url" alt="头像" />
               </div>
@@ -222,6 +226,7 @@
 </template>
 <script>
 import scroll from "@/components/common/scroll";
+import { mapGetters } from "vuex";
 export default {
   props: {
     searchData: {
@@ -282,7 +287,8 @@ export default {
       if (this.searchData.user) {
         return this.searchData.user;
       }
-    }
+    },
+    ...mapGetters(["playLists"])
   },
   filters: {
     playCountFilter(value) {
@@ -296,6 +302,49 @@ export default {
   methods: {
     more(tag, index) {
       this.$emit("more", tag, index);
+    },
+    playAllSongs() {
+      if (this.playLists.length == 0) {
+        this.$store.dispatch("getSheetMusicList", this.song.songs).then(() => {
+          this.playMusic(0);
+        });
+      } else {
+        this.$store.dispatch("getSheetMusicList", this.song.songs);
+      }
+    },
+    playMusic(index) {
+      var playMusic = [
+        this.song.songs[index].id,
+        this.song.songs[index].name,
+        this.song.songs[index].ar[0].name,
+        this.song.songs[index].al.picUrl,
+        this.$route.query.id
+      ];
+      var oneSong = [this.song.songs[index]];
+      this.$store.dispatch("getSheetMusicList", oneSong);
+      this.$store.dispatch("playMusicIndex", this.playLists.length - 1);
+      this.$store.dispatch("getPlayMusic", playMusic);
+      this.$store.dispatch("isPlaying", true);
+    },
+    showMore(id) {
+      var data = {
+        id: id,
+        isShowControl: true
+      };
+      this.$emit("showControl", data);
+    },
+    playMv(id, name, singerId) {
+      this.$store.dispatch("playMv", [id, name]).then(() => {
+        this.$router.push("/musicVideo?mvId=" + id + "&singerId=" + singerId);
+      });
+    },
+    getSingerArtists(id) {
+      this.$store.dispatch("getSingerArtists", id).then(() => {
+        this.$router.push("/singerMsg?id=" + id);
+      });
+    },
+    toMusicLists(id) {
+      this.$router.push("/musicList?sheetId=" + id);
     }
   },
   components: {

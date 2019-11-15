@@ -2,7 +2,7 @@
   <div class="searchDetailWrap">
     <div class="searchHeader">
       <div class="returnBox">
-        <i class="iconfont">&#xe62d;</i>
+        <i class="iconfont" @click="returnPre()">&#xe62d;</i>
       </div>
       <div class="searchBox">
         <input type="text" :placeholder="palceHolder" v-model="keyWords" @keyup.enter="search()" />
@@ -19,8 +19,17 @@
         >{{tag.name}}</li>
       </ul>
     </scroll>
-    <div :is="currentView" :searchData="searchData" :keyWords="keyWords" @more="more"></div>
+    <div
+      :is="currentView"
+      :searchData="searchData"
+      :keyWords="keyWords"
+      @more="more"
+      @showControl="showControl"
+    ></div>
     <NavBar v-if="isMusicPlay"></NavBar>
+    <transition name="slide-fade">
+      <MusicControl v-if="isShowControl" @showControl="showControl" :songMsg="songMsg"></MusicControl>
+    </transition>
   </div>
 </template>
 <script>
@@ -28,7 +37,10 @@ import NavBar from "@/components/navBar/navBar";
 import scroll from "@/components/common/scroll";
 import MusicList from "./component/musicLists";
 import Comprehensive from "./component/comprehensive";
+import MusicControl from "./component/musicControl";
 import Video from "./component/video";
+import Artist from "./component/artist";
+import PlayList from "./component/playList";
 import { mapGetters } from "vuex";
 import axios from "axios";
 export default {
@@ -42,15 +54,17 @@ export default {
         { name: "单曲", tag: "MusicList", type: "1" },
         { name: "云村" },
         { name: "视频", tag: "Video" },
-        { name: "歌手" },
+        { name: "歌手", tag: "Artist" },
         { name: "专辑" },
-        { name: "歌单" },
+        { name: "歌单", tag: "PlayList" },
         { name: "主播电台" },
         { name: "用户" }
       ],
       activeIndex: 0,
       currentView: "Comprehensive",
-      searchData: {}
+      searchData: {},
+      isShowControl: false,
+      songMsg: ""
     };
   },
   mounted() {
@@ -101,6 +115,41 @@ export default {
     more(tag, index) {
       this.activeIndex = index;
       this.currentView = tag;
+    },
+    showControl(data) {
+      if (data.id) {
+        axios
+          .get("http://localhost:3000/song/detail?ids=" + data.id)
+          .then(res => {
+            if (res.status == 200) {
+              this.songMsg = res.data.songs[0];
+              this.isShowControl = data.isShowControl;
+            }
+          });
+      } else {
+        this.isShowControl = data.isShowControl;
+      }
+    },
+    returnPre() {
+      this.$router.go(-1);
+    },
+
+    showCoverImg() {
+      this.isShowCover = !this.isShowCover;
+    },
+    showControl(data) {
+      if (data.id) {
+        axios
+          .get("http://localhost:3000/song/detail?ids=" + data.id)
+          .then(res => {
+            if (res.status == 200) {
+              this.songMsg = res.data.songs[0];
+              this.isShowControl = data.isShowControl;
+            }
+          });
+      } else {
+        this.isShowControl = data.isShowControl;
+      }
     }
   },
   components: {
@@ -108,7 +157,10 @@ export default {
     NavBar,
     MusicList,
     Comprehensive,
-    Video
+    Video,
+    MusicControl,
+    Artist,
+    PlayList
   }
 };
 </script>

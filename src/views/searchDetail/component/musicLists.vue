@@ -14,7 +14,7 @@
         </div>
       </div>
       <ul>
-        <li v-for="(song,index) in songs.songs" :key="index">
+        <li v-for="(song,index) in songs.songs" :key="index" @click="playMusic(index)">
           <div class="songMsg">
             <span class="songName">{{song.name}}</span>
             <span class="singer">{{song.artists[0].name}}-{{song.album.name}}</span>
@@ -38,6 +38,7 @@
 <script>
 import scroll from "@/components/common/scroll";
 import axios from "axios";
+import { mapGetters } from "vuex";
 export default {
   name: "musicList",
   props: {
@@ -54,6 +55,9 @@ export default {
   mounted() {
     this.getSearchData();
   },
+  computed: {
+    ...mapGetters(["playLists"])
+  },
   methods: {
     getSearchData() {
       axios
@@ -67,9 +71,41 @@ export default {
           }
         });
     },
-    playAllSongs() {},
-    playMv(mv, name, id) {},
-    showMore(id) {}
+    playAllSongs() {
+      if (this.playLists.length == 0) {
+        this.$store.dispatch("getSheetMusicList", this.songs.songs).then(() => {
+          this.playMusic(0);
+        });
+      } else {
+        this.$store.dispatch("getSheetMusicList", this.songs.songs);
+      }
+    },
+    playMusic(index) {
+      var playMusic = [
+        this.songs.songs[index].id,
+        this.songs.songs[index].name,
+        this.songs.songs[index].artists[0].name,
+        this.songs.songs[index].artists[0].img1v1Url,
+        this.$route.query.id
+      ];
+      var oneSong = [this.songs.songs[index]];
+      this.$store.dispatch("getSheetMusicList", oneSong);
+      this.$store.dispatch("playMusicIndex", this.playLists.length - 1);
+      this.$store.dispatch("getPlayMusic", playMusic);
+      this.$store.dispatch("isPlaying", true);
+    },
+    showMore(id) {
+      var data = {
+        id: id,
+        isShowControl: true
+      };
+      this.$emit("showControl", data);
+    },
+    playMv(id, name, singerId) {
+      this.$store.dispatch("playMv", [id, name]).then(() => {
+        this.$router.push("/musicVideo?mvId=" + id + "&singerId=" + singerId);
+      });
+    }
   },
   components: {
     scroll
