@@ -49,7 +49,7 @@
           </div>
           <div class="lyric">
             <scroll class="lyricList" ref="lyricList">
-              <div class="lyricBox">
+              <div class="lyricBox" ref="lyricBox">
                 <div v-if="lyricData">
                   <p
                     v-for="(line,index) in lyricData"
@@ -243,16 +243,12 @@ export default {
     },
     //处理歌词
     handl({ lineNum, txt }) {
-      if (!this.$refs.lyricLine) {
+      if (!this.$refs.lyricLine || !this.$refs.lyricList) {
         return;
       }
       this.currentLineNum = lineNum;
-      if (lineNum > 5) {
-        let lineEl = this.$refs.lyricLine[lineNum - 5];
-        this.$refs.lyricList.scrollToElement(lineEl, 1000);
-      } else {
-        this.$refs.lyricList.scrollTo(0, 0, 1000);
-      }
+      let lineEl = this.$refs.lyricLine[lineNum];
+      this.$refs.lyricList.scrollToElement(lineEl, 1000);
     },
     //控制显示音乐列表
     showMusicList(showMusicList) {
@@ -649,24 +645,26 @@ export default {
           }
         }
         .lyric {
-          position: relative;
           height: 500px;
           overflow: hidden;
           .lyricList {
+            position: relative;
             width: 100%;
-            height: 100%;
-            overflow: hidden;
+            height: 32px;
+            top: 50%;
+            margin-top: -16px;
             .lyricBox {
               position: absolute;
               width: 100%;
               text-align: center;
               .text {
                 line-height: 32px;
-                color: rgba(255, 255, 255, 0.5);
+                color: rgba(255, 151, 151, 0.582);
                 font-size: 16px;
               }
               .current {
-                color: #ff6c32;
+                color: rgb(250, 171, 0);
+                font-size: 20px;
               }
             }
           }
@@ -689,6 +687,7 @@ export default {
 
         .timeAxis {
           flex: 12;
+          max-width: 75%;
           position: relative;
           .timeBar {
             position: relative;

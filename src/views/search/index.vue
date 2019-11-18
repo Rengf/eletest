@@ -85,6 +85,8 @@ export default {
     search(keywords) {
       if (keywords) {
         this.keyWords = keywords;
+      } else {
+        this.keyWords = this.palceHolder;
       }
       this.$router.push("/searchdetail?keywords=" + this.keyWords);
     },

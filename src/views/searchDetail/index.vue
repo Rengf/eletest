@@ -9,7 +9,7 @@
         <i class="iconfont" v-if="keyWords" @click="clearKeyWords()">&#xe607;</i>
       </div>
     </div>
-    <scroll class="categoryList" :scrollX="true" :scrollY="false">
+    <scroll class="categoryList" :scrollX="true" :scrollY="false" ref="categoryList">
       <ul>
         <li
           v-for="(tag,index) of myTags"
@@ -41,6 +41,9 @@ import MusicControl from "./component/musicControl";
 import Video from "./component/video";
 import Artist from "./component/artist";
 import PlayList from "./component/playList";
+import User from "./component/user";
+import DjRadio from "./component/djradio";
+import Album from "./component/album";
 import { mapGetters } from "vuex";
 import axios from "axios";
 export default {
@@ -52,13 +55,13 @@ export default {
       myTags: [
         { name: "综合", tag: "comprehensive", type: "1018" },
         { name: "单曲", tag: "MusicList", type: "1" },
-        { name: "云村" },
+        { name: "云村", tag: "" },
         { name: "视频", tag: "Video" },
         { name: "歌手", tag: "Artist" },
-        { name: "专辑" },
+        { name: "专辑", tag: "Album" },
         { name: "歌单", tag: "PlayList" },
-        { name: "主播电台" },
-        { name: "用户" }
+        { name: "主播电台", tag: "DjRadio" },
+        { name: "用户", tag: "User" }
       ],
       activeIndex: 0,
       currentView: "Comprehensive",
@@ -115,6 +118,7 @@ export default {
     more(tag, index) {
       this.activeIndex = index;
       this.currentView = tag;
+      this.$refs.categoryList.scrollTo(-(this.activeIndex - 2) * 70, 0, 1000);
     },
     showControl(data) {
       if (data.id) {
@@ -160,7 +164,10 @@ export default {
     Video,
     MusicControl,
     Artist,
-    PlayList
+    PlayList,
+    User,
+    DjRadio,
+    Album
   }
 };
 </script>
