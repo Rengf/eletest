@@ -3,7 +3,7 @@ var mysql_config = {
     user: 'root',
     port: 3306,
     password: '',
-    database: 'eletest'
+    database: 'musicPlayer'
 }
 
 module.exports = mysql_config;

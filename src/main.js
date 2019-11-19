@@ -2,7 +2,6 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router/router.js'
 import store from './store/store.js'
-import axios from 'axios'
 import moment from 'moment'
 
 import ElementUI from 'element-ui';
@@ -14,8 +13,8 @@ import './assets/css/iconfont/iconfont.js'
 import './registerServiceWorker'
 
 
-axios.defaults.withCredentials = true
-Vue.prototype.$http = axios
+// axios.defaults.withCredentials = true
+// Vue.prototype.$http = axios
 
 Vue.config.productionTip = false
 
